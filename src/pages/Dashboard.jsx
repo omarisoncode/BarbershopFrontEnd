@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   Loader2,
   LogOut,
+  Menu,
   Moon,
   Scissors,
   Settings,
@@ -20,13 +21,14 @@ import {
   SunMedium,
   UserCheck,
   UserRound,
+  X,
 } from 'lucide-react';
 
 import KuwaitFlagBadge from '../components/KuwaitFlagBadge';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastContext } from '../context/ToastContext';
-import { CalendarIcon, WarningIcon } from '../components/Icons';
+import { WarningIcon } from '../components/Icons';
 import useUserDashboardBookings from '../hooks/useUserDashboardBookings';
 import { translations } from '../utils/i18n';
 import {
@@ -260,7 +262,7 @@ const copy = {
 const glassPanel =
   'border border-brand-gold/22 bg-[linear-gradient(180deg,rgba(255,252,247,0.98),rgba(247,239,226,0.98))] shadow-[0_18px_48px_rgba(124,89,39,0.08),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl dark:border-brand-gold/18 dark:bg-[linear-gradient(180deg,rgba(15,12,10,0.98),rgba(8,7,6,0.98))] dark:shadow-[0_24px_80px_rgba(0,0,0,0.34)] dark:backdrop-blur-none';
 const actionButtonClass =
-  'inline-flex items-center justify-center gap-2 rounded-[1rem] px-4 py-3 text-sm font-bold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex items-center justify-center gap-2 rounded-[1rem] px-4 py-3 text-sm font-bold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-gold/30 disabled:cursor-not-allowed disabled:opacity-60';
 const subtleButtonClass =
   'border border-brand-gold/24 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,236,221,0.94))] text-slate-800 shadow-[0_8px_24px_rgba(124,89,39,0.06)] hover:-translate-y-[1px] hover:border-brand-gold/52 hover:text-[#8b6238] hover:shadow-[0_14px_28px_rgba(124,89,39,0.1)] dark:border-brand-gold/20 dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(15,13,11,0.98))] dark:text-[#f4ead6] dark:shadow-none dark:hover:border-brand-gold/40 dark:hover:text-brand-gold-soft dark:hover:shadow-none';
 const primaryButtonClass =
@@ -295,20 +297,6 @@ const Avatar = ({ user, imageOverride = '', large = false }) => {
   );
 };
 
-const StatCard = ({ icon: Icon, value, label, accent }) => (
-  <div className={`rounded-[0.9rem] border p-3.5 sm:min-w-[11rem] sm:flex-1 ${insetPanelClass} ${accent}`}>
-    <div className='flex items-center justify-between gap-3'>
-      <div>
-        <p className='text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300'>{label}</p>
-        <p className='mt-1 text-lg font-black text-slate-900 dark:text-white sm:text-xl'>{value}</p>
-      </div>
-      <div className='rounded-[0.75rem] border border-brand-gold/12 bg-white/58 p-2 text-brand-gold dark:border-brand-gold/12 dark:bg-white/6 dark:text-brand-gold-soft'>
-        <Icon size={16} />
-      </div>
-    </div>
-  </div>
-);
-
 const SkeletonCard = () => (
   <div className={`rounded-[1.1rem] p-4 ${glassPanel}`} aria-busy='true'>
     <div className='flex items-center gap-4 animate-pulse'>
@@ -329,11 +317,11 @@ const DashboardSection = ({
   titleClassName = '',
   contentClassName = '',
 }) => (
-  <section className={`rounded-[1.4rem] p-5 sm:p-6 ${glassPanel}`}>
-    <div className='flex flex-col gap-3 border-b border-brand-gold/14 pb-4 sm:flex-row sm:items-end sm:justify-between'>
+  <section className={`rounded-[1.2rem] p-4 sm:p-5 ${glassPanel}`}>
+    <div className='flex flex-col gap-3 border-b border-brand-gold/14 pb-3 sm:flex-row sm:items-end sm:justify-between'>
       <div>
         {eyebrow ? (
-          <p className='text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold'>
+          <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
             {eyebrow}
           </p>
         ) : null}
@@ -341,7 +329,7 @@ const DashboardSection = ({
       </div>
       {action ? <div>{action}</div> : null}
     </div>
-    <div className={`mt-4 ${contentClassName}`}>{children}</div>
+    <div className={`mt-3 ${contentClassName}`}>{children}</div>
   </section>
 );
 
@@ -380,34 +368,158 @@ const SidebarNavButton = ({ icon: Icon, label, active, onClick, badge = null }) 
   </button>
 );
 
+const MobileDrawerNav = ({
+  activeSection,
+  brandLabel,
+  dashboardCopy,
+  isOpen,
+  isRTL,
+  navItems,
+  onClose,
+  onLogout,
+  onNavigateHome,
+  onOpenSettings,
+  onSelectSection,
+  onStartBooking,
+  user,
+}) => {
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
+  return (
+    <AnimatePresence>
+      {isOpen ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className='fixed inset-0 z-[70] bg-slate-950/45 backdrop-blur-sm xl:hidden'
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ opacity: 0, x: isRTL ? 36 : -36 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: isRTL ? 36 : -36 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className={`h-full w-[min(19rem,86vw)] p-3 sm:p-4 ${isRTL ? 'ml-auto' : ''}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div
+              className={`flex h-full flex-col rounded-[1.4rem] p-3.5 ${glassPanel}`}
+              dir={isRTL ? 'rtl' : 'ltr'}
+            >
+              <div
+                className={`flex items-center justify-between gap-3 border-b border-brand-gold/16 pb-4 ${
+                  isRTL ? 'flex-row-reverse' : ''
+                }`}
+              >
+                <div className={`flex min-w-0 items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.8rem] border border-brand-gold/20 bg-white/80 text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-brand-gold-soft'>
+                    <Scissors size={18} />
+                  </div>
+                  <div className='min-w-0'>
+                    <p className='truncate font-display text-[1.2rem] font-semibold text-slate-900 dark:text-[#f6eddc]'>
+                      {brandLabel}
+                    </p>
+                    <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold'>
+                      {dashboardCopy.overview}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type='button'
+                  onClick={onClose}
+                  className='inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-gold/16 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300'
+                  aria-label='Close dashboard navigation'
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className='mt-3.5 flex-1 overflow-y-auto pr-1'>
+                <nav className='space-y-1.5'>
+                  {navItems.map((item) => (
+                    <SidebarNavButton
+                      key={item.id}
+                      icon={item.icon}
+                      label={item.label}
+                      badge={item.badge}
+                      active={activeSection === item.id}
+                      onClick={() => {
+                        onSelectSection(item.id);
+                        onClose();
+                      }}
+                    />
+                  ))}
+                </nav>
+
+                <div className='mt-3.5 space-y-2.5'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      onOpenSettings();
+                      onClose();
+                    }}
+                    className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] w-full rounded-[1rem]`}
+                  >
+                    <Settings size={16} />
+                    {dashboardCopy.manageProfile}
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      onNavigateHome();
+                      onClose();
+                    }}
+                    className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] w-full rounded-[1rem]`}
+                  >
+                    <ArrowLeft size={16} className={isRTL ? 'rotate-180' : ''} />
+                    {dashboardCopy.backToSite}
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      onLogout();
+                      onClose();
+                    }}
+                    className={`${actionButtonClass} ${subtleButtonClass} mt-4 min-h-[3rem] w-full rounded-[1rem]`}
+                  >
+                    <LogOut size={16} />
+                    {dashboardCopy.navLogout}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+};
+
 const QuickActionCard = ({ icon: Icon, label, onClick }) => (
   <button
     type='button'
     onClick={onClick}
-    className={`flex min-h-[5.8rem] flex-col items-center justify-center gap-2 rounded-[1rem] p-3.5 text-center ${insetPanelClass} text-slate-800 transition duration-200 hover:-translate-y-[1px] hover:border-brand-gold/28 hover:text-[#8b6238] hover:shadow-[0_16px_30px_rgba(124,89,39,0.08)] dark:text-[#f4ead6] dark:hover:text-brand-gold-soft dark:hover:shadow-none`}
+    className={`flex min-h-[4.6rem] items-center gap-3 rounded-[1rem] p-3.5 text-left ${insetPanelClass} text-slate-800 transition duration-200 hover:-translate-y-[1px] hover:border-brand-gold/28 hover:text-[#8b6238] hover:shadow-[0_16px_30px_rgba(124,89,39,0.08)] sm:min-h-[5.8rem] sm:flex-col sm:justify-center sm:gap-2 sm:text-center dark:text-[#f4ead6] dark:hover:text-brand-gold-soft dark:hover:shadow-none`}
   >
     <span className='flex h-10 w-10 items-center justify-center rounded-[0.9rem] border border-brand-gold/16 bg-brand-gold/[0.08] text-brand-gold dark:bg-white/[0.02]'>
       <Icon size={18} />
     </span>
-    <span className='text-[12px] font-medium leading-5'>{label}</span>
+    <span className='text-sm font-medium leading-5 sm:text-[12px]'>{label}</span>
   </button>
 );
 
-const ActivityMetric = ({ icon: Icon, label, value }) => (
-  <div className={`rounded-[1rem] p-3.5 ${insetPanelClass}`}>
-    <div className='flex items-start justify-between gap-3'>
-      <div>
-        <p className='text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 dark:text-white/46'>{label}</p>
-        <p className='mt-2 text-[1.55rem] font-semibold leading-none text-slate-900 dark:text-[#f6eddc]'>{value}</p>
-      </div>
-      <span className='flex h-9 w-9 items-center justify-center rounded-[0.9rem] border border-brand-gold/16 bg-brand-gold/[0.08] text-brand-gold dark:bg-white/[0.02]'>
-        <Icon size={16} />
-      </span>
-    </div>
-  </div>
-);
-
-const NextVisitCard = ({ booking, lang, dashboardCopy, onBook, onCancel }) => {
+const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
   if (!booking) {
     return (
       <div className={`rounded-[1.2rem] border border-dashed p-6 ${insetPanelClass}`}>
@@ -417,29 +529,21 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onBook, onCancel }) => {
         <p className='mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-white/64'>
           {dashboardCopy.noNextVisitBody}
         </p>
-        <Link
-          to='/booking'
-          onClick={onBook}
-          className={`${actionButtonClass} ${primaryButtonClass} mt-5 min-h-[2.9rem] rounded-[0.85rem] px-5`}
-        >
-          <CalendarIcon className='h-4 w-4' />
-          {dashboardCopy.bookAppointment}
-        </Link>
       </div>
     );
   }
 
   return (
-    <div className={`rounded-[1.35rem] border border-brand-gold/16 p-5 ${insetPanelClass}`}>
-      <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between'>
+    <div className={`rounded-[1.05rem] border border-brand-gold/14 p-3.5 sm:p-4 ${insetPanelClass}`}>
+      <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
         <div className='min-w-0 flex-1'>
-          <p className='text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold'>
+          <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
             {dashboardCopy.nextAppointment}
           </p>
-          <h3 className='mt-3 font-display text-[2rem] font-semibold tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[2.25rem]'>
+          <h3 className='mt-2 text-[1.35rem] font-black tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.55rem]'>
             {getLocalizedBookingService(booking, lang)}
           </h3>
-          <div className='mt-5 space-y-3 text-slate-700 dark:text-white/78'>
+          <div className='mt-3 grid gap-2 text-slate-700 dark:text-white/78 sm:grid-cols-3'>
             <div className='flex items-center gap-3 text-sm'>
               <CalendarDays size={17} className='text-brand-gold' />
               <span>{formatDateLabel(booking.date, lang)} • {formatBookingTime(booking.time, lang)}</span>
@@ -454,7 +558,7 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onBook, onCancel }) => {
             </div>
           </div>
 
-          <div className='mt-6 flex flex-wrap gap-3'>
+          <div className='mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap'>
             <button
               type='button'
               onClick={() => onCancel(booking)}
@@ -462,29 +566,21 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onBook, onCancel }) => {
             >
               {dashboardCopy.cancelBookingShort}
             </button>
-            <Link
-              to='/booking'
-              onClick={onBook}
-              className={`${actionButtonClass} ${primaryButtonClass} min-h-[3rem] rounded-[1rem] px-5`}
-            >
-              <Scissors size={16} />
-              {dashboardCopy.bookAppointment}
-            </Link>
           </div>
         </div>
 
-        <div className='flex justify-center lg:w-[18rem]'>
-          <div className='relative flex h-[15rem] w-[15rem] items-center justify-center rounded-full border border-brand-gold/18 bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.22),rgba(255,248,236,0.92)_58%,rgba(245,238,225,1)_100%)] shadow-[0_18px_46px_rgba(15,23,42,0.12)] dark:bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.18),rgba(18,15,12,0.94)_58%,rgba(8,7,6,1)_100%)] dark:shadow-[0_18px_60px_rgba(0,0,0,0.34)] sm:h-[16rem] sm:w-[16rem]'>
-            <div className='absolute inset-3 rounded-full border border-brand-gold/10' />
+        <div className='flex justify-center lg:w-[9.5rem]'>
+          <div className='relative flex h-[6.8rem] w-[6.8rem] items-center justify-center rounded-[1.35rem] border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,239,226,0.84))] shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(14,12,10,0.98))] dark:shadow-[0_12px_28px_rgba(0,0,0,0.22)] sm:h-[7.4rem] sm:w-[7.4rem]'>
+            <div className='absolute inset-2 rounded-[1.2rem] border border-brand-gold/10' />
             {booking.barber?.image || booking.barber?.profileImage ? (
               <img
                 src={booking.barber.image || booking.barber.profileImage}
                 alt={booking.barber?.name || getLocalizedBookingService(booking, lang)}
-                className='relative z-10 h-[11.75rem] w-[11.75rem] rounded-full object-cover shadow-[0_20px_60px_rgba(0,0,0,0.4)] sm:h-[12.5rem] sm:w-[12.5rem]'
+                className='relative z-10 h-[5.05rem] w-[5.05rem] rounded-[0.95rem] object-cover shadow-[0_10px_22px_rgba(0,0,0,0.22)] sm:h-[5.55rem] sm:w-[5.55rem]'
               />
             ) : (
-              <div className='relative z-10 flex h-[11.75rem] w-[11.75rem] items-center justify-center rounded-full border border-brand-gold/14 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.92),rgba(250,244,233,0.58))] text-brand-gold dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] sm:h-[12.5rem] sm:w-[12.5rem]'>
-                <Scissors size={42} />
+              <div className='relative z-10 flex h-[5.05rem] w-[5.05rem] items-center justify-center rounded-[0.95rem] border border-brand-gold/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,244,233,0.68))] text-brand-gold dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] sm:h-[5.55rem] sm:w-[5.55rem]'>
+                <Scissors size={26} />
               </div>
             )}
           </div>
@@ -513,15 +609,15 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, height: 0 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-[1.15rem] border p-4 transition-all duration-200 ${
+      className={`rounded-[1rem] border p-3 transition-all duration-200 sm:p-3.5 ${
         isActive
           ? 'border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,254,251,0.97),rgba(248,240,227,0.97))] shadow-[0_16px_32px_rgba(124,89,39,0.06)] dark:bg-[linear-gradient(180deg,rgba(21,18,16,0.98),rgba(12,10,9,0.98))] dark:shadow-none'
           : 'border-brand-gold/14 bg-[linear-gradient(180deg,rgba(252,248,241,0.95),rgba(242,235,223,0.95))] opacity-90 dark:bg-[linear-gradient(180deg,rgba(18,16,14,0.92),rgba(10,9,8,0.92))] dark:opacity-85'
       }`}
     >
-      <div className='flex items-start justify-between gap-4'>
-        <div className='flex min-w-0 items-start gap-4'>
-          <div className='flex h-18 w-18 shrink-0 flex-col items-center justify-center rounded-[1rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none'>
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
+        <div className='flex min-w-0 items-start gap-3'>
+          <div className='flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-[0.9rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none'>
             <span className='text-[12px] font-black uppercase tracking-[0.18em] text-brand-gold'>
               {date
                 ? date.toLocaleDateString(lang === 'ar' ? 'ar-KW' : 'en-US', {
@@ -534,31 +630,31 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             </span>
           </div>
 
-          <div className='min-w-0 space-y-2.5'>
-            <h3
-              className={`truncate font-display text-[1.45rem] font-semibold leading-none sm:text-[1.62rem] ${
-                isActive
-                  ? 'text-slate-900 dark:text-[#f6eddc]'
-                  : 'line-through text-slate-400 dark:text-white/38'
+            <div className='min-w-0 space-y-2'>
+              <h3
+                className={`truncate text-[1.05rem] font-black leading-tight sm:text-[1.12rem] ${
+                  isActive
+                    ? 'text-slate-900 dark:text-[#f6eddc]'
+                    : 'line-through text-slate-400 dark:text-white/38'
               }`}
             >
               {getLocalizedBookingService(booking, lang)}
             </h3>
-            <div className='flex flex-wrap items-center gap-2 text-[11px]'>
-              <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-3 py-1.5 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
-                {booking.barber?.name || '—'}
-              </span>
+              <div className='flex flex-wrap items-center gap-2 text-[11px]'>
+                <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-3 py-1.5 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
+                  {booking.barber?.name || '—'}
+                </span>
               <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-3 py-1.5 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
                 {booking.time || '—'}
               </span>
             </div>
-            <span className='block text-sm text-slate-500 dark:text-white/52'>
-                {formatDateLabel(booking.date, lang)}
-            </span>
+              <span className='block text-xs text-slate-500 dark:text-white/52'>
+                 {formatDateLabel(booking.date, lang)}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className='flex shrink-0 flex-col items-end gap-3'>
+        <div className='flex shrink-0 flex-row items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2'>
           <span
             className={`inline-flex rounded-full px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] ${
               isActive
@@ -599,7 +695,7 @@ const ActionModal = ({ open, children }) => (
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-md'
+        className='fixed inset-0 z-50 flex overflow-y-auto overscroll-contain bg-black/55 p-4 backdrop-blur-md sm:items-center sm:justify-center'
       >
         {children}
       </motion.div>
@@ -616,7 +712,9 @@ const CancelModal = ({ target, onClose, onConfirm, loading, dashboardCopy }) => 
         initial={{ scale: 0.95, opacity: 0, y: 12 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 12 }}
-        className={`relative w-full max-w-sm rounded-[1rem] p-6 ${glassPanel}`}
+        role='dialog'
+        aria-modal='true'
+        className={`relative my-auto w-full max-w-sm rounded-[1rem] p-6 ${glassPanel}`}
       >
         <div className='mb-4 flex justify-center'>
           <div className='rounded-full bg-red-500/10 p-3 text-red-500'>
@@ -661,7 +759,9 @@ const LogoutConfirmModal = ({ open, onClose, onConfirm, loading, dashboardCopy }
         initial={{ scale: 0.95, opacity: 0, y: 12 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 12 }}
-        className={`relative w-full max-w-sm rounded-[1rem] p-6 ${glassPanel}`}
+        role='dialog'
+        aria-modal='true'
+        className={`relative my-auto w-full max-w-sm rounded-[1rem] p-6 ${glassPanel}`}
       >
         <div className='mb-4 flex justify-center'>
           <div className='rounded-full bg-brand-gold/12 p-3 text-brand-gold'>
@@ -676,7 +776,7 @@ const LogoutConfirmModal = ({ open, onClose, onConfirm, loading, dashboardCopy }
           {dashboardCopy.logoutMessage}
         </p>
 
-        <div className='mt-6 flex gap-3'>
+        <div className='mt-6 flex flex-col gap-3 sm:flex-row'>
           <button
             type='button'
             onClick={onClose}
@@ -722,6 +822,9 @@ const ProfileModal = ({
   loading,
   imageProcessing,
   lang,
+  setLang,
+  darkMode,
+  setDarkMode,
   dashboardCopy,
   user,
   hasChanges,
@@ -737,147 +840,184 @@ const ProfileModal = ({
         initial={{ scale: 0.95, opacity: 0, y: 12 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 12 }}
-        className={`w-full max-w-lg rounded-[1rem] p-6 ${glassPanel}`}
+        role='dialog'
+        aria-modal='true'
+        className={`my-auto flex max-h-[calc(100vh-2rem)] w-full max-w-lg flex-col rounded-[1rem] p-6 ${glassPanel}`}
         dir={lang === 'ar' ? 'rtl' : 'ltr'}
       >
-        <div className='mb-5 flex items-center gap-3'>
-          <div className='rounded-lg border border-brand-gold/12 bg-white/62 p-3 text-brand-gold backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/5 dark:text-brand-gold-soft'>
-            <Camera size={20} />
-          </div>
-          <div>
-            <h3 className='text-xl font-black text-slate-900 dark:text-white'>
-              {dashboardCopy.editProfile}
-            </h3>
-            <p className='text-sm text-slate-500 dark:text-slate-300'>
-              {dashboardCopy.profileCardBody}
-            </p>
-          </div>
-        </div>
-
-        <div className='mb-5 flex flex-col items-center text-center'>
-          <Avatar user={user} imageOverride={image} large={true} />
-          <p className='mt-4 text-xs leading-6 text-slate-500 dark:text-slate-300'>
-            {dashboardCopy.photoRules}
-          </p>
-        </div>
-
-        <div className='mb-5 grid gap-4 sm:grid-cols-2'>
-          <div>
-            <label className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
-              {dashboardCopy.nameLabel}
-            </label>
-            <input
-              type='text'
-              value={name}
-              onChange={(event) => onNameChange(event.target.value)}
-              autoComplete='name'
-              disabled={loading}
-              className='min-h-[3rem] w-full rounded-xl border border-brand-gold/14 bg-white/72 px-3.5 text-sm font-semibold text-slate-900 outline-none backdrop-blur-xl transition focus:border-brand-gold/40 dark:border-brand-gold/14 dark:bg-white/5 dark:text-white dark:focus:border-brand-gold/34'
-            />
-          </div>
-          <div>
-            <label className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
-              {dashboardCopy.emailLabel}
-            </label>
-            <input
-              type='email'
-              value={email}
-              readOnly
-              disabled
-              className='min-h-[3rem] w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm font-semibold text-slate-500 outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
-            />
-            <p className='mt-2 text-xs leading-6 text-slate-500 dark:text-slate-300'>
-              {dashboardCopy.emailReadOnly}
-            </p>
-          </div>
-        </div>
-
-        <div className='mb-5'>
-          <label className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
-            {dashboardCopy.phoneLabel}
-          </label>
-          <div className='grid grid-cols-[auto_minmax(0,1fr)] gap-2'>
-            <div className={`inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-xl px-3 text-sm font-bold ${insetPanelClass}`}>
-              <KuwaitFlagBadge className='h-4 w-6 rounded-[2px] object-cover shadow-sm' />
-              <span>{KUWAIT_DIAL_CODE}</span>
+        <div className='overflow-y-auto pr-1'>
+          <div className='mb-4 flex items-center gap-3'>
+            <div className='rounded-lg border border-brand-gold/12 bg-white/62 p-3 text-brand-gold backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/5 dark:text-brand-gold-soft'>
+              <Camera size={20} />
             </div>
-            <input
-              type='tel'
-              value={phone}
-              onChange={(event) => onPhoneChange(normalizeKuwaitPhoneInput(event.target.value))}
-              placeholder={dashboardCopy.phonePlaceholder || '4XXXXXXX'}
-              inputMode='numeric'
-              autoComplete='tel-national'
-              disabled={loading}
-              className={`min-h-[3rem] rounded-xl border bg-white/72 px-3.5 text-sm font-semibold text-slate-900 outline-none backdrop-blur-xl transition dark:bg-white/5 dark:text-white ${
-                phoneValid
-                  ? 'border-brand-gold/14 focus:border-brand-gold/40 dark:border-brand-gold/14 dark:focus:border-brand-gold/34'
-                  : 'border-red-300 focus:border-red-400 dark:border-red-500/70 dark:focus:border-red-400'
-              }`}
-            />
+            <div>
+              <h3 className='text-xl font-black text-slate-900 dark:text-white'>
+                {dashboardCopy.manageProfile}
+              </h3>
+              <p className='mt-1 text-sm text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.profileCardBody}
+              </p>
+            </div>
           </div>
-          <p className='mt-2 text-xs leading-6 text-slate-500 dark:text-slate-300'>
-            {dashboardCopy.phoneHelp}
-          </p>
-          {!phoneValid ? (
-            <p className='mt-1 text-xs font-semibold text-red-500 dark:text-red-300'>
-              {dashboardCopy.phoneInvalid}
+
+          <div className={`mb-4 rounded-[1rem] p-4 ${insetPanelClass}`}>
+            <p className='text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+              {dashboardCopy.editProfile}
             </p>
-          ) : null}
-        </div>
+            <div className='mt-3 flex flex-col items-center text-center'>
+              <Avatar user={user} imageOverride={image} large={true} />
+              <p className='mt-4 text-xs leading-6 text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.photoRules}
+              </p>
+            </div>
+            <div className='mt-4 grid gap-3 sm:grid-cols-2'>
+              <button
+                type='button'
+                onClick={onPickPhoto}
+                disabled={loading || imageProcessing}
+                className={`${actionButtonClass} ${subtleButtonClass}`}
+              >
+                {imageProcessing ? <Loader2 size={16} className='animate-spin' /> : null}
+                {dashboardCopy.choosePhoto}
+              </button>
+              <button
+                type='button'
+                onClick={onCapturePhoto}
+                disabled={loading || imageProcessing}
+                className={`${actionButtonClass} ${subtleButtonClass}`}
+              >
+                {imageProcessing ? <Loader2 size={16} className='animate-spin' /> : null}
+                {dashboardCopy.takePhoto}
+              </button>
+            </div>
+            {imageProcessing ? (
+              <p className='mt-3 text-xs font-semibold text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.preparingPhoto}
+              </p>
+            ) : null}
+            <button
+              type='button'
+              onClick={onRemovePhoto}
+              disabled={loading || !hasProfileImage}
+              className={`${actionButtonClass} ${subtleButtonClass} mt-3 w-full`}
+            >
+              {dashboardCopy.removePhoto}
+            </button>
+          </div>
 
-        <div className='grid gap-3 sm:grid-cols-2'>
-          <button
-            type='button'
-            onClick={onPickPhoto}
-            disabled={loading || imageProcessing}
-            className={`${actionButtonClass} ${subtleButtonClass}`}
-          >
-            {imageProcessing ? <Loader2 size={16} className='animate-spin' /> : null}
-            {dashboardCopy.choosePhoto}
-          </button>
-          <button
-            type='button'
-            onClick={onCapturePhoto}
-            disabled={loading || imageProcessing}
-            className={`${actionButtonClass} ${subtleButtonClass}`}
-          >
-            {imageProcessing ? <Loader2 size={16} className='animate-spin' /> : null}
-            {dashboardCopy.takePhoto}
-          </button>
-        </div>
-        {imageProcessing ? (
-          <p className='mt-3 text-xs font-semibold text-slate-500 dark:text-slate-300'>
-            {dashboardCopy.preparingPhoto}
-          </p>
-        ) : null}
+          <div className='mb-4 grid gap-4 sm:grid-cols-2'>
+            <div>
+              <label className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.nameLabel}
+              </label>
+              <input
+                type='text'
+                value={name}
+                onChange={(event) => onNameChange(event.target.value)}
+                autoComplete='name'
+                disabled={loading}
+                className='min-h-[3rem] w-full rounded-xl border border-brand-gold/14 bg-white/72 px-3.5 text-sm font-semibold text-slate-900 outline-none backdrop-blur-xl transition focus:border-brand-gold/40 dark:border-brand-gold/14 dark:bg-white/5 dark:text-white dark:focus:border-brand-gold/34'
+              />
+            </div>
+            <div>
+              <label className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.emailLabel}
+              </label>
+              <input
+                type='email'
+                value={email}
+                readOnly
+                disabled
+                className='min-h-[3rem] w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm font-semibold text-slate-500 outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
+              />
+              <p className='mt-2 text-xs leading-6 text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.emailReadOnly}
+              </p>
+            </div>
+          </div>
 
-        <div className='mt-6 flex gap-3'>
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className={`${actionButtonClass} ${subtleButtonClass} flex-1`}
-          >
-            {dashboardCopy.goBack || 'Back'}
-          </button>
-          <button
-            onClick={onSave}
-            disabled={loading || !hasChanges || !phoneValid}
-            className={`${actionButtonClass} ${primaryButtonClass} flex-1`}
-          >
-            {loading ? <Loader2 size={16} className='animate-spin' /> : null}
-            {loading ? `${dashboardCopy.saveProfile}...` : dashboardCopy.saveProfile}
-          </button>
-        </div>
+          <div className={`mb-4 rounded-[1rem] p-4 ${insetPanelClass}`}>
+            <p className='text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+              {dashboardCopy.phoneSavedLabel}
+            </p>
+            <div className='mt-3'>
+              <label className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.phoneLabel}
+              </label>
+              <div className='grid grid-cols-[auto_minmax(0,1fr)] gap-2'>
+                <div className={`inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-xl px-3 text-sm font-bold ${insetPanelClass}`}>
+                  <KuwaitFlagBadge className='h-4 w-6 rounded-[2px] object-cover shadow-sm' />
+                  <span>{KUWAIT_DIAL_CODE}</span>
+                </div>
+                <input
+                  type='tel'
+                  value={phone}
+                  onChange={(event) => onPhoneChange(normalizeKuwaitPhoneInput(event.target.value))}
+                  placeholder={dashboardCopy.phonePlaceholder || '4XXXXXXX'}
+                  inputMode='numeric'
+                  autoComplete='tel-national'
+                  disabled={loading}
+                  className={`min-h-[3rem] rounded-xl border bg-white/72 px-3.5 text-sm font-semibold text-slate-900 outline-none backdrop-blur-xl transition dark:bg-white/5 dark:text-white ${
+                    phoneValid
+                      ? 'border-brand-gold/14 focus:border-brand-gold/40 dark:border-brand-gold/14 dark:focus:border-brand-gold/34'
+                      : 'border-red-300 focus:border-red-400 dark:border-red-500/70 dark:focus:border-red-400'
+                  }`}
+                />
+              </div>
+              <p className='mt-2 text-xs leading-6 text-slate-500 dark:text-slate-300'>
+                {dashboardCopy.phoneHelp}
+              </p>
+              {!phoneValid ? (
+                <p className='mt-1 text-xs font-semibold text-red-500 dark:text-red-300'>
+                  {dashboardCopy.phoneInvalid}
+                </p>
+              ) : null}
+            </div>
+          </div>
 
-        <button
-          type='button'
-          onClick={onRemovePhoto}
-          disabled={loading || !hasProfileImage}
-          className={`${actionButtonClass} ${subtleButtonClass} mt-3 w-full`}
-        >
-          {dashboardCopy.removePhoto}
-        </button>
+          <div className={`mb-4 rounded-[1rem] p-4 ${insetPanelClass}`}>
+            <p className='text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+              {dashboardCopy.appearance}
+            </p>
+            <div className='mt-3 grid gap-3 sm:grid-cols-2'>
+              <button
+                type='button'
+                onClick={() => setLang?.(lang === 'en' ? 'ar' : 'en')}
+                className={`${actionButtonClass} ${subtleButtonClass}`}
+              >
+                <Globe size={15} />
+                {dashboardCopy.languageSwitch}
+              </button>
+              <button
+                type='button'
+                onClick={() => setDarkMode(!darkMode)}
+                aria-pressed={darkMode}
+                className={`${actionButtonClass} ${subtleButtonClass}`}
+              >
+                {darkMode ? <SunMedium size={15} /> : <Moon size={15} />}
+                {darkMode ? dashboardCopy.lightMode : dashboardCopy.darkMode}
+              </button>
+            </div>
+          </div>
+
+          <div className='mt-5 flex flex-col gap-3 sm:flex-row'>
+            <button
+              onClick={onClose}
+              disabled={loading}
+              className={`${actionButtonClass} ${subtleButtonClass} flex-1`}
+            >
+              {dashboardCopy.goBack || 'Back'}
+            </button>
+            <button
+              onClick={onSave}
+              disabled={loading || !hasChanges || !phoneValid}
+              className={`${actionButtonClass} ${primaryButtonClass} flex-1`}
+            >
+              {loading ? <Loader2 size={16} className='animate-spin' /> : null}
+              {loading ? `${dashboardCopy.saveProfile}...` : dashboardCopy.saveProfile}
+            </button>
+          </div>
+        </div>
       </motion.div>
     </ActionModal>
   );
@@ -888,7 +1028,6 @@ const dashboardSectionIds = {
   nextVisit: 'dashboard-next-visit',
   active: 'dashboard-active',
   history: 'dashboard-history',
-  profile: 'dashboard-profile',
 };
 
 const Dashboard = ({ lang, isRTL, setLang }) => {
@@ -909,6 +1048,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(dashboardSectionIds.overview);
   const [profileName, setProfileName] = useState(user?.name || '');
   const [profileImage, setProfileImage] = useState(user?.profileImage || '');
@@ -963,10 +1103,10 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
   }, [bookings]);
 
   const nextActiveBooking = useMemo(() => {
-    const today = new Date(new Date().toDateString()).getTime();
+    const now = Date.now();
 
     return [...groupedBookings.activeBookings]
-      .filter((booking) => getBookingDateTimeValue(booking) >= today)
+      .filter((booking) => getBookingDateTimeValue(booking) >= now)
       .sort((a, b) => getBookingDateTimeValue(a) - getBookingDateTimeValue(b))[0] || null;
   }, [groupedBookings.activeBookings]);
 
@@ -1091,6 +1231,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
     if (!element) return;
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setActiveSection(sectionId);
+    setMobileSidebarOpen(false);
   };
 
   const navItems = [
@@ -1098,12 +1239,6 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
     { id: dashboardSectionIds.nextVisit, label: dashboardCopy.navNextVisit, icon: CalendarRange },
     { id: dashboardSectionIds.active, label: dashboardCopy.navActiveBookings, icon: CalendarDays, badge: groupedBookings.activeBookings.length || null },
     { id: dashboardSectionIds.history, label: dashboardCopy.navHistory, icon: Clock3 },
-    { id: dashboardSectionIds.profile, label: dashboardCopy.navProfile, icon: UserRound },
-  ];
-
-  const quickActions = [
-    { id: 'book', label: dashboardCopy.bookAppointment, icon: CalendarDays, onClick: handleStartBooking },
-    { id: 'profile', label: dashboardCopy.accountSummary, icon: UserRound, onClick: () => scrollToSection(dashboardSectionIds.profile) },
   ];
 
   return (
@@ -1113,7 +1248,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
     >
       <div className={`mx-auto max-w-[1440px] ${workspaceFrame}`}>
         <div className='flex flex-col xl:flex-row'>
-          <aside className='border-b border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(247,236,216,0.3))] px-4 py-5 dark:border-brand-gold/16 dark:bg-transparent xl:min-h-[calc(100vh-3rem)] xl:w-[16.75rem] xl:shrink-0 xl:border-b-0 xl:border-r'>
+          <aside className='hidden border-b border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(247,236,216,0.3))] px-4 py-5 dark:border-brand-gold/16 dark:bg-transparent xl:block xl:min-h-[calc(100vh-3rem)] xl:w-[16.75rem] xl:shrink-0 xl:border-b-0 xl:border-r'>
             <div className='flex flex-col gap-5 xl:h-full'>
               <div className='rounded-[1.4rem] border border-brand-gold/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(247,239,226,0.68))] p-5 shadow-[0_16px_34px_rgba(124,89,39,0.07)] dark:border-brand-gold/16 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] dark:shadow-none'>
                 <div className='flex items-center gap-3'>
@@ -1145,38 +1280,27 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                   ))}
                 </nav>
 
-                <div className='mt-auto space-y-2.5 pt-4'>
+                <div className={`space-y-3 rounded-[1rem] p-3 ${insetPanelClass}`}>
                   <button
                     type='button'
-                    onClick={handleStartBooking}
-                    className={`${actionButtonClass} ${primaryButtonClass} min-h-[3rem] w-full rounded-[1rem]`}
+                    onClick={() => setProfileModalOpen(true)}
+                    className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] w-full rounded-[1rem] px-4`}
                   >
-                    <CalendarDays size={16} />
-                    {dashboardCopy.navBook}
+                    <Settings size={16} />
+                    {dashboardCopy.manageProfile}
                   </button>
-                  <div className='grid grid-cols-2 gap-3'>
-                    <button
-                      type='button'
-                      onClick={() => setLang?.(lang === 'en' ? 'ar' : 'en')}
-                      className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem] px-3`}
-                    >
-                      <Globe size={15} />
-                      {dashboardCopy.languageSwitch}
-                    </button>
-                    <button
-                      type='button'
-                      onClick={() => setDarkMode(!darkMode)}
-                      aria-pressed={darkMode}
-                      className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem] px-3`}
-                    >
-                      {darkMode ? <SunMedium size={15} /> : <Moon size={15} />}
-                      {darkMode ? dashboardCopy.lightMode : dashboardCopy.darkMode}
-                    </button>
-                  </div>
+                  <button
+                    type='button'
+                    onClick={() => navigate('/')}
+                    className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] w-full rounded-[1rem] px-4`}
+                  >
+                    <ArrowLeft size={16} className={isRTL ? 'rotate-180' : ''} />
+                    {dashboardCopy.backToSite}
+                  </button>
                   <button
                     type='button'
                     onClick={() => setLogoutModalOpen(true)}
-                    className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] w-full rounded-[1rem] px-4`}
+                    className={`${actionButtonClass} ${subtleButtonClass} mt-4 min-h-[3rem] w-full rounded-[1rem] px-4`}
                   >
                     <LogOut size={16} />
                     {dashboardCopy.navLogout}
@@ -1184,47 +1308,63 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                 </div>
               </div>
 
-              <div className='flex gap-2 overflow-x-auto xl:hidden'>
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    type='button'
-                    onClick={() => scrollToSection(item.id)}
-                    className={`whitespace-nowrap rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.18em] ${
-                      activeSection === item.id
-                        ? 'border-brand-gold/26 bg-brand-gold/12 text-brand-gold'
-                        : 'border-brand-gold/12 text-slate-600 dark:text-white/64'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
             </div>
           </aside>
 
           <div className='min-w-0 flex-1 p-4 sm:p-5 xl:p-6'>
-            <div className='grid gap-4 xl:grid-cols-[minmax(0,1fr)_22rem]'>
-              <div className='space-y-4'>
+            <div className={`mb-4 flex items-center justify-between gap-3 rounded-[1.2rem] px-4 py-3 xl:hidden ${glassPanel}`}>
+              <div className='flex min-w-0 items-center gap-3'>
+                <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.9rem] border border-brand-gold/20 bg-white/80 text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-brand-gold-soft'>
+                  <Scissors size={18} />
+                </div>
+                <div className='min-w-0'>
+                  <p className='truncate font-display text-[1.18rem] font-semibold text-slate-900 dark:text-[#f6eddc]'>
+                    {t.logo}
+                  </p>
+                  <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold'>
+                    {navItems.find((item) => item.id === activeSection)?.label || dashboardCopy.navOverview}
+                  </p>
+                </div>
+              </div>
+              <button
+                type='button'
+                onClick={() => setMobileSidebarOpen(true)}
+                className='inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-gold/16 bg-white/80 text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200'
+                aria-label='Open dashboard navigation'
+              >
+                <Menu size={18} />
+              </button>
+            </div>
+
+            <div className='space-y-4'>
                 <section
                   id={dashboardSectionIds.overview}
-                  className={`relative overflow-hidden rounded-[1.55rem] p-6 sm:p-8 ${glassPanel}`}
+                  className={`rounded-[1.35rem] p-5 sm:p-6 ${glassPanel}`}
                 >
-                  <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_right,rgba(201,164,92,0.14),transparent_28%),linear-gradient(90deg,rgba(255,255,255,0.24),transparent_42%)] dark:bg-[radial-gradient(circle_at_right,rgba(201,164,92,0.14),transparent_28%),linear-gradient(90deg,rgba(255,255,255,0.02),transparent_42%)]' />
-                  <div className='pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] bg-[radial-gradient(circle_at_center,rgba(201,164,92,0.14),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.22),transparent_58%)] dark:bg-[radial-gradient(circle_at_center,rgba(201,164,92,0.1),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_58%)] xl:block' />
-                  <div className='relative z-10 flex flex-col gap-4'>
-                    <div className='flex flex-wrap items-start justify-between gap-3'>
-                      <div>
-                        <p className='text-[10px] font-black uppercase tracking-[0.28em] text-brand-gold'>
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
+                      <div className='min-w-0'>
+                        <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
                           {dashboardCopy.welcomeBack}
                         </p>
-                        <h1 className='mt-3 font-display text-[2.4rem] font-semibold leading-none tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[3.1rem]'>
+                        <h1 className='mt-2 text-[1.55rem] font-black leading-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.8rem]'>
                           {user?.name || ''}
                         </h1>
-                        <p className='mt-4 max-w-2xl text-base leading-8 text-slate-700 dark:text-white/70'>
+                        <p className='mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-white/68 sm:text-base'>
                           {dashboardCopy.overviewSubtitle}
                         </p>
                       </div>
+                    </div>
+
+                    <div className='flex flex-col gap-3 sm:flex-row'>
+                      <button
+                        type='button'
+                        onClick={handleStartBooking}
+                        className={`${actionButtonClass} ${primaryButtonClass} min-h-[3rem] rounded-[1rem] px-5`}
+                      >
+                        <CalendarDays size={16} />
+                        {dashboardCopy.bookAppointment}
+                      </button>
                       <button
                         type='button'
                         onClick={() => navigate('/')}
@@ -1247,7 +1387,6 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                       booking={nextActiveBooking}
                       lang={lang}
                       dashboardCopy={dashboardCopy}
-                      onBook={handleStartBooking}
                       onCancel={setDeleteTarget}
                     />
                   </DashboardSection>
@@ -1258,16 +1397,6 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                     eyebrow={dashboardCopy.active}
                     title={dashboardCopy.active}
                     titleClassName='font-sans text-[1.05rem] font-black uppercase tracking-[0.22em] text-[#9b7441] dark:text-[#f3e4c0]'
-                    action={
-                      <button
-                        type='button'
-                        onClick={handleStartBooking}
-                        className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem] px-5`}
-                      >
-                        <CalendarDays size={16} />
-                        {dashboardCopy.bookAppointment}
-                      </button>
-                    }
                   >
                     {loading ? (
                       <div className='space-y-3'>
@@ -1346,85 +1475,23 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                     )}
                   </DashboardSection>
                 </div>
-              </div>
-
-              <aside className='space-y-3'>
-                <section id={dashboardSectionIds.profile} className={`rounded-[1.45rem] p-5 ${glassPanel}`}>
-                  <div className='flex items-start gap-4'>
-                    <Avatar user={user} large={true} />
-                    <div className='min-w-0 flex-1'>
-                      <p className='text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold'>
-                        {dashboardCopy.accountSummary}
-                      </p>
-                      <p className='mt-3 text-sm leading-7 text-slate-700 dark:text-white/72'>
-                        {dashboardCopy.profileCardBody}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className='mt-5 space-y-4 border-t border-brand-gold/14 pt-4'>
-                    <DetailItem label={dashboardCopy.emailLabel} value={user?.email || '—'} />
-                    <DetailItem
-                      label={dashboardCopy.phoneSavedLabel}
-                      value={displayPhone ? `${dashboardCopy.phoneReady} ${displayPhone}` : dashboardCopy.phoneMissing}
-                    />
-                  </div>
-
-                  <button
-                    type='button'
-                    onClick={() => setProfileModalOpen(true)}
-                    className={`${actionButtonClass} ${subtleButtonClass} mt-5 min-h-[3rem] w-full rounded-[1rem]`}
-                  >
-                    <Settings size={16} />
-                    {dashboardCopy.editProfile}
-                  </button>
-                </section>
-
-                <section className={`rounded-[1.45rem] p-5 ${glassPanel}`}>
-                  <p className='text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold'>
-                    {dashboardCopy.yourActivity}
-                  </p>
-                  <div className='mt-4 space-y-2.5'>
-                    <ActivityMetric icon={CalendarDays} label={dashboardCopy.active} value={stats.totalActive} />
-                    <ActivityMetric icon={CalendarX} label={dashboardCopy.cancelled} value={stats.totalCancelled} />
-                    <ActivityMetric icon={Sparkles} label={dashboardCopy.next} value={stats.nextBooking} />
-                  </div>
-                </section>
-
-                <section className={`rounded-[1.45rem] p-5 ${glassPanel}`}>
-                  <p className='text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold'>
-                    {dashboardCopy.quickActions}
-                  </p>
-                  <div className='mt-4 grid grid-cols-2 gap-2.5'>
-                    {quickActions.map((action) => (
-                      <QuickActionCard
-                        key={action.id}
-                        icon={action.icon}
-                        label={action.label}
-                        onClick={action.onClick}
-                      />
-                    ))}
-                  </div>
-                </section>
-
-                <section className={`rounded-[1.45rem] p-5 xl:hidden ${glassPanel}`}>
+                <section className={`rounded-[1.2rem] p-4 xl:hidden ${glassPanel}`}>
                   <div className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
                     <button
                       type='button'
-                      onClick={() => setLang?.(lang === 'en' ? 'ar' : 'en')}
+                      onClick={() => setProfileModalOpen(true)}
                       className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem]`}
                     >
-                      <Globe size={15} />
-                      {dashboardCopy.languageSwitch}
+                      <Settings size={15} />
+                      {dashboardCopy.manageProfile}
                     </button>
                     <button
                       type='button'
-                      onClick={() => setDarkMode(!darkMode)}
-                      aria-pressed={darkMode}
+                      onClick={() => navigate('/')}
                       className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem]`}
                     >
-                      {darkMode ? <SunMedium size={15} /> : <Moon size={15} />}
-                      {darkMode ? dashboardCopy.lightMode : dashboardCopy.darkMode}
+                      <ArrowLeft size={15} className={isRTL ? 'rotate-180' : ''} />
+                      {dashboardCopy.backToSite}
                     </button>
                     <button
                       type='button'
@@ -1436,11 +1503,26 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                     </button>
                   </div>
                 </section>
-              </aside>
             </div>
           </div>
         </div>
       </div>
+
+      <MobileDrawerNav
+        activeSection={activeSection}
+        brandLabel={t.logo}
+        dashboardCopy={dashboardCopy}
+        isOpen={mobileSidebarOpen}
+        isRTL={isRTL}
+        navItems={navItems}
+        onClose={() => setMobileSidebarOpen(false)}
+        onLogout={() => setLogoutModalOpen(true)}
+        onNavigateHome={() => navigate('/')}
+        onOpenSettings={() => setProfileModalOpen(true)}
+        onSelectSection={scrollToSection}
+        onStartBooking={handleStartBooking}
+        user={user}
+      />
 
       <CancelModal
         target={deleteTarget}
@@ -1474,6 +1556,9 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
         loading={profileLoading}
         imageProcessing={imageProcessing}
         lang={lang}
+        setLang={setLang}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
         dashboardCopy={dashboardCopy}
         user={user}
         hasChanges={hasProfileChanges}

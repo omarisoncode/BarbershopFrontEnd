@@ -54,6 +54,7 @@ import {
   optimizeProfileImage,
   validateProfileImageFile,
 } from '../utils/profileImage';
+import { isPastBusinessDate } from '../utils/businessDate';
 import { getDashboardSharedCopy } from '../utils/dashboardCopy';
 import { repairArabicObject } from '../utils/repairArabicText';
 
@@ -192,6 +193,7 @@ const copy = {
     noServicesCreated: 'No services yet. Create your first premium service to open the catalog.',
     noBarbersCreated:
       'No barber profiles yet. Add your team here and they will also power the homepage roster.',
+    noDataYet: 'No data yet',
   },
   ar: {
     title: 'مركز تشغيل الاستوديو',
@@ -298,6 +300,7 @@ const copy = {
     noServicesCreated: 'لا توجد خدمات بعد. أضف أول خدمة مميزة لبدء الكتالوج.',
     noBarbersCreated:
       'لا توجد ملفات حلاقين بعد. أضف الفريق هنا ليظهر أيضاً في واجهة الموقع.',
+    noDataYet: 'لا توجد بيانات بعد',
   },
 };
 
@@ -1371,6 +1374,16 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   }, []);
 
   const handleDeskBookingInput = useCallback((field, value) => {
+    if (field === 'date' && isPastBusinessDate(value)) {
+      addToast(
+        lang === 'ar'
+          ? 'لا يمكن اختيار تاريخ سابق.'
+          : 'You cannot choose a past date.',
+        'error',
+      );
+      return;
+    }
+
     setDeskBookingForm((current) => {
       if (field === 'serviceId') {
         return {
@@ -1403,7 +1416,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
         [field]: value,
       };
     });
-  }, []);
+  }, [addToast, lang]);
 
   const clearSelectedCustomer = useCallback(() => {
     setSelectedCustomer(null);
@@ -2142,7 +2155,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
               <div
                 className={`rounded-[1.15rem] border border-dashed p-6 text-center text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
               >
-                {analytics?.leaders?.mostBookedService?.label || 'No data yet'}
+                {analytics?.leaders?.mostBookedService?.label || t.noDataYet}
               </div>
             )}
           </SectionShell>
@@ -2154,7 +2167,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
               <div
                 className={`rounded-[1.15rem] border border-dashed p-6 text-center text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
               >
-                {analytics?.leaders?.mostSelectedBarber?.label || 'No data yet'}
+                {analytics?.leaders?.mostSelectedBarber?.label || t.noDataYet}
               </div>
             )}
           </SectionShell>

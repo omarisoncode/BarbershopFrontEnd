@@ -100,7 +100,9 @@ function AppLayout() {
     location.pathname.startsWith(path),
   );
   const shouldHideNavbar =
-    location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard');
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname.startsWith('/booking');
 
   useEffect(() => {
     localStorage.setItem(APP_LANG_KEY, lang);

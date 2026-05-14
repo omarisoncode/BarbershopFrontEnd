@@ -114,8 +114,8 @@ const translateApiMessage = (message, lang) => {
 const getAuthFieldClass = (error) =>
   `relative flex items-center rounded-[1.5rem] border backdrop-blur-xl transition-all duration-200 ${
     error
-      ? 'border-red-300/70 bg-red-50/70 ring-2 ring-red-100/80 dark:border-red-500/40 dark:bg-red-950/10 dark:ring-red-900/30'
-      : 'border-brand-gold/12 bg-white/72 shadow-[0_18px_40px_rgba(15,23,42,0.05)] focus-within:border-brand-gold/50 focus-within:ring-2 focus-within:ring-brand-gold/18 dark:border-white/10 dark:bg-white/5'
+      ? 'border-red-300/70 bg-red-50/70 shadow-[0_0_0_1px_rgba(254,202,202,0.72),0_16px_34px_rgba(239,68,68,0.08)] dark:border-red-500/40 dark:bg-red-950/10 dark:shadow-[0_0_0_1px_rgba(127,29,29,0.34),0_16px_34px_rgba(0,0,0,0.18)]'
+      : 'border-brand-gold/12 bg-white/72 shadow-[0_18px_40px_rgba(15,23,42,0.05)] focus-within:border-brand-gold/28 focus-within:shadow-[0_0_0_1px_rgba(201,164,92,0.24),0_18px_40px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/20 dark:focus-within:shadow-[0_0_0_1px_rgba(201,164,92,0.2),0_18px_40px_rgba(0,0,0,0.24)]'
   }`;
 
 const AuthPage = ({ lang, isRTL }) => {
@@ -359,14 +359,14 @@ const AuthPage = ({ lang, isRTL }) => {
         </div>
       </div>
 
-      <div className='flex flex-1 items-center justify-center p-6 sm:p-12'>
+      <div className='flex flex-1 items-start justify-center overflow-y-auto px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-6 md:items-center md:px-8 md:pb-8 md:pt-8 lg:p-12'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className={`w-full max-w-md ${isRTL ? 'text-right' : 'text-left'}`}
+          className={`w-full max-w-md self-start md:self-auto ${isRTL ? 'text-right' : 'text-left'}`}
         >
-          <div className='md:hidden flex items-center justify-center gap-3 mb-10'>
+          <div className='md:hidden flex items-center justify-center gap-3 mb-6'>
             <div className='text-brand-gold'>
               <ScissorsIcon />
             </div>
@@ -375,7 +375,7 @@ const AuthPage = ({ lang, isRTL }) => {
             </span>
           </div>
 
-          <div className='lux-panel space-y-8 border-white/45 p-8 sm:p-10 dark:border-white/10'>
+          <div className='lux-panel space-y-7 border-white/45 p-5 sm:p-8 md:space-y-8 md:p-10 dark:border-white/10'>
             <div className='text-center space-y-2'>
               <h2 className='text-3xl font-display font-bold text-slate-900 dark:text-white'>
                 {panelTitle}
@@ -414,7 +414,7 @@ const AuthPage = ({ lang, isRTL }) => {
               )}
             </AnimatePresence>
 
-            <form onSubmit={handleSubmit} className='space-y-5'>
+            <form onSubmit={handleSubmit} className='space-y-4 md:space-y-5'>
               {!isLogin && !isResetForm && (
                 <>
                   <InputField
@@ -505,7 +505,7 @@ const AuthPage = ({ lang, isRTL }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='lux-button-primary flex w-full items-center justify-center gap-2 rounded-full py-3.5 font-bold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
+                className='lux-button-primary flex min-h-12 w-full items-center justify-center gap-2 rounded-full py-3.5 font-bold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
               >
                 {loading && <Loader2 className='animate-spin' size={18} />}
                 {submitLabel}

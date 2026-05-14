@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 
+import Calendar from '../Calendar';
 import { TrashIcon } from '../Icons';
 import {
   dashboardGlassPanel,
@@ -648,7 +649,9 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.97, opacity: 0, y: 12 }}
           onClick={(event) => event.stopPropagation()}
-          className={`w-full max-w-md rounded-[2rem] p-6 ${glassPanel}`}
+          role='dialog'
+          aria-modal='true'
+          className={`my-auto w-full max-w-md rounded-[2rem] p-6 ${glassPanel}`}
         >
           <div className='mb-5 flex items-start justify-between gap-4'>
             <div className={`rounded-2xl p-3 ${tone.icon}`}>
@@ -1001,6 +1004,20 @@ const NotificationStatusGrid = ({ summary, lang }) => {
   );
 };
 
+const FieldShell = ({ label, hint = '', className = '', children }) => (
+  <label className={`block min-w-0 ${className}`}>
+    <span className='mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+      {label}
+    </span>
+    {children}
+    {hint ? (
+      <span className='mt-2 block text-xs leading-5 text-slate-500 dark:text-slate-400'>
+        {hint}
+      </span>
+    ) : null}
+  </label>
+);
+
 const ModalShell = ({ open, onClose, title, children }) => {
   useBodyScrollLock(open);
 
@@ -1020,6 +1037,8 @@ const ModalShell = ({ open, onClose, title, children }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.97, opacity: 0, y: 12 }}
           onClick={(event) => event.stopPropagation()}
+          role='dialog'
+          aria-modal='true'
           className={`my-auto w-full max-w-3xl overflow-hidden rounded-[2rem] p-5 sm:max-h-[calc(100vh-3rem)] sm:p-6 ${glassPanel}`}
         >
           <div className='mb-5 flex items-start justify-between gap-4'>
@@ -1174,20 +1193,48 @@ const ServiceForm = ({ t, form, onInput, onSubmit, submitting, submitLabel }) =>
   return (
     <form onSubmit={onSubmit} className='space-y-4'>
       <div className='grid gap-4 lg:grid-cols-2'>
-        <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
-        <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} required />
-        <input value={form.slug} onChange={(event) => onInput('slug', event.target.value)} placeholder={t.slug} className={inputClass} required />
-        <input value={form.category} onChange={(event) => onInput('category', event.target.value)} placeholder={t.category} className={inputClass} />
-        <input value={form.categoryAr} onChange={(event) => onInput('categoryAr', event.target.value)} placeholder={t.categoryAr} className={inputClass} />
-        <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
-        <input value={form.badge} onChange={(event) => onInput('badge', event.target.value)} placeholder={t.badge} className={inputClass} />
-        <input value={form.badgeAr} onChange={(event) => onInput('badgeAr', event.target.value)} placeholder={t.badgeAr} className={inputClass} />
-        <input type='text' inputMode='decimal' value={form.price} onChange={(event) => onInput('price', event.target.value)} placeholder={t.price} className={inputClass} required />
-        <input type='text' inputMode='numeric' value={form.durationMinutes} onChange={(event) => onInput('durationMinutes', event.target.value)} placeholder={t.duration} className={inputClass} required />
-        <textarea value={form.featuresText} onChange={(event) => onInput('featuresText', event.target.value)} placeholder={t.features} className={`${inputClass} min-h-20 md:col-span-2`} />
-        <textarea value={form.featuresArText} onChange={(event) => onInput('featuresArText', event.target.value)} placeholder={t.featuresAr} className={`${inputClass} min-h-20 md:col-span-2`} />
-        <textarea value={form.description} onChange={(event) => onInput('description', event.target.value)} placeholder={t.description} className={`${inputClass} min-h-24 md:col-span-2`} />
-        <textarea value={form.descriptionAr} onChange={(event) => onInput('descriptionAr', event.target.value)} placeholder={t.descriptionAr} className={`${inputClass} min-h-24 md:col-span-2`} />
+        <FieldShell label={t.englishName}>
+          <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
+        </FieldShell>
+        <FieldShell label={t.arabicName}>
+          <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} required />
+        </FieldShell>
+        <FieldShell label={t.slug}>
+          <input value={form.slug} onChange={(event) => onInput('slug', event.target.value)} placeholder={t.slug} className={inputClass} required />
+        </FieldShell>
+        <FieldShell label={t.category}>
+          <input value={form.category} onChange={(event) => onInput('category', event.target.value)} placeholder={t.category} className={inputClass} />
+        </FieldShell>
+        <FieldShell label={t.categoryAr}>
+          <input value={form.categoryAr} onChange={(event) => onInput('categoryAr', event.target.value)} placeholder={t.categoryAr} className={inputClass} />
+        </FieldShell>
+        <FieldShell label={t.image}>
+          <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
+        </FieldShell>
+        <FieldShell label={t.badge}>
+          <input value={form.badge} onChange={(event) => onInput('badge', event.target.value)} placeholder={t.badge} className={inputClass} />
+        </FieldShell>
+        <FieldShell label={t.badgeAr}>
+          <input value={form.badgeAr} onChange={(event) => onInput('badgeAr', event.target.value)} placeholder={t.badgeAr} className={inputClass} />
+        </FieldShell>
+        <FieldShell label={t.price}>
+          <input type='text' inputMode='decimal' value={form.price} onChange={(event) => onInput('price', event.target.value)} placeholder={t.price} className={inputClass} required />
+        </FieldShell>
+        <FieldShell label={t.duration}>
+          <input type='text' inputMode='numeric' value={form.durationMinutes} onChange={(event) => onInput('durationMinutes', event.target.value)} placeholder={t.duration} className={inputClass} required />
+        </FieldShell>
+        <FieldShell label={t.features} className='md:col-span-2'>
+          <textarea value={form.featuresText} onChange={(event) => onInput('featuresText', event.target.value)} placeholder={t.features} className={`${inputClass} min-h-20`} />
+        </FieldShell>
+        <FieldShell label={t.featuresAr} className='md:col-span-2'>
+          <textarea value={form.featuresArText} onChange={(event) => onInput('featuresArText', event.target.value)} placeholder={t.featuresAr} className={`${inputClass} min-h-20`} />
+        </FieldShell>
+        <FieldShell label={t.description} className='md:col-span-2'>
+          <textarea value={form.description} onChange={(event) => onInput('description', event.target.value)} placeholder={t.description} className={`${inputClass} min-h-24`} />
+        </FieldShell>
+        <FieldShell label={t.descriptionAr} className='md:col-span-2'>
+          <textarea value={form.descriptionAr} onChange={(event) => onInput('descriptionAr', event.target.value)} placeholder={t.descriptionAr} className={`${inputClass} min-h-24`} />
+        </FieldShell>
       </div>
       <div className='pt-2'>
         <label className='inline-flex items-center gap-3 text-sm font-bold text-slate-700 dark:text-slate-200'>
@@ -1229,12 +1276,24 @@ const BarberForm = ({
   return (
   <form onSubmit={onSubmit} className='space-y-5'>
     <div className='grid gap-4 lg:grid-cols-2'>
-      <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
-      <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} />
-      <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
-      <input type='text' inputMode='numeric' value={form.experienceYears} onChange={(event) => onInput('experienceYears', event.target.value)} placeholder={t.experience} className={inputClass} />
-      <textarea value={form.bio} onChange={(event) => onInput('bio', event.target.value)} placeholder={t.bio} className={`${inputClass} min-h-24 md:col-span-2`} />
-      <textarea value={form.bioAr} onChange={(event) => onInput('bioAr', event.target.value)} placeholder={t.bioAr} className={`${inputClass} min-h-24 md:col-span-2`} />
+      <FieldShell label={t.englishName}>
+        <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
+      </FieldShell>
+      <FieldShell label={t.arabicName}>
+        <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} />
+      </FieldShell>
+      <FieldShell label={t.image}>
+        <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
+      </FieldShell>
+      <FieldShell label={t.experience}>
+        <input type='text' inputMode='numeric' value={form.experienceYears} onChange={(event) => onInput('experienceYears', event.target.value)} placeholder={t.experience} className={inputClass} />
+      </FieldShell>
+      <FieldShell label={t.bio} className='md:col-span-2'>
+        <textarea value={form.bio} onChange={(event) => onInput('bio', event.target.value)} placeholder={t.bio} className={`${inputClass} min-h-24`} />
+      </FieldShell>
+      <FieldShell label={t.bioAr} className='md:col-span-2'>
+        <textarea value={form.bioAr} onChange={(event) => onInput('bioAr', event.target.value)} placeholder={t.bioAr} className={`${inputClass} min-h-24`} />
+      </FieldShell>
     </div>
 
     <div>
@@ -1313,10 +1372,9 @@ const BarberForm = ({
     </div>
 
     <div className='grid gap-4 md:grid-cols-[1fr_auto] md:items-end'>
-      <div>
-        <label className='mb-2 block text-sm font-black text-slate-900 dark:text-white'>{t.daysOff}</label>
+      <FieldShell label={t.daysOff} hint={t.daysOffHint}>
         <input value={form.daysOffText} onChange={(event) => onInput('daysOffText', event.target.value)} placeholder={t.daysOffHint} className={inputClass} />
-      </div>
+      </FieldShell>
       <button type='submit' disabled={submitting || !canSubmit} className='inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
         {submitting ? <Loader2 size={16} className='animate-spin' /> : null}
         {submitLabel}
@@ -1672,14 +1730,21 @@ export const AdminBookingsPanel = ({
                 <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
                   {t.dateField}
                 </label>
-                <input
-                  type='date'
-                  value={deskBookingForm.date}
-                  onChange={(event) => onDeskBookingInput('date', event.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className={`${inputClass} min-w-0 max-w-full appearance-none`}
-                  disabled={!selectedCustomer || !deskBookingForm.barberId}
-                />
+                {!selectedCustomer || !deskBookingForm.barberId ? (
+                  <div
+                    className={`rounded-[1.2rem] border border-dashed p-4 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
+                  >
+                    {!selectedCustomer ? t.chooseCustomerFirst : t.chooseBarber}
+                  </div>
+                ) : (
+                  <div className='overflow-hidden rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-950/45'>
+                    <Calendar
+                      onSelectDate={(date) => onDeskBookingInput('date', date)}
+                      lang={lang}
+                      bookedDates={[]}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -3018,7 +3083,7 @@ export const AdminBarbersPanel = ({
                               </span>
                             </div>
                             <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>
-                              {scheduleLine || 'â€”'}
+                              {scheduleLine || '—'}
                             </p>
                           </div>
                         );

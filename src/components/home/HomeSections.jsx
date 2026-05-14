@@ -40,7 +40,6 @@ import {
   HOME_SECTION_IDS,
   PROMISE_POINTS,
   REVIEW_KEYS,
-  SOCIAL_ACTIONS,
 } from './homeContent';
 import { businessInfo, getBusinessValue } from '../../config/businessInfo';
 import { localizeDigits } from '../../utils/localizeDigits';
@@ -58,19 +57,6 @@ const iconMap = {
 const renderArrow = (isRTL) => (
   <ArrowRight size={16} className={isRTL ? 'rotate-180' : ''} />
 );
-
-const renderSocialIcon = (key) => {
-  switch (key) {
-    case 'phone':
-      return <Phone size={16} />;
-    case 'whatsapp':
-      return <MessageCircle size={16} />;
-    case 'email':
-      return <ArrowRight size={16} />;
-    default:
-      return <ArrowRight size={16} />;
-  }
-};
 
 export function HeroSection({
   t,
@@ -849,7 +835,7 @@ export function LocationSection({ t, isRTL, onBook }) {
         whileInView='visible'
         viewport={sectionViewport}
         variants={staggerContainer}
-        className='grid gap-6 xl:grid-cols-[0.95fr_1.05fr]'
+        className='grid gap-6'
       >
         <motion.div variants={revealUpVariants}>
           <GlassPanel className='h-full p-6 sm:p-8'>
@@ -901,75 +887,6 @@ export function LocationSection({ t, isRTL, onBook }) {
                 {t.homeBookGeneralCta}
                 {renderArrow(isRTL)}
               </SecondaryButton>
-            </div>
-          </GlassPanel>
-        </motion.div>
-
-        <motion.div variants={revealUpVariants}>
-          <GlassPanel id={HOME_SECTION_IDS.contact} className='relative h-full min-h-[520px] overflow-hidden p-0'>
-            <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02)),radial-gradient(circle_at_top_left,rgba(212,175,55,0.12),transparent_26%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02)),radial-gradient(circle_at_top_left,rgba(212,175,55,0.12),transparent_26%)]' />
-            <div className='absolute inset-0 bg-[linear-gradient(90deg,rgba(212,175,55,0.05)_1px,transparent_1px),linear-gradient(rgba(212,175,55,0.05)_1px,transparent_1px)] bg-[size:36px_36px] opacity-50' />
-
-            <div className='absolute inset-0 overflow-hidden'>
-              <div className='absolute left-[12%] top-[22%] h-28 w-28 rounded-full border border-brand-gold/16 bg-brand-gold/10 blur-xl' />
-              <div className='absolute right-[16%] top-[18%] h-24 w-24 rounded-full border border-white/10 bg-white/6 blur-xl' />
-              <div className='absolute bottom-[14%] left-[22%] h-44 w-44 rounded-full border border-brand-gold/12 bg-brand-gold/8 blur-3xl' />
-            </div>
-
-            <div className='relative flex h-full flex-col justify-between p-6 sm:p-8'>
-              <div className='flex flex-wrap gap-3'>
-                <StatusBadge tone='accent'>
-                  <Star size={12} className='fill-current' />
-                  {t.locationRatingValue}
-                </StatusBadge>
-                <StatusBadge>{t.locationRatingReviews}</StatusBadge>
-              </div>
-
-              <div className='grid gap-4 md:grid-cols-2'>
-                <div className='rounded-[1.5rem] border border-black/8 bg-white/58 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/10 dark:bg-black/30'>
-                  <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>{t.homeLocationMapTitle}</p>
-                  <p className='mt-3 text-lg font-semibold text-slate-900 dark:text-white'>
-                    {t.homeLocationMapText}
-                  </p>
-                  <p className='mt-3 text-sm leading-7 text-slate-600 dark:text-white/70'>
-                    {t.locationBusinessInfo2Value}
-                  </p>
-                </div>
-
-                <div className='rounded-[1.5rem] border border-black/8 bg-white/58 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/10 dark:bg-black/30'>
-                  <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>{t.locationParkingTitle}</p>
-                  <p className='mt-3 text-lg font-semibold text-slate-900 dark:text-white'>
-                    {locationParkingValue}
-                  </p>
-                  <p className='mt-3 text-sm leading-7 text-slate-600 dark:text-white/70'>
-                    {t.locationBusinessInfo1Value}
-                  </p>
-                </div>
-              </div>
-
-              <div className='relative mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-brand-gold/35 bg-brand-gold/12 text-brand-gold shadow-[0_24px_60px_rgba(212,175,55,0.18)]'>
-                <div className='absolute inset-2 rounded-full border border-brand-gold/25' />
-                <MapPin size={28} className='relative z-10' />
-              </div>
-
-              <div className='flex flex-wrap gap-3'>
-                {SOCIAL_ACTIONS.map((action) => (
-                  <a
-                    key={action.key}
-                    href={
-                      action.key === 'phone'
-                        ? locationPhoneHref
-                        : action.key === 'whatsapp'
-                          ? locationWhatsappHref
-                          : locationEmailHref
-                    }
-                    className='inline-flex items-center gap-2 rounded-full border border-black/8 bg-white/58 px-4 py-2 text-sm font-semibold text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl transition hover:border-brand-gold/30 hover:text-brand-gold dark:border-white/10 dark:bg-black/30 dark:text-white/80'
-                  >
-                    {renderSocialIcon(action.key)}
-                    {t[action.labelKey]}
-                  </a>
-                ))}
-              </div>
             </div>
           </GlassPanel>
         </motion.div>
