@@ -114,8 +114,8 @@ const translateApiMessage = (message, lang) => {
 const getAuthFieldClass = (error) =>
   `relative flex items-center rounded-[1.5rem] border backdrop-blur-xl transition-all duration-200 ${
     error
-      ? 'border-red-300/70 bg-red-50/70 shadow-[0_0_0_1px_rgba(254,202,202,0.72),0_16px_34px_rgba(239,68,68,0.08)] dark:border-red-500/40 dark:bg-red-950/10 dark:shadow-[0_0_0_1px_rgba(127,29,29,0.34),0_16px_34px_rgba(0,0,0,0.18)]'
-      : 'border-brand-gold/12 bg-white/72 shadow-[0_18px_40px_rgba(15,23,42,0.05)] focus-within:border-brand-gold/28 focus-within:shadow-[0_0_0_1px_rgba(201,164,92,0.24),0_18px_40px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/20 dark:focus-within:shadow-[0_0_0_1px_rgba(201,164,92,0.2),0_18px_40px_rgba(0,0,0,0.24)]'
+      ? 'border-red-300/70 bg-red-50/70 shadow-[0_0_0_1px_rgba(254,202,202,0.5)] dark:border-red-500/40 dark:bg-red-950/10 dark:shadow-[0_0_0_1px_rgba(127,29,29,0.28)] sm:shadow-[0_0_0_1px_rgba(254,202,202,0.72),0_16px_34px_rgba(239,68,68,0.08)] dark:sm:shadow-[0_0_0_1px_rgba(127,29,29,0.34),0_16px_34px_rgba(0,0,0,0.18)]'
+      : 'border-brand-gold/12 bg-white/72 shadow-[0_14px_30px_rgba(15,23,42,0.04)] focus-within:border-brand-gold/24 focus-within:bg-white/82 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/18 sm:focus-within:shadow-[0_0_0_1px_rgba(201,164,92,0.24),0_18px_40px_rgba(15,23,42,0.06)] dark:sm:focus-within:shadow-[0_0_0_1px_rgba(201,164,92,0.2),0_18px_40px_rgba(0,0,0,0.24)]'
   }`;
 
 const AuthPage = ({ lang, isRTL }) => {
@@ -580,7 +580,7 @@ const PhoneInputField = ({ value, onChange, error, lang, isRTL, autoComplete }) 
           placeholder={t.phonePlaceholder}
           value={value}
           onChange={(event) => onChange(normalizeKuwaitPhoneInput(event.target.value))}
-          className={`w-full flex-1 bg-transparent py-3.5 text-sm tracking-[0.16em] text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-white/34 ${
+          className={`auth-field-input w-full flex-1 bg-transparent py-3.5 tracking-[0.16em] text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-white/34 ${
             isRTL ? 'pr-3 pl-4 text-right' : 'px-3 text-left'
           }`}
         />
@@ -615,7 +615,7 @@ const InputField = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full flex-1 bg-transparent py-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-white/34 ${
+        className={`auth-field-input w-full flex-1 bg-transparent py-3.5 text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-white/34 ${
           isRTL ? 'order-1 pr-4 pl-3 text-right' : 'px-3 text-left'
         }`}
       />
@@ -649,7 +649,7 @@ const PasswordField = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full flex-1 bg-transparent py-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-white/34 ${
+        className={`auth-field-input w-full flex-1 bg-transparent py-3.5 text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-white/34 ${
           isRTL ? 'order-2 pr-4 pl-3 text-right' : 'px-3 text-left'
         }`}
       />
