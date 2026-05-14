@@ -330,7 +330,7 @@ const AuthPage = ({ lang, isRTL }) => {
 
   return (
     <div
-      className='lux-page-shell min-h-screen flex flex-col md:flex-row'
+      className='lux-page-shell min-h-screen flex flex-col overflow-x-hidden md:flex-row'
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className='relative hidden overflow-hidden md:flex md:w-1/2 lg:w-[45%]'>
@@ -359,12 +359,12 @@ const AuthPage = ({ lang, isRTL }) => {
         </div>
       </div>
 
-      <div className='flex flex-1 items-start justify-center overflow-y-auto px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-6 md:items-center md:px-8 md:pb-8 md:pt-8 lg:p-12'>
+      <div className='flex flex-1 items-start justify-center overflow-x-hidden overflow-y-auto px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-6 md:items-center md:px-8 md:pb-8 md:pt-8 lg:p-12'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className={`w-full max-w-md self-start md:self-auto ${isRTL ? 'text-right' : 'text-left'}`}
+          className={`mx-auto w-full max-w-md self-start md:self-auto ${isRTL ? 'text-right' : 'text-left'}`}
         >
           <div className='md:hidden flex items-center justify-center gap-3 mb-6'>
             <div className='text-brand-gold'>
