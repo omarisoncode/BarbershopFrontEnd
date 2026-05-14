@@ -368,9 +368,32 @@ const SidebarNavButton = ({ icon: Icon, label, active, onClick, badge = null }) 
   </button>
 );
 
+const UserIdentityBlock = ({ user, subtitle, compact = false }) => (
+  <div className='flex min-w-0 items-center gap-3'>
+    {user?.profileImage ? (
+      <img
+        src={user.profileImage}
+        alt={user?.name || 'User'}
+        className={`${compact ? 'h-11 w-11 rounded-[0.9rem]' : 'h-13 w-13 rounded-[1rem]'} shrink-0 object-cover ring-1 ring-brand-gold/18`}
+      />
+    ) : (
+      <div className={`${compact ? 'h-11 w-11 rounded-[0.9rem]' : 'h-13 w-13 rounded-[1rem]'} flex shrink-0 items-center justify-center border border-brand-gold/26 bg-brand-gold/10 text-brand-gold`}>
+        <UserRound size={compact ? 18 : 22} />
+      </div>
+    )}
+    <div className='min-w-0'>
+      <p className={`truncate ${compact ? 'text-[1.02rem]' : 'text-[1.15rem]'} font-black text-slate-900 dark:text-[#f6eddc]`}>
+        {user?.name || 'User'}
+      </p>
+      <p className='mt-1 text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
+        {subtitle}
+      </p>
+    </div>
+  </div>
+);
+
 const MobileDrawerNav = ({
   activeSection,
-  brandLabel,
   dashboardCopy,
   isOpen,
   isRTL,
@@ -421,18 +444,12 @@ const MobileDrawerNav = ({
                   isRTL ? 'flex-row-reverse' : ''
                 }`}
               >
-                <div className={`flex min-w-0 items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.8rem] border border-brand-gold/20 bg-white/80 text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-brand-gold-soft'>
-                    <Scissors size={18} />
-                  </div>
-                  <div className='min-w-0'>
-                    <p className='truncate font-display text-[1.2rem] font-semibold text-slate-900 dark:text-[#f6eddc]'>
-                      {brandLabel}
-                    </p>
-                    <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold'>
-                      {dashboardCopy.overview}
-                    </p>
-                  </div>
+                <div className={`${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <UserIdentityBlock
+                    user={user}
+                    subtitle={dashboardCopy.overview}
+                    compact={true}
+                  />
                 </div>
 
                 <button
@@ -558,18 +575,9 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
             </div>
           </div>
 
-          <div className='mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap'>
-            <button
-              type='button'
-              onClick={() => onCancel(booking)}
-              className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem] px-5`}
-            >
-              {dashboardCopy.cancelBookingShort}
-            </button>
-          </div>
         </div>
 
-        <div className='flex justify-center lg:w-[9.5rem]'>
+        <div className='flex flex-col items-center gap-3 lg:w-[9.5rem]'>
           <div className='relative flex h-[6.8rem] w-[6.8rem] items-center justify-center rounded-[1.35rem] border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,239,226,0.84))] shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(14,12,10,0.98))] dark:shadow-[0_12px_28px_rgba(0,0,0,0.22)] sm:h-[7.4rem] sm:w-[7.4rem]'>
             <div className='absolute inset-2 rounded-[1.2rem] border border-brand-gold/10' />
             {booking.barber?.image || booking.barber?.profileImage ? (
@@ -584,6 +592,13 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
               </div>
             )}
           </div>
+          <button
+            type='button'
+            onClick={() => onCancel(booking)}
+            className={`${actionButtonClass} ${subtleButtonClass} min-h-[2.75rem] w-full rounded-[1rem] px-4`}
+          >
+            {dashboardCopy.cancelBookingShort}
+          </button>
         </div>
       </div>
     </div>
@@ -1251,19 +1266,10 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
           <aside className='hidden border-b border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(247,236,216,0.3))] px-4 py-5 dark:border-brand-gold/16 dark:bg-transparent xl:block xl:min-h-[calc(100vh-3rem)] xl:w-[16.75rem] xl:shrink-0 xl:border-b-0 xl:border-r'>
             <div className='flex flex-col gap-5 xl:h-full'>
               <div className='rounded-[1.4rem] border border-brand-gold/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(247,239,226,0.68))] p-5 shadow-[0_16px_34px_rgba(124,89,39,0.07)] dark:border-brand-gold/16 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] dark:shadow-none'>
-                <div className='flex items-center gap-3'>
-                  <div className='flex h-13 w-13 items-center justify-center rounded-[1rem] border border-brand-gold/26 bg-brand-gold/10 text-brand-gold'>
-                    <Scissors size={22} />
-                  </div>
-                  <div>
-                    <p className='font-display text-[1.55rem] font-semibold tracking-[0.08em] text-slate-900 dark:text-[#f6eddc]'>
-                      {t.logo}
-                    </p>
-                    <p className='mt-1 text-[10px] font-black uppercase tracking-[0.26em] text-brand-gold'>
-                      {dashboardCopy.overview}
-                    </p>
-                  </div>
-                </div>
+                <UserIdentityBlock
+                  user={user}
+                  subtitle={dashboardCopy.overview}
+                />
               </div>
 
               <div className='hidden xl:flex xl:flex-1 xl:flex-col'>
@@ -1313,19 +1319,11 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
 
           <div className='min-w-0 flex-1 p-4 sm:p-5 xl:p-6'>
             <div className={`mb-4 flex items-center justify-between gap-3 rounded-[1.2rem] px-4 py-3 xl:hidden ${glassPanel}`}>
-              <div className='flex min-w-0 items-center gap-3'>
-                <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.9rem] border border-brand-gold/20 bg-white/80 text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-brand-gold-soft'>
-                  <Scissors size={18} />
-                </div>
-                <div className='min-w-0'>
-                  <p className='truncate font-display text-[1.18rem] font-semibold text-slate-900 dark:text-[#f6eddc]'>
-                    {t.logo}
-                  </p>
-                  <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold'>
-                    {navItems.find((item) => item.id === activeSection)?.label || dashboardCopy.navOverview}
-                  </p>
-                </div>
-              </div>
+              <UserIdentityBlock
+                user={user}
+                subtitle={navItems.find((item) => item.id === activeSection)?.label || dashboardCopy.navOverview}
+                compact={true}
+              />
               <button
                 type='button'
                 onClick={() => setMobileSidebarOpen(true)}
@@ -1364,14 +1362,6 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                       >
                         <CalendarDays size={16} />
                         {dashboardCopy.bookAppointment}
-                      </button>
-                      <button
-                        type='button'
-                        onClick={() => navigate('/')}
-                        className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem] px-5`}
-                      >
-                        <ArrowLeft size={16} className={isRTL ? 'rotate-180' : ''} />
-                        {dashboardCopy.backToSite}
                       </button>
                     </div>
                   </div>
@@ -1475,34 +1465,6 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                     )}
                   </DashboardSection>
                 </div>
-                <section className={`rounded-[1.2rem] p-4 xl:hidden ${glassPanel}`}>
-                  <div className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
-                    <button
-                      type='button'
-                      onClick={() => setProfileModalOpen(true)}
-                      className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem]`}
-                    >
-                      <Settings size={15} />
-                      {dashboardCopy.manageProfile}
-                    </button>
-                    <button
-                      type='button'
-                      onClick={() => navigate('/')}
-                      className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem]`}
-                    >
-                      <ArrowLeft size={15} className={isRTL ? 'rotate-180' : ''} />
-                      {dashboardCopy.backToSite}
-                    </button>
-                    <button
-                      type='button'
-                      onClick={() => setLogoutModalOpen(true)}
-                      className={`${actionButtonClass} ${subtleButtonClass} min-h-[3rem] rounded-[1rem]`}
-                    >
-                      <LogOut size={16} />
-                      {dashboardCopy.navLogout}
-                    </button>
-                  </div>
-                </section>
             </div>
           </div>
         </div>
@@ -1510,7 +1472,6 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
 
       <MobileDrawerNav
         activeSection={activeSection}
-        brandLabel={t.logo}
         dashboardCopy={dashboardCopy}
         isOpen={mobileSidebarOpen}
         isRTL={isRTL}
