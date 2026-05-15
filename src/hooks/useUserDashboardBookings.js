@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import api from '../utils/api';
 import useSocketBookings from './useSocketBookings';
@@ -11,6 +11,7 @@ export default function useUserDashboardBookings({
   addToast,
 }) {
   const cacheKey = user?._id ? `user-dashboard-bookings:${user._id}` : '';
+  const remoteLoadedRef = useRef(false);
   const [bookings, setBookings] = useState(() => {
     if (typeof window === 'undefined' || !cacheKey) {
       return [];
@@ -33,9 +34,14 @@ export default function useUserDashboardBookings({
 
   const fetchBookings = useCallback(async () => {
     const response = await api.get('/bookings/my');
-    setBookings((current) =>
-      Array.isArray(response.data) ? response.data : current,
-    );
+    if (Array.isArray(response.data)) {
+      remoteLoadedRef.current = true;
+      setBookings((current) =>
+        response.data.length === 0 && current.length > 0
+          ? current
+          : response.data,
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -56,6 +62,10 @@ export default function useUserDashboardBookings({
 
   useEffect(() => {
     if (typeof window === 'undefined' || !cacheKey) {
+      return;
+    }
+
+    if (bookings.length === 0 && !remoteLoadedRef.current) {
       return;
     }
 

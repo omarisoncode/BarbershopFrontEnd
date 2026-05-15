@@ -182,7 +182,6 @@ export function ServicesPreviewSection({
   state,
   items,
   showRefreshing,
-  showCachedWarning,
   onRetry,
   onBook,
   onOpenService,
@@ -190,10 +189,9 @@ export function ServicesPreviewSection({
 }) {
   const statusBadge = useMemo(() => {
     if (state === 'fallback') return { tone: 'accent', label: t.homeFallbackPreviewBadge };
-    if (showCachedWarning) return { tone: 'danger', label: t.homeCachedPreviewBadge };
     if (showRefreshing) return { tone: 'default', label: t.homeRefreshingBadge };
     return null;
-  }, [showCachedWarning, showRefreshing, state, t]);
+  }, [showRefreshing, state, t]);
 
   return (
     <SectionShell
@@ -466,17 +464,15 @@ export function BarbersPreviewSection({
   state,
   items,
   showRefreshing,
-  showCachedWarning,
   onRetry,
   onBook,
   onViewAll,
 }) {
   const statusBadge = useMemo(() => {
     if (state === 'fallback') return { tone: 'accent', label: t.homeFallbackPreviewBadge };
-    if (showCachedWarning) return { tone: 'danger', label: t.homeCachedPreviewBadge };
     if (showRefreshing) return { tone: 'default', label: t.homeRefreshingBadge };
     return null;
-  }, [showCachedWarning, showRefreshing, state, t]);
+  }, [showRefreshing, state, t]);
 
   return (
     <SectionShell

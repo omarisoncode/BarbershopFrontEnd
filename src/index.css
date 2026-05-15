@@ -42,6 +42,18 @@ textarea {
   box-shadow: none !important;
 }
 
+.auth-submit-button {
+  -webkit-text-size-adjust: 100%;
+}
+
+.auth-submit-label {
+  min-width: 0;
+  letter-spacing: 0;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  transform: translateZ(0);
+}
+
 @media (min-width: 640px) {
   .auth-field-input {
     font-size: 0.875rem !important;

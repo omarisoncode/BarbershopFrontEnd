@@ -505,10 +505,12 @@ const AuthPage = ({ lang, isRTL }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='lux-button-primary flex min-h-12 w-full items-center justify-center gap-2 rounded-full py-3.5 font-bold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
+                className='auth-submit-button lux-button-primary flex min-h-12 w-full items-center justify-center rounded-full py-3.5 font-bold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
               >
-                {loading && <Loader2 className='animate-spin' size={18} />}
-                {submitLabel}
+                <span className='auth-submit-label inline-flex items-center justify-center gap-2 whitespace-nowrap leading-none'>
+                  {loading && <Loader2 className='shrink-0 animate-spin' size={18} />}
+                  <span>{submitLabel}</span>
+                </span>
               </button>
             </form>
 

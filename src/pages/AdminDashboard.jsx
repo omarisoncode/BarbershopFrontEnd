@@ -69,6 +69,19 @@ const EMPTY_TODAY_SNAPSHOT = {
   noShow: 0,
 };
 
+const readJsonStorage = (key, fallback) => {
+  if (typeof window === 'undefined' || !key) {
+    return fallback;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 const copy = {
   en: {
     title: 'Studio Command',
@@ -709,9 +722,21 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
-  const [bookings, setBookings] = useState([]);
-  const [bookingPagination, setBookingPagination] = useState({ page: 1, limit: 25, total: 0, totalPages: 1 });
-  const [bookingSummary, setBookingSummary] = useState({ all: 0, active: 0, completed: 0, cancelled: 0, no_show: 0 });
+  const adminBookingsCacheKey = user?._id
+    ? `admin-dashboard-bookings:${user._id}:${statusFilter}`
+    : '';
+  const [bookings, setBookings] = useState(() => {
+    const cached = readJsonStorage(adminBookingsCacheKey, []);
+    return Array.isArray(cached) ? cached : [];
+  });
+  const [bookingPagination, setBookingPagination] = useState(() => {
+    const cached = readJsonStorage(adminBookingsCacheKey ? `${adminBookingsCacheKey}:pagination` : '', null);
+    return cached || { page: 1, limit: 25, total: 0, totalPages: 1 };
+  });
+  const [bookingSummary, setBookingSummary] = useState(() => {
+    const cached = readJsonStorage(adminBookingsCacheKey ? `${adminBookingsCacheKey}:summary` : '', null);
+    return cached || { all: 0, active: 0, completed: 0, cancelled: 0, no_show: 0 };
+  });
   const [services, setServices] = useState([]);
   const [barbers, setBarbers] = useState([]);
   const [analytics, setAnalytics] = useState(null);
@@ -759,6 +784,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   const [adminProfileSaving, setAdminProfileSaving] = useState(false);
   const suppressedLiveToastsRef = useRef(new Set());
   const deskBookingSubmitLockRef = useRef(false);
+  const bookingsRemoteLoadedRef = useRef(false);
   const initialRecoveryAttemptedRef = useRef(false);
   const adminProfileFileInputRef = useRef(null);
   const isAdminUser = user?.role === 'admin';
@@ -777,6 +803,70 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     setAdminProfilePhone(user?.phone || '');
     setAdminProfileImage(user?.profileImage || '');
   }, [user?.name, user?.phone, user?.profileImage]);
+
+  useEffect(() => {
+    if (!adminBookingsCacheKey || typeof window === 'undefined') {
+      return;
+    }
+
+    const cachedBookings = readJsonStorage(adminBookingsCacheKey, []);
+    const cachedPagination = readJsonStorage(
+      `${adminBookingsCacheKey}:pagination`,
+      null,
+    );
+    const cachedSummary = readJsonStorage(
+      `${adminBookingsCacheKey}:summary`,
+      null,
+    );
+
+    if (Array.isArray(cachedBookings) && cachedBookings.length > 0) {
+      setBookings((current) => (current.length ? current : cachedBookings));
+    }
+
+    if (cachedPagination) {
+      setBookingPagination((current) =>
+        current.total > 0 ? current : cachedPagination,
+      );
+    }
+
+    if (cachedSummary) {
+      setBookingSummary((current) =>
+        current.all > 0 ? current : cachedSummary,
+      );
+    }
+  }, [adminBookingsCacheKey]);
+
+  useEffect(() => {
+    if (!adminBookingsCacheKey || typeof window === 'undefined') {
+      return;
+    }
+
+    if (bookings.length === 0 && !bookingsRemoteLoadedRef.current) {
+      return;
+    }
+
+    try {
+      window.localStorage.setItem(
+        adminBookingsCacheKey,
+        JSON.stringify(bookings),
+      );
+      window.localStorage.setItem(
+        `${adminBookingsCacheKey}:pagination`,
+        JSON.stringify(bookingPagination),
+      );
+      window.localStorage.setItem(
+        `${adminBookingsCacheKey}:summary`,
+        JSON.stringify(bookingSummary),
+      );
+    } catch {
+      // Ignore storage issues and keep in-memory state.
+    }
+  }, [
+    adminBookingsCacheKey,
+    bookingPagination,
+    bookingSummary,
+    bookings,
+  ]);
 
   const fetchCoreData = useCallback(async () => {
     const [servicesResponse, barbersResponse] = await Promise.all([
@@ -802,8 +892,16 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       },
     });
 
+    bookingsRemoteLoadedRef.current = true;
     setBookings((current) =>
-      Array.isArray(response.data?.items) ? response.data.items : current,
+      Array.isArray(response.data?.items)
+        ? status === 'all' &&
+          page === 1 &&
+          response.data.items.length === 0 &&
+          current.length > 0
+          ? current
+          : response.data.items
+        : current,
     );
     setBookingPagination((current) =>
       response.data?.pagination || current,
