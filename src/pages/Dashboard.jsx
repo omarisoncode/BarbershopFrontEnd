@@ -1076,6 +1076,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
   const {
     bookings,
     loading,
+    initialSyncComplete,
     deleteTarget,
     setDeleteTarget,
     modalLoading,
@@ -1368,15 +1369,27 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                 <div id={dashboardSectionIds.nextVisit}>
                   <DashboardSection
                     eyebrow={dashboardCopy.nextAppointment}
-                    title={nextActiveBooking ? nextActiveBooking.service || dashboardCopy.next : dashboardCopy.noNextVisit}
+                    title={
+                      !initialSyncComplete
+                        ? dashboardCopy.nextAppointment
+                        : nextActiveBooking
+                          ? nextActiveBooking.service || dashboardCopy.next
+                          : dashboardCopy.noNextVisit
+                    }
                     titleClassName='text-[2rem] sm:text-[2.25rem]'
                   >
-                    <NextVisitCard
-                      booking={nextActiveBooking}
-                      lang={lang}
-                      dashboardCopy={dashboardCopy}
-                      onCancel={setDeleteTarget}
-                    />
+                    {!initialSyncComplete ? (
+                      <div className='space-y-3'>
+                        <SkeletonCard />
+                      </div>
+                    ) : (
+                      <NextVisitCard
+                        booking={nextActiveBooking}
+                        lang={lang}
+                        dashboardCopy={dashboardCopy}
+                        onCancel={setDeleteTarget}
+                      />
+                    )}
                   </DashboardSection>
                 </div>
 
@@ -1386,7 +1399,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                     title={dashboardCopy.active}
                     titleClassName='font-sans text-[1.05rem] font-black uppercase tracking-[0.22em] text-[#9b7441] dark:text-[#f3e4c0]'
                   >
-                    {loading ? (
+                    {!initialSyncComplete || loading ? (
                       <div className='space-y-3'>
                         <SkeletonCard />
                         <SkeletonCard />
@@ -1432,7 +1445,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                     title={dashboardCopy.pastAppointments}
                     titleClassName='font-sans text-[1.05rem] font-black uppercase tracking-[0.22em] text-[#9b7441] dark:text-[#f3e4c0]'
                   >
-                    {loading ? (
+                    {!initialSyncComplete || loading ? (
                       <div className='space-y-3'>
                         <SkeletonCard />
                         <SkeletonCard />

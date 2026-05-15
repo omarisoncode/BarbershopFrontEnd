@@ -47,7 +47,7 @@ export const glassPanel = dashboardGlassPanel;
 export const mutedPanel = dashboardInsetPanelClass;
 
 export const inputClass =
-  'w-full rounded-[1rem] border border-brand-gold/12 bg-white/72 px-3.5 py-3 text-base text-slate-900 shadow-[0_16px_38px_rgba(15,23,42,0.04)] backdrop-blur-xl transition focus:border-brand-gold/42 focus:bg-white dark:border-brand-gold/14 dark:bg-white/5 dark:text-white dark:focus:border-brand-gold/34 sm:text-sm';
+  'admin-form-input w-full rounded-[1rem] border border-brand-gold/12 bg-white/72 px-3.5 py-3 text-base text-slate-900 caret-slate-900 shadow-[0_16px_38px_rgba(15,23,42,0.04)] backdrop-blur-xl transition placeholder:text-slate-400 focus:border-brand-gold/42 focus:bg-white focus:outline-none dark:border-brand-gold/14 dark:bg-slate-950/70 dark:text-white dark:caret-white dark:placeholder:text-white/38 dark:focus:border-brand-gold/34 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]';
 
 const timeFieldClass =
   `${inputClass} px-3 py-2.5 text-sm`;
@@ -1277,9 +1277,9 @@ const ServiceForm = ({ t, form, onInput, onSubmit, submitting, submitLabel }) =>
         </label>
       </div>
       <div className='pt-2'>
-        <button type='submit' disabled={submitting || !canSubmit} className='inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
+        <button type='submit' disabled={submitting || !canSubmit} className='admin-submit-button inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
           {submitting ? <Loader2 size={16} className='animate-spin' /> : null}
-          {submitLabel}
+          <span className='admin-submit-label'>{submitLabel}</span>
         </button>
       </div>
     </form>
@@ -1409,9 +1409,9 @@ const BarberForm = ({
       <FieldShell label={t.daysOff} hint={t.daysOffHint}>
         <input value={form.daysOffText} onChange={(event) => onInput('daysOffText', event.target.value)} placeholder={t.daysOffHint} className={inputClass} />
       </FieldShell>
-      <button type='submit' disabled={submitting || !canSubmit} className='inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
+      <button type='submit' disabled={submitting || !canSubmit} className='admin-submit-button inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
         {submitting ? <Loader2 size={16} className='animate-spin' /> : null}
-        {submitLabel}
+        <span className='admin-submit-label'>{submitLabel}</span>
       </button>
     </div>
   </form>

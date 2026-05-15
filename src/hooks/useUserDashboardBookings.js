@@ -26,6 +26,7 @@ export default function useUserDashboardBookings({
     }
   });
   const [loading, setLoading] = useState(true);
+  const [initialSyncComplete, setInitialSyncComplete] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
 
@@ -45,17 +46,21 @@ export default function useUserDashboardBookings({
   }, []);
 
   useEffect(() => {
+    remoteLoadedRef.current = false;
+    setLoading(true);
+    setInitialSyncComplete(false);
+
     if (typeof window === 'undefined' || !cacheKey) {
+      setBookings([]);
       return;
     }
 
     try {
       const cached = window.localStorage.getItem(cacheKey);
       const parsed = cached ? JSON.parse(cached) : [];
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        setBookings((current) => (current.length ? current : parsed));
-      }
+      setBookings(Array.isArray(parsed) ? parsed : []);
     } catch {
+      setBookings([]);
       // Ignore cache hydration failures and rely on the live request path.
     }
   }, [cacheKey]);
@@ -80,6 +85,14 @@ export default function useUserDashboardBookings({
     let isMounted = true;
 
     const loadBookings = async () => {
+      if (!user?._id) {
+        if (isMounted) {
+          setLoading(false);
+          setInitialSyncComplete(true);
+        }
+        return;
+      }
+
       try {
         await fetchBookings();
       } catch (error) {
@@ -89,6 +102,7 @@ export default function useUserDashboardBookings({
       } finally {
         if (isMounted) {
           setLoading(false);
+          setInitialSyncComplete(true);
         }
       }
     };
@@ -98,7 +112,7 @@ export default function useUserDashboardBookings({
     return () => {
       isMounted = false;
     };
-  }, [addToast, dashboardCopy.loadBookingsFailed, fetchBookings]);
+  }, [addToast, dashboardCopy.loadBookingsFailed, fetchBookings, user?._id]);
 
   useSocketBookings({
     enabled: Boolean(user),
@@ -148,6 +162,7 @@ export default function useUserDashboardBookings({
   return {
     bookings,
     loading,
+    initialSyncComplete,
     deleteTarget,
     setDeleteTarget,
     modalLoading,
