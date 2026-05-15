@@ -49,9 +49,11 @@ textarea {
 .auth-submit-label {
   min-width: 0;
   letter-spacing: 0;
-  text-rendering: geometricPrecision;
+  font-size: 0.95rem;
+  line-height: 1;
+  font-variant-ligatures: none;
   -webkit-font-smoothing: antialiased;
-  transform: translateZ(0);
+  text-rendering: optimizeLegibility;
 }
 
 @media (min-width: 640px) {
