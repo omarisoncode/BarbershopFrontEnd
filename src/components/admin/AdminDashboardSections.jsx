@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   BellRing,
   CalendarClock,
+  ChevronDown,
+  ChevronUp,
   Loader2,
   LogOut,
   Mail,
@@ -713,14 +715,22 @@ export const BookingCard = ({
   onDelete,
   onReschedule,
 }) => {
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const hasPhone = Boolean(booking.user?.phone);
   const hasEmail = Boolean(booking.user?.email);
+  const detailsToggleLabel = detailsOpen
+    ? lang === 'ar'
+      ? 'إخفاء التفاصيل'
+      : 'Hide details'
+    : lang === 'ar'
+      ? 'عرض التفاصيل'
+      : 'View details';
 
   return (
   <div className={`rounded-[1.45rem] p-4 sm:p-5 ${glassPanel}`}>
-    <div className='grid gap-4 2xl:grid-cols-[minmax(0,1fr)_15rem]'>
+    <div className='grid gap-4 xl:grid-cols-[minmax(0,1fr)_14rem]'>
       <div className='min-w-0'>
-        <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
+        <div className='flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between'>
           <div className='min-w-0'>
             <div className='flex flex-wrap items-center gap-3'>
               <p className='truncate text-base font-black text-slate-900 dark:text-white sm:text-lg'>
@@ -741,64 +751,76 @@ export const BookingCard = ({
                 {booking.barber?.name || booking.barberName}
               </span>
             </div>
+            <div className='mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-300'>
+              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 ${mutedPanel}`}>
+                <UserRound size={13} />
+                {formatCustomerIdDisplay(booking.user?.customerId, lang, lang === 'ar' ? 'غير متوفر' : 'N/A')}
+              </span>
+              <button
+                type='button'
+                onClick={() => setDetailsOpen((current) => !current)}
+                className='inline-flex items-center gap-2 rounded-full border border-brand-gold/16 bg-white/72 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl transition hover:border-brand-gold/26 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-slate-200 dark:hover:text-brand-gold-soft'
+              >
+                {detailsToggleLabel}
+                {detailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              </button>
+            </div>
           </div>
 
           <div
-            className={`inline-flex min-h-[3rem] items-center gap-3 rounded-[1.05rem] px-4 py-3 text-sm font-semibold text-slate-700 ${mutedPanel}`}
+            className={`inline-flex min-h-[2.8rem] items-center gap-3 rounded-[1.05rem] px-4 py-2.5 text-sm font-semibold text-slate-700 ${mutedPanel}`}
           >
             <CalendarClock size={16} className='text-slate-500 dark:text-slate-300' />
             <span>{formatDateTime(booking.date, booking.time, lang, booking.businessDate || '')}</span>
           </div>
         </div>
 
-        <div className='mt-4 grid gap-2 lg:grid-cols-3'>
-          {hasPhone ? (
-            <a
-              href={`tel:${booking.user?.countryCode || '+965'}${booking.user?.phone || ''}`}
-              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
-            >
-              <Phone size={15} />
-              <span className='truncate'>
-                {formatPhoneDisplay(booking.user.phone, booking.user?.countryCode || '+965', lang)}
-              </span>
-            </a>
-          ) : (
-            <span
-              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-400 dark:text-slate-500 ${mutedPanel}`}
-            >
-              <Phone size={15} />
-              <span className='truncate'>{lang === 'ar' ? 'غير متوفر' : 'N/A'}</span>
-            </span>
-          )}
-          {hasEmail ? (
-            <a
-              href={`mailto:${booking.user.email}`}
-              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
-            >
-              <Mail size={15} />
-              <span className='truncate'>{booking.user.email}</span>
-            </a>
-          ) : (
-            <span
-              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-400 dark:text-slate-500 ${mutedPanel}`}
-            >
-              <Mail size={15} />
-              <span className='truncate'>N/A</span>
-            </span>
-          )}
-          <span
-            className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ${mutedPanel}`}
-          >
-            <UserRound size={15} />
-            <span className='truncate'>{formatCustomerIdDisplay(booking.user?.customerId, lang, lang === 'ar' ? 'غير متوفر' : 'N/A')}</span>
-          </span>
-        </div>
+        {detailsOpen ? (
+          <>
+            <div className='mt-4 grid gap-2 lg:grid-cols-2'>
+              {hasPhone ? (
+                <a
+                  href={`tel:${booking.user?.countryCode || '+965'}${booking.user?.phone || ''}`}
+                  className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
+                >
+                  <Phone size={15} />
+                  <span className='truncate'>
+                    {formatPhoneDisplay(booking.user.phone, booking.user?.countryCode || '+965', lang)}
+                  </span>
+                </a>
+              ) : (
+                <span
+                  className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-400 dark:text-slate-500 ${mutedPanel}`}
+                >
+                  <Phone size={15} />
+                  <span className='truncate'>{lang === 'ar' ? 'غير متوفر' : 'N/A'}</span>
+                </span>
+              )}
+              {hasEmail ? (
+                <a
+                  href={`mailto:${booking.user.email}`}
+                  className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
+                >
+                  <Mail size={15} />
+                  <span className='truncate'>{booking.user.email}</span>
+                </a>
+              ) : (
+                <span
+                  className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-400 dark:text-slate-500 ${mutedPanel}`}
+                >
+                  <Mail size={15} />
+                  <span className='truncate'>N/A</span>
+                </span>
+              )}
+            </div>
 
-        <NotificationStatusGrid summary={booking.notificationSummary} lang={lang} />
+            <NotificationStatusGrid summary={booking.notificationSummary} lang={lang} />
+          </>
+        ) : null}
       </div>
 
       <div className={`rounded-[1.2rem] p-3 ${mutedPanel}`}>
-        <div className='grid gap-2 sm:grid-cols-2 2xl:grid-cols-1'>
+        <div className='grid gap-2 sm:grid-cols-2 xl:grid-cols-1'>
           {booking.status === 'active' ? (
             <>
               <button
@@ -1144,13 +1166,15 @@ export const AdminRescheduleModal = ({
             <label className='mb-2 block text-sm font-black text-slate-900 dark:text-white'>
               {t.rescheduleDate}
             </label>
-                <input
-                  type='date'
-                  value={form.date}
-                  onChange={(event) => onDateChange(event.target.value)}
-                  min={getBusinessDateKey(new Date())}
-                  className={`${inputClass} min-w-0 max-w-full appearance-none`}
-                />
+            <div className='overflow-hidden rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-950/45'>
+              <Calendar
+                onSelectDate={onDateChange}
+                lang={lang}
+                bookedDates={[]}
+                selectedDateString={form.date}
+                initialDateString={form.date || getBusinessDateKey(new Date())}
+              />
+            </div>
           </div>
 
           <div>
@@ -1942,8 +1966,8 @@ export const AdminBookingsPanel = ({
         <div className='space-y-4'>
           {activeBookingView === 'manage' ? (
           <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-            <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
-              <div className='space-y-3'>
+            <div className='flex flex-col gap-4'>
+              <div className='flex flex-wrap items-end justify-between gap-3'>
                 <div>
                   <p className='text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300'>
                     {selectedStatus.label}
@@ -1957,32 +1981,27 @@ export const AdminBookingsPanel = ({
                     </p>
                   </div>
                 </div>
-                <div className='flex flex-wrap gap-2 text-xs font-bold text-slate-500 dark:text-slate-300'>
-                  <span className={`rounded-full px-3 py-1.5 ${mutedPanel}`}>
-                    {`${t.allStatuses}: ${formatNumber(bookingSummary?.all || 0, lang)}`}
-                  </span>
-                  <span className={`rounded-full px-3 py-1.5 ${mutedPanel}`}>
-                    {`${t.bookings}: ${formatNumber(visibleBookingsCount, lang)}`}
-                  </span>
-                </div>
+                <span className={`rounded-full px-3 py-1.5 text-xs font-bold text-slate-500 dark:text-slate-300 ${mutedPanel}`}>
+                  {`${t.allStatuses}: ${formatNumber(bookingSummary?.all || 0, lang)}`}
+                </span>
               </div>
 
-              <div className='pb-1 lg:max-w-[44rem]'>
+              <div className='pb-1'>
                 <div className='flex flex-wrap gap-2'>
                   {statusOptions.map((status) => (
                     <button
                       key={status.id}
                       type='button'
                       onClick={() => setStatusFilter(status.id)}
-                      className={`rounded-[1rem] border px-3.5 py-2.5 text-left text-xs font-black uppercase tracking-[0.16em] transition ${
+                      className={`rounded-full border px-3 py-2 text-left text-[11px] font-black uppercase tracking-[0.14em] transition ${
                         statusFilter === status.id
                           ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900'
                           : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:text-white'
                       }`}
                     >
-                      <span className='block whitespace-nowrap'>{status.label}</span>
+                      <span className='whitespace-nowrap'>{status.label}</span>
                       <span
-                        className={`mt-1 block text-[13px] tracking-normal ${
+                        className={`ml-2 inline-block text-[11px] tracking-normal ${
                           statusFilter === status.id ? 'text-white/75 dark:text-slate-700' : 'text-slate-400 dark:text-slate-500'
                         }`}
                       >
@@ -2063,9 +2082,6 @@ export const AdminBookingsPanel = ({
 
       {activeBookingView === 'manage' ? (
         <div className='space-y-4'>
-          <p className='text-sm text-slate-500 dark:text-slate-300'>
-            {`${selectedStatus.label} • ${formatNumber(visibleBookingsCount, lang)}`}
-          </p>
           {bookings.length === 0 ? (
             <div
               className={`rounded-[1.35rem] border border-dashed p-8 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}

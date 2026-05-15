@@ -5,6 +5,18 @@ import api, { setAccessToken } from '../utils/api';
 export const AuthContext = createContext();
 const AUTH_USER_STORAGE_KEY = 'auth-user';
 
+const normalizeAuthUser = (nextUser) => {
+  if (!nextUser) {
+    return null;
+  }
+
+  return {
+    ...nextUser,
+    _id: nextUser._id || nextUser.id || '',
+    id: nextUser.id || nextUser._id || '',
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     if (typeof window === 'undefined') {
@@ -13,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const cached = window.localStorage.getItem(AUTH_USER_STORAGE_KEY);
-      return cached ? JSON.parse(cached) : null;
+      return cached ? normalizeAuthUser(JSON.parse(cached)) : null;
     } catch {
       return null;
     }
@@ -21,14 +33,18 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const persistUser = (nextUser) => {
-    setUser(nextUser);
+    const normalizedUser = normalizeAuthUser(nextUser);
+    setUser(normalizedUser);
 
     if (typeof window === 'undefined') {
       return;
     }
 
-    if (nextUser) {
-      window.localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(nextUser));
+    if (normalizedUser) {
+      window.localStorage.setItem(
+        AUTH_USER_STORAGE_KEY,
+        JSON.stringify(normalizedUser),
+      );
     } else {
       window.localStorage.removeItem(AUTH_USER_STORAGE_KEY);
     }

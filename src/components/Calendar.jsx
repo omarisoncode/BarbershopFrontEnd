@@ -4,9 +4,37 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getBusinessDateParts } from '../utils/businessDate';
 
-const Calendar = ({ onSelectDate, lang, bookedDates = [] }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null);
+const parseDateString = (value) => {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
+    return null;
+  }
+
+  const [year, month, day] = String(value).split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const Calendar = ({
+  onSelectDate,
+  lang,
+  bookedDates = [],
+  selectedDateString = '',
+  initialDateString = '',
+}) => {
+  const resolvedInitialDate =
+    parseDateString(selectedDateString) ||
+    parseDateString(initialDateString) ||
+    new Date();
+  const [currentDate, setCurrentDate] = useState(
+    new Date(
+      resolvedInitialDate.getFullYear(),
+      resolvedInitialDate.getMonth(),
+      1,
+    ),
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    parseDateString(selectedDateString) || parseDateString(initialDateString),
+  );
   const [direction, setDirection] = useState(0);
 
   const isRTL = lang === 'ar';

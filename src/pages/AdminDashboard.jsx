@@ -722,8 +722,9 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
-  const adminBookingsCacheKey = user?._id
-    ? `admin-dashboard-bookings:${user._id}:${statusFilter}`
+  const adminUserId = user?._id || user?.id || '';
+  const adminBookingsCacheKey = adminUserId
+    ? `admin-dashboard-bookings:${adminUserId}:${statusFilter}`
     : '';
   const [bookings, setBookings] = useState(() => {
     const cached = readJsonStorage(adminBookingsCacheKey, []);

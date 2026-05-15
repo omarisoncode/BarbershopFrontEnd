@@ -12,7 +12,11 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import { dashboardGlassPanel } from '../dashboard/dashboardTheme';
+import {
+  dashboardGlassPanel,
+  dashboardInsetPanelClass,
+  dashboardSubtleButtonClass,
+} from '../dashboard/dashboardTheme';
 
 const MotionDiv = motion.div;
 
@@ -26,6 +30,8 @@ const navIcons = {
 };
 
 const shellSurface = dashboardGlassPanel;
+const shellInset = dashboardInsetPanelClass;
+const shellSubtle = dashboardSubtleButtonClass;
 
 const SidebarNavItem = ({ item, active, isRTL, onClick }) => {
   const Icon = navIcons[item.id] || LayoutDashboard;
@@ -37,7 +43,7 @@ const SidebarNavItem = ({ item, active, isRTL, onClick }) => {
       className={`group relative flex min-h-[3.1rem] w-full items-center gap-3 overflow-hidden rounded-[0.75rem] px-3.5 py-2.5 text-left transition-colors ${
         active
           ? 'border border-brand-gold/24 bg-brand-gold/10 text-slate-900 shadow-[0_10px_28px_rgba(201,164,92,0.16)] dark:border-brand-gold/26 dark:bg-brand-gold/12 dark:text-white'
-          : 'border border-transparent text-slate-600 hover:bg-white/72 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/6 dark:hover:text-white'
+          : 'border border-transparent text-slate-600 hover:bg-white/62 hover:text-[#8b6238] dark:text-slate-300 dark:hover:bg-white/6 dark:hover:text-brand-gold-soft'
       } ${isRTL ? 'flex-row-reverse text-right' : ''}`}
     >
       <span
@@ -84,19 +90,19 @@ export const AdminDashboardSidebar = ({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div
-        className={`flex items-center justify-between gap-3 border-b border-slate-200/80 pb-4 dark:border-slate-800 ${
+        className={`flex items-center justify-between gap-3 border-b border-brand-gold/12 pb-4 dark:border-brand-gold/12 ${
           isRTL ? 'flex-row-reverse' : ''
         }`}
       >
         <div className={`flex min-w-0 items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.8rem] border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200'>
+          <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.8rem] border border-brand-gold/16 bg-brand-gold/[0.08] text-brand-gold dark:bg-white/[0.02] dark:text-brand-gold-soft'>
             <Scissors size={18} />
           </div>
           <div className='min-w-0'>
             <p className='truncate text-[1.08rem] font-black text-slate-900 dark:text-white'>
               {branding.name}
             </p>
-            <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+            <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold dark:text-brand-gold-soft'>
               {branding.subtitle}
             </p>
           </div>
@@ -105,7 +111,7 @@ export const AdminDashboardSidebar = ({
         <button
           type='button'
           onClick={onClose}
-          className='inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 lg:hidden'
+          className={`inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden ${shellSubtle}`}
           aria-label='Close admin navigation'
         >
           <X size={18} />
@@ -125,16 +131,16 @@ export const AdminDashboardSidebar = ({
           ))}
         </nav>
         <div className='mt-3.5 space-y-3'>
-          <div className='rounded-[0.8rem] border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/56'>
+          <div className={`rounded-[0.8rem] border p-3 ${shellInset}`}>
             <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               {profile?.image ? (
                 <img
                   src={profile.image}
                   alt={profile.name || 'Admin profile'}
-                  className='h-10 w-10 rounded-[0.8rem] border border-slate-200 object-cover dark:border-slate-700'
+                  className='h-10 w-10 rounded-[0.8rem] border border-brand-gold/16 object-cover'
                 />
               ) : (
-                <div className='flex h-10 w-10 items-center justify-center rounded-[0.8rem] bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'>
+                <div className='flex h-10 w-10 items-center justify-center rounded-[0.8rem] border border-brand-gold/14 bg-brand-gold/[0.08] text-brand-gold dark:bg-white/[0.02] dark:text-brand-gold-soft'>
                   <UserRound size={18} />
                 </div>
               )}
@@ -198,8 +204,8 @@ export const AdminDashboardHeader = ({
 }) => {
   const statusToneClass =
     statusTone === 'warning'
-      ? 'border-amber-300/28 bg-amber-50/80 text-amber-700 dark:border-amber-300/20 dark:bg-amber-400/8 dark:text-amber-200'
-      : 'border-brand-gold/18 bg-brand-gold/10 text-slate-700 dark:border-brand-gold/18 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
+      ? 'border-amber-300/28 bg-amber-50/80 text-amber-700 shadow-[0_12px_26px_rgba(245,158,11,0.08)] dark:border-amber-300/20 dark:bg-amber-400/8 dark:text-amber-200'
+      : 'border-brand-gold/18 bg-brand-gold/10 text-slate-700 shadow-[0_12px_26px_rgba(201,164,92,0.1)] dark:border-brand-gold/18 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
 
   return (
     <header className={`rounded-[0.95rem] p-4 sm:p-4 ${shellSurface}`} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -209,13 +215,13 @@ export const AdminDashboardHeader = ({
             <button
               type='button'
               onClick={onOpenSidebar}
-              className='inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.8rem] border border-slate-200 bg-white text-slate-700 dark:border-white/10 dark:bg-transparent dark:text-slate-200 lg:hidden'
+              className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.8rem] lg:hidden ${shellSubtle}`}
               aria-label='Open admin navigation'
             >
               <Menu size={18} />
             </button>
             <div className='min-w-0'>
-              <p className='text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500'>
+              <p className='text-[10px] font-black uppercase tracking-[0.2em] text-brand-gold dark:text-brand-gold-soft'>
                 {isRTL ? 'مساحة الإدارة' : 'Admin workspace'}
               </p>
               <h1 className='mt-1 text-[1.55rem] font-black leading-tight text-slate-900 dark:text-white sm:text-[1.8rem]'>
@@ -235,7 +241,7 @@ export const AdminDashboardHeader = ({
         <div className={`flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
           <div className={`flex flex-wrap items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
             {dateLabel ? (
-              <span className='inline-flex min-h-10 items-center rounded-[0.8rem] border border-slate-200 bg-slate-50/80 px-3.5 text-sm font-bold text-slate-600 dark:border-slate-800 dark:bg-slate-900/56 dark:text-slate-200'>
+              <span className={`inline-flex min-h-10 items-center rounded-[0.8rem] px-3.5 text-sm font-bold text-slate-600 dark:text-slate-200 ${shellInset}`}>
                 {dateLabel}
               </span>
             ) : null}
@@ -281,8 +287,8 @@ export const AdminShellActions = ({ actions, isRTL = false }) => {
             aria-busy={action.busy ? 'true' : 'false'}
             className={`inline-flex min-h-10 items-center gap-2 rounded-[0.8rem] border px-3.5 py-2 text-sm font-bold transition ${
               action.tone === 'danger'
-                ? 'border-red-200 bg-white text-red-600 hover:bg-red-50 dark:border-red-900/40 dark:bg-slate-950 dark:text-red-300 dark:hover:bg-red-950/25'
-                : 'border-slate-200 bg-white text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200'
+                ? 'border-red-200 bg-white/78 text-red-600 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-red-50 dark:border-red-900/40 dark:bg-red-950/18 dark:text-red-300 dark:hover:bg-red-950/30'
+                : `${shellSubtle} text-slate-700 dark:text-slate-200`
               } ${isRTL ? 'flex-row-reverse' : ''}`}
           >
             {action.busy ? (
@@ -314,8 +320,8 @@ export const AdminSidebarUtilityActions = ({ actions, isRTL = false }) => {
             disabled={action.disabled}
             className={`flex min-h-[3rem] w-full items-center gap-3 rounded-[0.75rem] border px-3.5 py-2.5 text-left text-sm font-bold transition ${
               action.tone === 'danger'
-                ? 'border-red-200 bg-white text-red-600 hover:bg-red-50 dark:border-red-900/40 dark:bg-slate-950 dark:text-red-300 dark:hover:bg-red-950/25'
-                : 'border-slate-200 bg-white text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200'
+                ? 'border-red-200 bg-white/78 text-red-600 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-red-50 dark:border-red-900/40 dark:bg-red-950/18 dark:text-red-300 dark:hover:bg-red-950/30'
+                : `${shellSubtle} text-slate-700 dark:text-slate-200`
             } ${isRTL ? 'flex-row-reverse text-right' : ''}`}
           >
             {action.busy ? (
@@ -334,10 +340,10 @@ export const AdminSidebarUtilityActions = ({ actions, isRTL = false }) => {
 export const AdminDashboardPlaceholder = ({ eyebrow, title, description }) => (
   <div className={`rounded-[1rem] p-6 sm:p-8 ${shellSurface}`}>
     <div className='mx-auto max-w-2xl text-center'>
-      <div className='mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'>
+      <div className='mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-gold/14 bg-brand-gold/[0.08] text-brand-gold dark:bg-white/[0.02] dark:text-brand-gold-soft'>
         <Settings size={22} />
       </div>
-      <p className='mt-5 text-[11px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500'>
+      <p className='mt-5 text-[11px] font-black uppercase tracking-[0.24em] text-brand-gold dark:text-brand-gold-soft'>
         {eyebrow}
       </p>
       <h2 className='mt-3 text-2xl font-black text-slate-900 dark:text-white'>{title}</h2>

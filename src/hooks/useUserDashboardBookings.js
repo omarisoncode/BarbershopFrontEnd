@@ -10,7 +10,8 @@ export default function useUserDashboardBookings({
   dashboardCopy,
   addToast,
 }) {
-  const cacheKey = user?._id ? `user-dashboard-bookings:${user._id}` : '';
+  const userId = user?._id || user?.id || '';
+  const cacheKey = userId ? `user-dashboard-bookings:${userId}` : '';
   const remoteLoadedRef = useRef(false);
   const [bookings, setBookings] = useState(() => {
     if (typeof window === 'undefined' || !cacheKey) {
@@ -85,7 +86,7 @@ export default function useUserDashboardBookings({
     let isMounted = true;
 
     const loadBookings = async () => {
-      if (!user?._id) {
+      if (!userId) {
         if (isMounted) {
           setLoading(false);
           setInitialSyncComplete(true);
@@ -112,7 +113,7 @@ export default function useUserDashboardBookings({
     return () => {
       isMounted = false;
     };
-  }, [addToast, dashboardCopy.loadBookingsFailed, fetchBookings, user?._id]);
+  }, [addToast, dashboardCopy.loadBookingsFailed, fetchBookings, userId]);
 
   useSocketBookings({
     enabled: Boolean(user),
