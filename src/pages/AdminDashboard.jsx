@@ -892,23 +892,40 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       },
     });
 
+    const nextItems = Array.isArray(response.data?.items) ? response.data.items : null;
+    const nextPagination = response.data?.pagination || null;
+    const nextSummary = response.data?.summary || null;
+    const totalPages = Math.max(nextPagination?.totalPages || 1, 1);
+
+    if (page > totalPages) {
+      setBookingPagination((current) => ({
+        ...current,
+        ...(nextPagination || {}),
+        page: totalPages,
+      }));
+      setBookingSummary((current) => nextSummary || current);
+      return;
+    }
+
     bookingsRemoteLoadedRef.current = true;
-    setBookings((current) =>
-      Array.isArray(response.data?.items)
-        ? status === 'all' &&
-          page === 1 &&
-          response.data.items.length === 0 &&
-          current.length > 0
-          ? current
-          : response.data.items
-        : current,
-    );
-    setBookingPagination((current) =>
-      response.data?.pagination || current,
-    );
-    setBookingSummary((current) =>
-      response.data?.summary || current,
-    );
+    setBookings((current) => {
+      if (!nextItems) {
+        return current;
+      }
+
+      if (
+        status === 'all' &&
+        page === 1 &&
+        nextItems.length === 0 &&
+        current.length > 0
+      ) {
+        return current;
+      }
+
+      return nextItems;
+    });
+    setBookingPagination((current) => nextPagination || current);
+    setBookingSummary((current) => nextSummary || current);
   }, [bookingPagination.limit, statusFilter]);
 
   const fetchCustomerDirectory = useCallback(async ({ page = 1, search = '' } = {}) => {
