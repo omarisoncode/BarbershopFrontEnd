@@ -55,6 +55,7 @@ import {
   validateProfileImageFile,
 } from '../utils/profileImage';
 import { isPastBusinessDate } from '../utils/businessDate';
+import { getBookingDateInputValue } from '../utils/bookingDateTime';
 import { getDashboardSharedCopy } from '../utils/dashboardCopy';
 import { repairArabicObject } from '../utils/repairArabicText';
 
@@ -686,19 +687,6 @@ const sectionMotion = {
   transition: { duration: 0.18, ease: 'easeOut' },
 };
 
-const toDateInputValue = (value) => {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0'),
-  ].join('-');
-};
-
 const createDeskBookingState = () => ({
   serviceId: '',
   barberId: '',
@@ -814,9 +802,15 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       },
     });
 
-    setBookings(Array.isArray(response.data?.items) ? response.data.items : []);
-    setBookingPagination(response.data?.pagination || { page: 1, limit: 25, total: 0, totalPages: 1 });
-    setBookingSummary(response.data?.summary || { all: 0, active: 0, completed: 0, cancelled: 0, no_show: 0 });
+    setBookings((current) =>
+      Array.isArray(response.data?.items) ? response.data.items : current,
+    );
+    setBookingPagination((current) =>
+      response.data?.pagination || current,
+    );
+    setBookingSummary((current) =>
+      response.data?.summary || current,
+    );
   }, [bookingPagination.limit, statusFilter]);
 
   const fetchCustomerDirectory = useCallback(async ({ page = 1, search = '' } = {}) => {
@@ -828,9 +822,15 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       },
     });
 
-    setCustomerDirectory(Array.isArray(response.data?.items) ? response.data.items : []);
-    setCustomerDirectoryPagination(response.data?.pagination || { page: 1, limit: 12, total: 0, totalPages: 1 });
-    setCustomerDirectorySummary(response.data?.summary || { totalCustomers: 0 });
+    setCustomerDirectory((current) =>
+      Array.isArray(response.data?.items) ? response.data.items : current,
+    );
+    setCustomerDirectoryPagination((current) =>
+      response.data?.pagination || current,
+    );
+    setCustomerDirectorySummary((current) =>
+      response.data?.summary || current,
+    );
   }, [customerDirectoryPagination.limit]);
 
   const fetchCustomerDetails = useCallback(async ({ customerId, page = 1 } = {}) => {
@@ -1000,7 +1000,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
         });
       } catch {
         if (isActive) {
-          setCustomerDirectory([]);
+          setSyncIssue(true);
         }
       } finally {
         if (isActive) {
@@ -1274,7 +1274,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
         }
       } catch {
         if (isActive) {
-          setCustomerResults([]);
+          setSyncIssue(true);
         }
       } finally {
         if (isActive) {
@@ -1555,7 +1555,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           },
         });
 
-        const sameDayAsCurrent = toDateInputValue(booking.date) === date;
+        const sameDayAsCurrent = getBookingDateInputValue(booking) === date;
         const slots = Array.isArray(response.data) ? response.data : [];
         const mergedSlots =
           sameDayAsCurrent && !slots.includes(booking.time)
@@ -1584,7 +1584,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   );
 
   const openRescheduleModal = async (booking) => {
-    const initialDate = toDateInputValue(booking.date);
+    const initialDate = getBookingDateInputValue(booking);
     setRescheduleBooking(booking);
     setRescheduleForm({ date: initialDate, time: booking.time });
     await loadRescheduleAvailability(booking, initialDate, booking.time);
@@ -2061,7 +2061,12 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
                   </span>
                 </div>
                 <p className='mt-4 text-sm font-semibold text-slate-600 dark:text-slate-300'>
-                  {formatDateTime(nextUpcomingBooking.date, nextUpcomingBooking.time, lang)}
+                  {formatDateTime(
+                    nextUpcomingBooking.date,
+                    nextUpcomingBooking.time,
+                    lang,
+                    nextUpcomingBooking.businessDate || '',
+                  )}
                 </p>
               </div>
             ) : (

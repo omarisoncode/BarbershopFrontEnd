@@ -40,31 +40,16 @@ import {
   optimizeProfileImage,
   validateProfileImageFile,
 } from '../utils/profileImage';
+import {
+  formatBookingDateLabel,
+  getBookingDateTimeValue,
+  getBookingDisplayDate,
+} from '../utils/bookingDateTime';
 import { getDashboardSharedCopy } from '../utils/dashboardCopy';
 import { repairArabicObject } from '../utils/repairArabicText';
 
-const getSafeDate = (dateStr) => {
-  if (!dateStr) return null;
-  const date = new Date(dateStr);
-  return Number.isNaN(date.getTime()) ? null : date;
-};
-
-const formatDateLabel = (dateStr, lang) => {
-  const date = getSafeDate(dateStr);
-  if (!date) return '';
-
-  return date.toLocaleDateString(lang === 'ar' ? 'ar-KW' : 'en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-};
-
-const getBookingDateTimeValue = (booking) => {
-  if (!booking?.date) return Number.POSITIVE_INFINITY;
-  const value = new Date(`${booking.date}T${booking.time || '00:00'}`).getTime();
-  return Number.isNaN(value) ? Number.POSITIVE_INFINITY : value;
-};
+const isBookingUpcoming = (booking, now = Date.now()) =>
+  getBookingDateTimeValue(booking) >= now;
 
 const formatBookingTime = (time, lang) => {
   if (!time) return '—';
@@ -158,6 +143,7 @@ const copy = {
     cancelled: 'Cancelled bookings',
     next: 'Next visit',
     statusActive: 'Active',
+    statusPast: 'Past',
     statusCancelled: 'Cancelled',
     statusCompleted: 'Completed',
     statusNoShow: 'No-show',
@@ -244,6 +230,7 @@ const copy = {
     cancelled: 'الحجوزات الملغاة',
     next: 'الزيارة القادمة',
     statusActive: 'نشط',
+    statusPast: 'سابق',
     statusCancelled: 'ملغي',
     statusCompleted: 'مكتمل',
     statusNoShow: 'لم يحضر',
@@ -267,6 +254,10 @@ const subtleButtonClass =
   'border border-brand-gold/24 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,236,221,0.94))] text-slate-800 shadow-[0_8px_24px_rgba(124,89,39,0.06)] hover:-translate-y-[1px] hover:border-brand-gold/52 hover:text-[#8b6238] hover:shadow-[0_14px_28px_rgba(124,89,39,0.1)] dark:border-brand-gold/20 dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(15,13,11,0.98))] dark:text-[#f4ead6] dark:shadow-none dark:hover:border-brand-gold/40 dark:hover:text-brand-gold-soft dark:hover:shadow-none';
 const primaryButtonClass =
   'bg-[linear-gradient(135deg,#f1ddb2_0%,#c9a45c_52%,#9d7242_100%)] text-brand-ink shadow-[0_16px_38px_rgba(201,164,92,0.28)] hover:-translate-y-[1px] hover:shadow-[0_22px_46px_rgba(201,164,92,0.34)]';
+const dangerButtonClass =
+  'border border-rose-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,241,242,0.96))] text-rose-700 shadow-[0_10px_24px_rgba(244,63,94,0.08)] hover:-translate-y-[1px] hover:border-rose-300 hover:bg-[linear-gradient(180deg,rgba(255,247,248,0.98),rgba(255,228,232,0.98))] hover:text-rose-800 hover:shadow-[0_16px_30px_rgba(244,63,94,0.12)] dark:border-rose-500/20 dark:bg-[linear-gradient(180deg,rgba(47,18,25,0.72),rgba(33,14,20,0.8))] dark:text-rose-200 dark:shadow-none dark:hover:border-rose-400/28 dark:hover:text-rose-100';
+const accentSecondaryButtonClass =
+  'border border-brand-gold/28 bg-[linear-gradient(180deg,rgba(255,252,245,0.98),rgba(245,233,210,0.96))] text-[#8b6238] shadow-[0_12px_26px_rgba(201,164,92,0.12)] hover:-translate-y-[1px] hover:border-brand-gold/56 hover:text-[#6f4d2a] hover:shadow-[0_18px_34px_rgba(201,164,92,0.18)] dark:border-brand-gold/24 dark:bg-[linear-gradient(180deg,rgba(42,32,20,0.8),rgba(28,21,14,0.88))] dark:text-[#f3dfb6] dark:shadow-none dark:hover:border-brand-gold/40 dark:hover:text-[#fff0cb]';
 const insetPanelClass =
   'border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(249,242,231,0.6))] shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:border-brand-gold/14 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.028),rgba(255,255,255,0.015))] dark:shadow-none';
 const workspaceFrame =
@@ -563,7 +554,7 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
           <div className='mt-3 grid gap-2 text-slate-700 dark:text-white/78 sm:grid-cols-3'>
             <div className='flex items-center gap-3 text-sm'>
               <CalendarDays size={17} className='text-brand-gold' />
-              <span>{formatDateLabel(booking.date, lang)} • {formatBookingTime(booking.time, lang)}</span>
+              <span>{formatBookingDateLabel(booking, lang)} • {formatBookingTime(booking.time, lang)}</span>
             </div>
             <div className='flex items-center gap-3 text-sm'>
               <UserRound size={17} className='text-brand-gold' />
@@ -595,7 +586,7 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
           <button
             type='button'
             onClick={() => onCancel(booking)}
-            className={`${actionButtonClass} ${subtleButtonClass} min-h-[2.75rem] w-full rounded-[1rem] px-4`}
+            className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.75rem] w-full rounded-[1rem] px-4`}
           >
             {dashboardCopy.cancelBookingShort}
           </button>
@@ -606,14 +597,16 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
 };
 
 const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
-  const date = getSafeDate(booking.date);
-  const isActive = booking.status === 'active';
+  const date = getBookingDisplayDate(booking);
+  const isActionableActive = booking.status === 'active' && isBookingUpcoming(booking);
   const statusLabel =
     booking.status === 'completed'
       ? dashboardCopy.statusCompleted
       : booking.status === 'no_show'
         ? dashboardCopy.statusNoShow
-        : isActive
+        : booking.status === 'active' && !isActionableActive
+          ? dashboardCopy.statusPast
+          : isActionableActive
           ? dashboardCopy.statusActive
           : dashboardCopy.statusCancelled;
 
@@ -624,55 +617,55 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, height: 0 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-[1rem] border p-3 transition-all duration-200 sm:p-3.5 ${
-        isActive
+      className={`rounded-[0.95rem] border p-2.5 transition-all duration-200 sm:p-3 ${
+        isActionableActive
           ? 'border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,254,251,0.97),rgba(248,240,227,0.97))] shadow-[0_16px_32px_rgba(124,89,39,0.06)] dark:bg-[linear-gradient(180deg,rgba(21,18,16,0.98),rgba(12,10,9,0.98))] dark:shadow-none'
           : 'border-brand-gold/14 bg-[linear-gradient(180deg,rgba(252,248,241,0.95),rgba(242,235,223,0.95))] opacity-90 dark:bg-[linear-gradient(180deg,rgba(18,16,14,0.92),rgba(10,9,8,0.92))] dark:opacity-85'
       }`}
     >
-      <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
-        <div className='flex min-w-0 items-start gap-3'>
-          <div className='flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-[0.9rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none'>
-            <span className='text-[12px] font-black uppercase tracking-[0.18em] text-brand-gold'>
+      <div className='flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between'>
+        <div className='flex min-w-0 items-start gap-2.5'>
+          <div className='flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-[0.8rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none sm:h-15 sm:w-15'>
+            <span className='text-[10px] font-black uppercase tracking-[0.16em] text-brand-gold'>
               {date
                 ? date.toLocaleDateString(lang === 'ar' ? 'ar-KW' : 'en-US', {
                     month: 'short',
                   })
                 : ''}
             </span>
-            <span className='mt-1 text-[2rem] font-semibold leading-none text-slate-900 dark:text-[#f6eddc]'>
+            <span className='mt-0.5 text-[1.7rem] font-semibold leading-none text-slate-900 dark:text-[#f6eddc]'>
               {date ? date.getDate() : ''}
             </span>
           </div>
 
-            <div className='min-w-0 space-y-2'>
+            <div className='min-w-0 space-y-1.5'>
               <h3
-                className={`truncate text-[1.05rem] font-black leading-tight sm:text-[1.12rem] ${
-                  isActive
+                className={`truncate text-[1rem] font-black leading-tight sm:text-[1.05rem] ${
+                  isActionableActive
                     ? 'text-slate-900 dark:text-[#f6eddc]'
                     : 'line-through text-slate-400 dark:text-white/38'
               }`}
             >
               {getLocalizedBookingService(booking, lang)}
             </h3>
-              <div className='flex flex-wrap items-center gap-2 text-[11px]'>
-                <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-3 py-1.5 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
+              <div className='flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px]'>
+                <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-2.5 py-1 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
                   {booking.barber?.name || '—'}
                 </span>
-              <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-3 py-1.5 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
-                {booking.time || '—'}
-              </span>
-            </div>
-              <span className='block text-xs text-slate-500 dark:text-white/52'>
-                 {formatDateLabel(booking.date, lang)}
-              </span>
+                <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-2.5 py-1 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
+                  {booking.time || '—'}
+                </span>
+                <span className='rounded-full border border-brand-gold/12 bg-white/70 px-2.5 py-1 font-medium text-slate-500 dark:bg-white/[0.02] dark:text-white/52'>
+                  {formatBookingDateLabel(booking, lang)}
+                </span>
+              </div>
             </div>
           </div>
 
-        <div className='flex shrink-0 flex-row items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2'>
+        <div className='flex shrink-0 flex-row items-center justify-between gap-2 sm:flex-col sm:items-end sm:gap-1.5'>
           <span
-            className={`inline-flex rounded-full px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] ${
-              isActive
+            className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+              isActionableActive
                 ? 'bg-brand-gold text-brand-ink'
                 : 'border border-brand-gold/12 bg-brand-gold/[0.08] text-slate-600 dark:bg-white/[0.03] dark:text-white/60'
             }`}
@@ -680,11 +673,11 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             {statusLabel}
           </span>
 
-          {isActive ? (
+          {isActionableActive ? (
             <button
               type='button'
               onClick={() => onCancel(booking)}
-              className='text-sm font-medium text-slate-600 underline-offset-4 transition-colors hover:text-brand-gold hover:underline dark:text-white/64'
+              className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.35rem] rounded-[0.9rem] px-3 py-2 text-[12px]`}
             >
               {dashboardCopy.cancelBookingShort}
             </button>
@@ -692,7 +685,7 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             <button
               type='button'
               onClick={() => onRebook(booking)}
-              className='text-sm font-medium text-brand-gold underline-offset-4 transition hover:underline'
+              className={`${actionButtonClass} ${accentSecondaryButtonClass} min-h-[2.35rem] rounded-[0.9rem] px-3 py-2 text-[12px]`}
             >
               {dashboardCopy.bookAgain}
             </button>
@@ -1108,8 +1101,13 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
   }, [location.pathname, location.state, navigate]);
 
   const groupedBookings = useMemo(() => {
-    const activeBookings = bookings.filter((booking) => booking.status === 'active');
-    const pastBookings = bookings.filter((booking) => booking.status !== 'active');
+    const now = Date.now();
+    const activeBookings = bookings.filter(
+      (booking) => booking.status === 'active' && isBookingUpcoming(booking, now),
+    );
+    const pastBookings = bookings.filter(
+      (booking) => booking.status !== 'active' || !isBookingUpcoming(booking, now),
+    );
 
     return {
       activeBookings,
@@ -1128,7 +1126,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
   const stats = useMemo(() => ({
     totalActive: groupedBookings.activeBookings.length,
     totalCancelled: groupedBookings.pastBookings.filter((booking) => booking.status === 'cancelled').length,
-    nextBooking: nextActiveBooking ? formatDateLabel(nextActiveBooking.date, lang) : '—',
+    nextBooking: nextActiveBooking ? formatBookingDateLabel(nextActiveBooking, lang) : '—',
   }), [groupedBookings.activeBookings.length, groupedBookings.pastBookings, lang, nextActiveBooking]);
 
   useEffect(() => {
@@ -1402,6 +1400,14 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                         <p className='mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-white/64'>
                           {dashboardCopy.dashboardEmptyDesc}
                         </p>
+                        <button
+                          type='button'
+                          onClick={handleStartBooking}
+                          className={`${actionButtonClass} ${primaryButtonClass} mt-5 min-h-[2.9rem] rounded-[0.95rem] px-4`}
+                        >
+                          <CalendarDays size={16} />
+                          {dashboardCopy.bookAppointment}
+                        </button>
                       </div>
                     ) : (
                       <div className='space-y-4'>
@@ -1444,6 +1450,14 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                             <p className='mt-1 text-sm text-slate-600 dark:text-white/60'>
                               {lang === 'ar' ? 'ستظهر زياراتك السابقة هنا بعد أول موعد مكتمل.' : 'Your visit history will appear here after your first completed appointment.'}
                             </p>
+                            <button
+                              type='button'
+                              onClick={handleStartBooking}
+                              className={`${actionButtonClass} ${subtleButtonClass} mt-4 min-h-[2.75rem] rounded-[0.95rem] px-4 text-[12px]`}
+                            >
+                              <CalendarDays size={15} />
+                              {dashboardCopy.bookAppointment}
+                            </button>
                           </div>
                         </div>
                       </div>

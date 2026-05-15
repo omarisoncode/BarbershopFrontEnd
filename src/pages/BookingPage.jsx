@@ -32,6 +32,7 @@ import {
   getServiceBadgeOrCategoryLabel,
   normalizeCategoryValue,
 } from '../utils/serviceCategories';
+import { getBookingDateTimeValue } from '../utils/bookingDateTime';
 import { isPastBusinessDate } from '../utils/businessDate';
 
 const copy = {
@@ -471,7 +472,7 @@ export default function BookingPage({ lang, isRTL }) {
           ? bookingsResponse.data.filter(
               (booking) =>
                 booking.status === 'active' &&
-                new Date(`${booking.date || ''}`).getTime() >= now,
+                getBookingDateTimeValue(booking) >= now,
             )
           : [];
 
@@ -1189,9 +1190,16 @@ export default function BookingPage({ lang, isRTL }) {
                           </p>
                         </div>
                         {selectedDate ? (
-                          <span className='rounded-full bg-brand-gold/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-brand-gold'>
-                            {formatLocalizedDate(selectedDate, lang)}
-                          </span>
+                          <div className='flex flex-wrap gap-2'>
+                            <span className='rounded-full bg-brand-gold/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-brand-gold'>
+                              {formatLocalizedDate(selectedDate, lang)}
+                            </span>
+                            {selectedTime ? (
+                              <span className='rounded-full border border-brand-gold/18 bg-white/75 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-slate-700 dark:bg-white/5 dark:text-slate-200'>
+                                {formatDisplayTime(selectedTime)}
+                              </span>
+                            ) : null}
+                          </div>
                         ) : null}
                       </div>
 
@@ -1232,7 +1240,7 @@ export default function BookingPage({ lang, isRTL }) {
                                   : 'border-brand-gold/10 bg-white/72 text-gray-700 backdrop-blur-xl hover:border-brand-gold/30 dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-200'
                               }`}
                             >
-                              {slot}
+                              {formatDisplayTime(slot)}
                             </button>
                           ))}
                         </div>
@@ -1252,73 +1260,72 @@ export default function BookingPage({ lang, isRTL }) {
                   exit='exit'
                   transition={{ duration: 0.22 }}
                 >
-                  <div className='app-surface overflow-hidden'>
-                    <div className='relative h-24 overflow-hidden sm:h-36'>
-                      <img
-                        src={selectedService?.image}
-                        alt={getServiceName(selectedService, lang)}
-                        className='h-full w-full object-cover'
-                      />
-                      <div className='absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent' />
-                      <div className='absolute inset-x-4 bottom-4 text-white'>
-                        <p className='text-[10px] font-black uppercase tracking-[0.35em] text-brand-gold'>
+                  <div className='app-surface p-3 sm:p-4'>
+                    <div className='flex items-center gap-3 rounded-[1.2rem] border border-brand-gold/12 bg-white/72 p-3 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5'>
+                      <div className='h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-950/95'>
+                        {selectedService?.image ? (
+                          <img
+                            src={selectedService.image}
+                            alt={getServiceName(selectedService, lang)}
+                            className='h-full w-full object-cover'
+                          />
+                        ) : (
+                          <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.14),_rgba(15,23,42,0.88)_40%,_rgba(2,6,23,1)_100%)]'>
+                            <Scissors className='h-5 w-5 text-brand-gold' />
+                          </div>
+                        )}
+                      </div>
+                      <div className='min-w-0 flex-1'>
+                        <p className='text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
                           {t.yourSelection}
                         </p>
-                        <h2 className='mt-1 text-lg font-black sm:text-2xl'>
+                        <h2 className='mt-1 truncate text-base font-black text-slate-900 dark:text-white sm:text-lg'>
                           {getServiceName(selectedService, lang)}
                         </h2>
                       </div>
+                      <div className='shrink-0 rounded-full bg-brand-gold/10 px-3 py-1.5 text-sm font-black text-brand-gold'>
+                        {formatPrice(selectedService?.price, lang)}
+                      </div>
                     </div>
 
-                    <div className='space-y-3 p-3 sm:p-4'>
+                    <div className='mt-3 grid gap-2 sm:grid-cols-2'>
                       {[
                         {
-                          icon: <Scissors size={16} className='text-brand-gold' />,
-                          label: t.serviceLabel,
-                          value: getServiceName(selectedService, lang),
-                        },
-                        {
-                          icon: <ShieldCheck size={16} className='text-brand-gold' />,
+                          icon: <ShieldCheck size={15} className='text-brand-gold' />,
                           label: t.barberLabel,
                           value: getBarberName(selectedBarber, lang),
                         },
                         {
-                          icon: <CalendarClock size={16} className='text-brand-gold' />,
+                          icon: <CalendarClock size={15} className='text-brand-gold' />,
                           label: t.dateLabel,
                           value: formatLocalizedDate(selectedDate, lang),
                         },
                         {
-                          icon: <Clock3 size={16} className='text-brand-gold' />,
+                          icon: <Clock3 size={15} className='text-brand-gold' />,
                           label: t.timeLabel,
-                          value: selectedTime,
+                          value: formatDisplayTime(selectedTime),
+                        },
+                        {
+                          icon: <Scissors size={15} className='text-brand-gold' />,
+                          label: t.totalAmount,
+                          value: formatPrice(selectedService?.price, lang),
                         },
                       ].map((item) => (
                         <div
                           key={item.label}
-                          className='app-surface-muted flex flex-col items-start gap-2.5 p-3 sm:flex-row sm:items-center sm:justify-between'
+                          className='app-surface-muted flex items-center justify-between gap-3 p-3'
                         >
-                          <div className='flex items-center gap-3 text-gray-500 dark:text-gray-400'>
+                          <div className='flex min-w-0 items-center gap-2.5 text-gray-500 dark:text-gray-400'>
                             {item.icon}
-                            <span className='text-[11px] font-bold uppercase tracking-[0.18em]'>
+                            <span className='text-[10px] font-bold uppercase tracking-[0.16em]'>
                               {item.label}
                             </span>
                           </div>
-                          <span className='text-sm font-black text-gray-900 dark:text-white'>
+                          <span className='truncate text-sm font-black text-gray-900 dark:text-white'>
                             {item.value}
                           </span>
                         </div>
                       ))}
-
-                      <div className='rounded-2xl border border-brand-gold/20 bg-brand-gold/5 p-3 dark:bg-brand-gold/10 sm:p-4'>
-                        <div className='flex items-center justify-between'>
-                          <span className='text-sm font-bold text-gray-600 dark:text-gray-300'>
-                            {t.totalAmount}
-                          </span>
-                          <span className='text-2xl font-black text-brand-gold sm:text-3xl'>
-                            {formatPrice(selectedService?.price, lang)}
-                          </span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </motion.div>

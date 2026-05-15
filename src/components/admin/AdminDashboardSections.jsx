@@ -23,6 +23,7 @@ import {
   dashboardGlassPanel,
   dashboardInsetPanelClass,
 } from '../dashboard/dashboardTheme';
+import { getBusinessDateKey } from '../../utils/businessDate';
 import { getLocalizedCategoryLabel } from '../../utils/serviceCategories';
 import { localizeDigits } from '../../utils/localizeDigits';
 
@@ -211,8 +212,10 @@ export const formatPrice = (value, lang) => {
 export const formatDuration = (value, lang) =>
   lang === 'ar' ? `${formatNumber(value, lang)} دقيقة` : `${formatNumber(value, lang)} min`;
 
-export const formatDateTime = (date, time, lang) => {
-  const safeDate = new Date(date);
+export const formatDateTime = (date, time, lang, businessDate = '') => {
+  const safeDate = businessDate
+    ? new Date(`${businessDate}T12:00:00`)
+    : new Date(date);
   if (Number.isNaN(safeDate.getTime())) return time || '';
   return `${safeDate.toLocaleDateString(lang === 'ar' ? 'ar-KW' : 'en-US', {
     month: 'short',
@@ -570,7 +573,12 @@ export const ActivityCard = ({ item, lang }) => (
         </p>
         <p className='mt-2 text-xs text-slate-400 dark:text-slate-500'>
           {item.booking?.date
-            ? formatDateTime(item.booking.date, item.booking.time, lang)
+            ? formatDateTime(
+                item.booking.date,
+                item.booking.time,
+                lang,
+                item.booking.businessDate || '',
+              )
             : new Date(item.timestamp).toLocaleString(lang === 'ar' ? 'ar-KW' : 'en-US')}
         </p>
       </div>
@@ -704,7 +712,11 @@ export const BookingCard = ({
   onStatusChange,
   onDelete,
   onReschedule,
-}) => (
+}) => {
+  const hasPhone = Boolean(booking.user?.phone);
+  const hasEmail = Boolean(booking.user?.email);
+
+  return (
   <div className={`rounded-[1.45rem] p-4 sm:p-5 ${glassPanel}`}>
     <div className='grid gap-4 2xl:grid-cols-[minmax(0,1fr)_15rem]'>
       <div className='min-w-0'>
@@ -735,29 +747,45 @@ export const BookingCard = ({
             className={`inline-flex min-h-[3rem] items-center gap-3 rounded-[1.05rem] px-4 py-3 text-sm font-semibold text-slate-700 ${mutedPanel}`}
           >
             <CalendarClock size={16} className='text-slate-500 dark:text-slate-300' />
-            <span>{formatDateTime(booking.date, booking.time, lang)}</span>
+            <span>{formatDateTime(booking.date, booking.time, lang, booking.businessDate || '')}</span>
           </div>
         </div>
 
         <div className='mt-4 grid gap-2 lg:grid-cols-3'>
-          <a
-            href={`tel:${booking.user?.countryCode || '+965'}${booking.user?.phone || ''}`}
-            className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
-          >
-            <Phone size={15} />
-            <span className='truncate'>
-              {booking.user?.phone
-                ? formatPhoneDisplay(booking.user.phone, booking.user?.countryCode || '+965', lang)
-                : lang === 'ar' ? 'غير متوفر' : 'N/A'}
+          {hasPhone ? (
+            <a
+              href={`tel:${booking.user?.countryCode || '+965'}${booking.user?.phone || ''}`}
+              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
+            >
+              <Phone size={15} />
+              <span className='truncate'>
+                {formatPhoneDisplay(booking.user.phone, booking.user?.countryCode || '+965', lang)}
+              </span>
+            </a>
+          ) : (
+            <span
+              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-400 dark:text-slate-500 ${mutedPanel}`}
+            >
+              <Phone size={15} />
+              <span className='truncate'>{lang === 'ar' ? 'غير متوفر' : 'N/A'}</span>
             </span>
-          </a>
-          <a
-            href={`mailto:${booking.user?.email || ''}`}
-            className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
-          >
-            <Mail size={15} />
-            <span className='truncate'>{booking.user?.email || 'N/A'}</span>
-          </a>
+          )}
+          {hasEmail ? (
+            <a
+              href={`mailto:${booking.user.email}`}
+              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 dark:text-slate-200 ${mutedPanel}`}
+            >
+              <Mail size={15} />
+              <span className='truncate'>{booking.user.email}</span>
+            </a>
+          ) : (
+            <span
+              className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-400 dark:text-slate-500 ${mutedPanel}`}
+            >
+              <Mail size={15} />
+              <span className='truncate'>N/A</span>
+            </span>
+          )}
           <span
             className={`inline-flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ${mutedPanel}`}
           >
@@ -814,7 +842,8 @@ export const BookingCard = ({
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const notificationTypeLabels = {
   booking_confirmed: {
@@ -1078,7 +1107,12 @@ export const AdminRescheduleModal = ({
 }) => {
   if (!booking) return null;
 
-  const currentSlotLabel = formatDateTime(booking.date, booking.time, lang);
+  const currentSlotLabel = formatDateTime(
+    booking.date,
+    booking.time,
+    lang,
+    booking.businessDate || '',
+  );
 
   return (
     <ModalShell
@@ -1114,7 +1148,7 @@ export const AdminRescheduleModal = ({
                   type='date'
                   value={form.date}
                   onChange={(event) => onDateChange(event.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
+                  min={getBusinessDateKey(new Date())}
                   className={`${inputClass} min-w-0 max-w-full appearance-none`}
                 />
           </div>
@@ -1726,6 +1760,85 @@ export const AdminBookingsPanel = ({
                   ))}
                 </select>
               </div>
+              {selectedService || selectedBarber ? (
+                <div className='grid gap-3 md:col-span-2 md:grid-cols-2'>
+                  <div className={`rounded-[1.15rem] border p-3 ${selectedService ? 'border-brand-gold/20 bg-white/82 dark:border-brand-gold/18 dark:bg-white/6' : `border-dashed ${mutedPanel}`}`}>
+                    <p className='text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
+                      {t.serviceField}
+                    </p>
+                    {selectedService ? (
+                      <div className='mt-2 flex items-start gap-3'>
+                        <div className='h-14 w-14 shrink-0 overflow-hidden rounded-[0.9rem] bg-slate-950/95'>
+                          {selectedService.image ? (
+                            <img
+                              src={selectedService.image}
+                              alt={getLocalizedName(selectedService, lang)}
+                              className='h-full w-full object-cover'
+                            />
+                          ) : (
+                            <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.14),_rgba(15,23,42,0.88)_40%,_rgba(2,6,23,1)_100%)]'>
+                              <Scissors size={18} className='text-brand-gold' />
+                            </div>
+                          )}
+                        </div>
+                        <div className='min-w-0 flex-1'>
+                          <p className='truncate text-sm font-black text-slate-900 dark:text-white'>
+                            {getLocalizedName(selectedService, lang)}
+                          </p>
+                          <p className='mt-1 text-xs text-slate-500 dark:text-slate-300'>
+                            {formatPrice(selectedService.price, lang)} • {formatDuration(selectedService.durationMinutes, lang)}
+                          </p>
+                          <p className='mt-2 inline-flex rounded-full border border-brand-gold/12 bg-brand-gold/8 px-2.5 py-1 text-[10px] font-bold text-brand-gold'>
+                            {getLocalizedCategoryLabel(selectedService, lang, t.allServices || (lang === 'ar' ? 'كل الخدمات' : 'All services'))}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>{t.chooseService}</p>
+                    )}
+                  </div>
+                  <div className={`rounded-[1.15rem] border p-3 ${selectedBarber ? 'border-brand-gold/20 bg-white/82 dark:border-brand-gold/18 dark:bg-white/6' : `border-dashed ${mutedPanel}`}`}>
+                    <p className='text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
+                      {t.barberField}
+                    </p>
+                    {selectedBarber ? (
+                      <div className='mt-2 flex items-start gap-3'>
+                        {selectedBarber.image ? (
+                          <img
+                            src={selectedBarber.image}
+                            alt={getLocalizedName(selectedBarber, lang)}
+                            className='h-14 w-14 shrink-0 rounded-[0.9rem] object-cover'
+                          />
+                        ) : (
+                          <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-[0.9rem] border border-brand-gold/16 bg-brand-gold/10 text-brand-gold'>
+                            <UserRound size={18} />
+                          </div>
+                        )}
+                        <div className='min-w-0 flex-1'>
+                          <p className='truncate text-sm font-black text-slate-900 dark:text-white'>
+                            {getLocalizedName(selectedBarber, lang)}
+                          </p>
+                          <p className='mt-1 text-xs text-slate-500 dark:text-slate-300'>
+                            {selectedBarber.experienceYears
+                              ? `${formatNumber(selectedBarber.experienceYears, lang)} ${t.experience}`
+                              : t.chooseBarber}
+                          </p>
+                          {(selectedBarber.serviceIds || []).length ? (
+                            <p className='mt-2 text-[11px] text-slate-500 dark:text-slate-400'>
+                              {getLocalizedName(selectedBarber.serviceIds[0], lang)}
+                              {(selectedBarber.serviceIds || []).length > 1
+                                ? ` +${formatNumber((selectedBarber.serviceIds || []).length - 1, lang)}`
+                                : ''}
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>{t.chooseBarber}</p>
+                    )}
+                  </div>
+                </div>
+              ) : null}
               <div className='min-w-0 md:col-span-2'>
                 <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
                   {t.dateField}
@@ -2053,7 +2166,12 @@ const CustomerHistoryRow = ({ booking, customer, lang, t, onRebookCustomerServic
             </span>
           </div>
           <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>
-            {formatDateTime(booking.date, booking.time || '', lang)}
+            {formatDateTime(
+              booking.date,
+              booking.time || '',
+              lang,
+              booking.businessDate || '',
+            )}
           </p>
           <div className='mt-2.5 flex flex-wrap gap-2.5 text-xs text-slate-500 dark:text-slate-300'>
             {booking.barber ? (

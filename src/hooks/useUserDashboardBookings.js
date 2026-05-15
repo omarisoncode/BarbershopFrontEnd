@@ -10,7 +10,20 @@ export default function useUserDashboardBookings({
   dashboardCopy,
   addToast,
 }) {
-  const [bookings, setBookings] = useState([]);
+  const cacheKey = user?._id ? `user-dashboard-bookings:${user._id}` : '';
+  const [bookings, setBookings] = useState(() => {
+    if (typeof window === 'undefined' || !cacheKey) {
+      return [];
+    }
+
+    try {
+      const cached = window.localStorage.getItem(cacheKey);
+      const parsed = cached ? JSON.parse(cached) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
@@ -20,8 +33,38 @@ export default function useUserDashboardBookings({
 
   const fetchBookings = useCallback(async () => {
     const response = await api.get('/bookings/my');
-    setBookings(Array.isArray(response.data) ? response.data : []);
+    setBookings((current) =>
+      Array.isArray(response.data) ? response.data : current,
+    );
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !cacheKey) {
+      return;
+    }
+
+    try {
+      const cached = window.localStorage.getItem(cacheKey);
+      const parsed = cached ? JSON.parse(cached) : [];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        setBookings((current) => (current.length ? current : parsed));
+      }
+    } catch {
+      // Ignore cache hydration failures and rely on the live request path.
+    }
+  }, [cacheKey]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !cacheKey) {
+      return;
+    }
+
+    try {
+      window.localStorage.setItem(cacheKey, JSON.stringify(bookings));
+    } catch {
+      // Ignore storage write issues and keep the in-memory dashboard state.
+    }
+  }, [bookings, cacheKey]);
 
   useEffect(() => {
     let isMounted = true;
