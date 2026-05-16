@@ -129,6 +129,7 @@ const AuthPage = ({ lang, isRTL }) => {
   const token = searchParams.get('token');
   const action = searchParams.get('action');
   const from = location.state?.from?.pathname;
+  const fromState = location.state?.from?.state;
   const isRegisterPath = location.pathname === '/register';
   const isResetRequest = action === 'reset' && !token;
   const isResetForm = Boolean(token);
@@ -253,6 +254,7 @@ const AuthPage = ({ lang, isRTL }) => {
         } else {
           navigate(from && from !== '/login' ? from : '/dashboard', {
             replace: true,
+            state: fromState || undefined,
           });
         }
       } else {
@@ -266,6 +268,7 @@ const AuthPage = ({ lang, isRTL }) => {
         } else {
           navigate(from && from !== '/login' ? from : '/dashboard', {
             replace: true,
+            state: fromState || undefined,
           });
         }
       }

@@ -5,7 +5,7 @@ import { AlertTriangle, ArrowRight, RefreshCcw } from 'lucide-react';
 
 const MotionDiv = motion.div;
 
-export const sectionViewport = { once: true, amount: 0.2, margin: '0px 0px -8% 0px' };
+export const sectionViewport = { once: true, amount: 0.08, margin: '0px 0px -2% 0px' };
 
 export const revealUpVariants = {
   hidden: { opacity: 0, y: 26 },

@@ -47,6 +47,9 @@ export const tabIcons = {
 export const glassPanel = dashboardGlassPanel;
 
 export const mutedPanel = dashboardInsetPanelClass;
+export const AUTO_BARBER_SELECTION_ID = 'auto-barber';
+export const mobileWorkspaceScrollClass =
+  'max-h-[calc(100vh-15.5rem)] overflow-y-auto pr-1 lg:max-h-none';
 
 export const inputClass =
   'admin-form-input w-full rounded-[1rem] border border-brand-gold/12 bg-white/72 px-3.5 py-3 text-base text-slate-900 caret-slate-900 shadow-[0_16px_38px_rgba(15,23,42,0.04)] backdrop-blur-xl transition placeholder:text-slate-400 focus:border-brand-gold/42 focus:bg-white focus:outline-none dark:border-brand-gold/14 dark:bg-slate-950/70 dark:text-white dark:caret-white dark:placeholder:text-white/38 dark:focus:border-brand-gold/34 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]';
@@ -207,7 +210,11 @@ export const formatNumber = (value, lang) =>
   new Intl.NumberFormat(lang === 'ar' ? 'ar-KW' : 'en-US').format(Number(value || 0));
 
 export const formatPrice = (value, lang) => {
-  const formatted = formatNumber(value, lang);
+  const numericValue = Number(value || 0);
+  const formatted = new Intl.NumberFormat(lang === 'ar' ? 'ar-KW' : 'en-US', {
+    minimumFractionDigits: Number.isInteger(numericValue) ? 0 : 1,
+    maximumFractionDigits: 2,
+  }).format(numericValue);
   return lang === 'ar' ? `${formatted} د.ك` : `KD ${formatted}`;
 };
 
@@ -419,7 +426,7 @@ export const SectionShell = ({ title, subtitle, children, right, compact = false
 
 export const AdminSubviewTabs = ({ activeView, tabs, onChange, columns = 2 }) => (
   <div
-    className={`grid w-full gap-2 sm:w-auto ${
+    className={`sticky top-2 z-20 grid w-full gap-2 rounded-[1.1rem] bg-[#f5efe4]/92 p-2 shadow-[0_16px_32px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:bg-[#0b0908]/92 sm:static sm:w-auto sm:bg-transparent sm:p-0 sm:shadow-none ${
       columns === 3 ? 'sm:grid-cols-3' : columns === 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2'
     }`}
   >
@@ -1069,6 +1076,20 @@ const FieldShell = ({ label, hint = '', className = '', children }) => (
   </label>
 );
 
+const FormSectionCard = ({ title, description = '', children }) => (
+  <div className={`rounded-[1.15rem] border p-4 ${mutedPanel}`}>
+    <div className='mb-4'>
+      <p className='text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300'>
+        {title}
+      </p>
+      {description ? (
+        <p className='mt-2 text-sm leading-6 text-slate-500 dark:text-slate-300'>{description}</p>
+      ) : null}
+    </div>
+    {children}
+  </div>
+);
+
 const ModalShell = ({ open, onClose, title, children }) => {
   useBodyScrollLock(open);
 
@@ -1239,7 +1260,7 @@ export const AdminRescheduleModal = ({
   );
 };
 
-const ServiceForm = ({ t, form, onInput, onSubmit, submitting, submitLabel }) => {
+const ServiceForm = ({ t, lang, form, onInput, onSubmit, submitting, submitLabel }) => {
   const canSubmit =
     form.name.trim() &&
     form.nameAr.trim() &&
@@ -1250,50 +1271,62 @@ const ServiceForm = ({ t, form, onInput, onSubmit, submitting, submitLabel }) =>
 
   return (
     <form onSubmit={onSubmit} className='space-y-4'>
-      <div className='grid gap-4 lg:grid-cols-2'>
-        <FieldShell label={t.englishName}>
-          <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
-        </FieldShell>
-        <FieldShell label={t.arabicName}>
-          <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} required />
-        </FieldShell>
-        <FieldShell label={t.slug}>
-          <input value={form.slug} onChange={(event) => onInput('slug', event.target.value)} placeholder={t.slug} className={inputClass} required />
-        </FieldShell>
-        <FieldShell label={t.category}>
-          <input value={form.category} onChange={(event) => onInput('category', event.target.value)} placeholder={t.category} className={inputClass} />
-        </FieldShell>
-        <FieldShell label={t.categoryAr}>
-          <input value={form.categoryAr} onChange={(event) => onInput('categoryAr', event.target.value)} placeholder={t.categoryAr} className={inputClass} />
-        </FieldShell>
-        <FieldShell label={t.image}>
-          <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
-        </FieldShell>
-        <FieldShell label={t.badge}>
-          <input value={form.badge} onChange={(event) => onInput('badge', event.target.value)} placeholder={t.badge} className={inputClass} />
-        </FieldShell>
-        <FieldShell label={t.badgeAr}>
-          <input value={form.badgeAr} onChange={(event) => onInput('badgeAr', event.target.value)} placeholder={t.badgeAr} className={inputClass} />
-        </FieldShell>
-        <FieldShell label={t.price}>
-          <input type='text' inputMode='decimal' value={form.price} onChange={(event) => onInput('price', event.target.value)} placeholder={t.price} className={inputClass} required />
-        </FieldShell>
-        <FieldShell label={t.duration}>
-          <input type='text' inputMode='numeric' value={form.durationMinutes} onChange={(event) => onInput('durationMinutes', event.target.value)} placeholder={t.duration} className={inputClass} required />
-        </FieldShell>
-        <FieldShell label={t.features} className='md:col-span-2'>
-          <textarea value={form.featuresText} onChange={(event) => onInput('featuresText', event.target.value)} placeholder={t.features} className={`${inputClass} min-h-20`} />
-        </FieldShell>
-        <FieldShell label={t.featuresAr} className='md:col-span-2'>
-          <textarea value={form.featuresArText} onChange={(event) => onInput('featuresArText', event.target.value)} placeholder={t.featuresAr} className={`${inputClass} min-h-20`} />
-        </FieldShell>
-        <FieldShell label={t.description} className='md:col-span-2'>
-          <textarea value={form.description} onChange={(event) => onInput('description', event.target.value)} placeholder={t.description} className={`${inputClass} min-h-24`} />
-        </FieldShell>
-        <FieldShell label={t.descriptionAr} className='md:col-span-2'>
-          <textarea value={form.descriptionAr} onChange={(event) => onInput('descriptionAr', event.target.value)} placeholder={t.descriptionAr} className={`${inputClass} min-h-24`} />
-        </FieldShell>
-      </div>
+      <FormSectionCard title={lang === 'ar' ? 'الأساسيات' : 'Core details'}>
+        <div className='grid gap-4 lg:grid-cols-2'>
+          <FieldShell label={t.englishName}>
+            <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
+          </FieldShell>
+          <FieldShell label={t.arabicName}>
+            <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} required />
+          </FieldShell>
+          <FieldShell label={t.slug}>
+            <input value={form.slug} onChange={(event) => onInput('slug', event.target.value)} placeholder={t.slug} className={inputClass} required />
+          </FieldShell>
+          <FieldShell label={t.category}>
+            <input value={form.category} onChange={(event) => onInput('category', event.target.value)} placeholder={t.category} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.categoryAr}>
+            <input value={form.categoryAr} onChange={(event) => onInput('categoryAr', event.target.value)} placeholder={t.categoryAr} className={inputClass} />
+          </FieldShell>
+        </div>
+      </FormSectionCard>
+
+      <FormSectionCard title={lang === 'ar' ? 'العرض العام' : 'Public presentation'}>
+        <div className='grid gap-4 lg:grid-cols-2'>
+          <FieldShell label={t.image}>
+            <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.badge}>
+            <input value={form.badge} onChange={(event) => onInput('badge', event.target.value)} placeholder={t.badge} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.badgeAr}>
+            <input value={form.badgeAr} onChange={(event) => onInput('badgeAr', event.target.value)} placeholder={t.badgeAr} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.price}>
+            <input type='text' inputMode='decimal' value={form.price} onChange={(event) => onInput('price', event.target.value)} placeholder={t.price} className={inputClass} required />
+          </FieldShell>
+          <FieldShell label={t.duration}>
+            <input type='text' inputMode='numeric' value={form.durationMinutes} onChange={(event) => onInput('durationMinutes', event.target.value)} placeholder={t.duration} className={inputClass} required />
+          </FieldShell>
+          <FieldShell label={t.features} className='md:col-span-2'>
+            <textarea value={form.featuresText} onChange={(event) => onInput('featuresText', event.target.value)} placeholder={t.features} className={`${inputClass} min-h-20`} />
+          </FieldShell>
+          <FieldShell label={t.featuresAr} className='md:col-span-2'>
+            <textarea value={form.featuresArText} onChange={(event) => onInput('featuresArText', event.target.value)} placeholder={t.featuresAr} className={`${inputClass} min-h-20`} />
+          </FieldShell>
+        </div>
+      </FormSectionCard>
+
+      <FormSectionCard title={lang === 'ar' ? 'النصوص' : 'Descriptions'}>
+        <div className='grid gap-4'>
+          <FieldShell label={t.description}>
+            <textarea value={form.description} onChange={(event) => onInput('description', event.target.value)} placeholder={t.description} className={`${inputClass} min-h-24`} />
+          </FieldShell>
+          <FieldShell label={t.descriptionAr}>
+            <textarea value={form.descriptionAr} onChange={(event) => onInput('descriptionAr', event.target.value)} placeholder={t.descriptionAr} className={`${inputClass} min-h-24`} />
+          </FieldShell>
+        </div>
+      </FormSectionCard>
       <div className='pt-2'>
         <label className='inline-flex items-center gap-3 text-sm font-bold text-slate-700 dark:text-slate-200'>
           <input type='checkbox' checked={form.active} onChange={(event) => onInput('active', event.target.checked)} className='h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:text-slate-100 dark:focus:ring-slate-600' />
@@ -1332,113 +1365,113 @@ const BarberForm = ({
     (!form.isActive || (form.image.trim() && form.nameAr.trim() && form.bioAr.trim()));
 
   return (
-  <form onSubmit={onSubmit} className='space-y-5'>
-    <div className='grid gap-4 lg:grid-cols-2'>
-      <FieldShell label={t.englishName}>
-        <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
-      </FieldShell>
-      <FieldShell label={t.arabicName}>
-        <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} />
-      </FieldShell>
-      <FieldShell label={t.image}>
-        <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
-      </FieldShell>
-      <FieldShell label={t.experience}>
-        <input type='text' inputMode='numeric' value={form.experienceYears} onChange={(event) => onInput('experienceYears', event.target.value)} placeholder={t.experience} className={inputClass} />
-      </FieldShell>
-      <FieldShell label={t.bio} className='md:col-span-2'>
-        <textarea value={form.bio} onChange={(event) => onInput('bio', event.target.value)} placeholder={t.bio} className={`${inputClass} min-h-24`} />
-      </FieldShell>
-      <FieldShell label={t.bioAr} className='md:col-span-2'>
-        <textarea value={form.bioAr} onChange={(event) => onInput('bioAr', event.target.value)} placeholder={t.bioAr} className={`${inputClass} min-h-24`} />
-      </FieldShell>
-    </div>
+    <form onSubmit={onSubmit} className='space-y-5'>
+      <FormSectionCard title={lang === 'ar' ? 'الملف الشخصي' : 'Profile'}>
+        <div className='grid gap-4 lg:grid-cols-2'>
+          <FieldShell label={t.englishName}>
+            <input value={form.name} onChange={(event) => onInput('name', event.target.value)} placeholder={t.englishName} className={inputClass} required />
+          </FieldShell>
+          <FieldShell label={t.arabicName}>
+            <input value={form.nameAr} onChange={(event) => onInput('nameAr', event.target.value)} placeholder={t.arabicName} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.image}>
+            <input value={form.image} onChange={(event) => onInput('image', event.target.value)} placeholder={t.image} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.experience}>
+            <input type='text' inputMode='numeric' value={form.experienceYears} onChange={(event) => onInput('experienceYears', event.target.value)} placeholder={t.experience} className={inputClass} />
+          </FieldShell>
+          <FieldShell label={t.bio} className='md:col-span-2'>
+            <textarea value={form.bio} onChange={(event) => onInput('bio', event.target.value)} placeholder={t.bio} className={`${inputClass} min-h-24`} />
+          </FieldShell>
+          <FieldShell label={t.bioAr} className='md:col-span-2'>
+            <textarea value={form.bioAr} onChange={(event) => onInput('bioAr', event.target.value)} placeholder={t.bioAr} className={`${inputClass} min-h-24`} />
+          </FieldShell>
+        </div>
+      </FormSectionCard>
 
-    <div>
-      <p className='mb-3 text-sm font-black text-slate-900 dark:text-white'>{t.assignServices}</p>
-      <div className='grid gap-3 lg:grid-cols-2'>
-        {services.map((service) => (
-          <label
-            key={service._id}
-            className={`flex items-start gap-3 rounded-[1.15rem] p-4 ${mutedPanel}`}
-          >
-            <input type='checkbox' checked={form.serviceIds.includes(service._id)} onChange={() => onToggleService(service._id)} className='mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:text-slate-100 dark:focus:ring-slate-600' />
-            <div className='min-w-0'>
-              <p className='font-bold text-slate-900 dark:text-white'>{getLocalizedName(service, lang)}</p>
-              <p className='text-xs text-slate-500 dark:text-slate-300'>
-                {formatDuration(service.durationMinutes, lang)} • {formatPrice(service.price, lang)}
-              </p>
+      <FormSectionCard title={t.assignServices}>
+        <div className='grid max-h-64 gap-3 overflow-y-auto pr-1 lg:grid-cols-2'>
+          {services.map((service) => (
+            <label
+              key={service._id}
+              className={`flex items-start gap-3 rounded-[1.15rem] p-4 ${mutedPanel}`}
+            >
+              <input type='checkbox' checked={form.serviceIds.includes(service._id)} onChange={() => onToggleService(service._id)} className='mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:text-slate-100 dark:focus:ring-slate-600' />
+              <div className='min-w-0'>
+                <p className='font-bold text-slate-900 dark:text-white'>{getLocalizedName(service, lang)}</p>
+                <p className='text-xs text-slate-500 dark:text-slate-300'>
+                  {formatDuration(service.durationMinutes, lang)} • {formatPrice(service.price, lang)}
+                </p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </FormSectionCard>
+
+      <FormSectionCard title={t.schedule}>
+        <div className='max-h-[28rem] space-y-3 overflow-y-auto pr-1'>
+          {form.workingHours.map((entry) => (
+            <div key={entry.dayOfWeek} className={`rounded-[1.15rem] p-4 ${mutedPanel}`}>
+              <div className='mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+                <p className='font-bold text-slate-900 dark:text-white'>
+                  {dayLabels[lang]?.[entry.dayOfWeek] || dayLabels.en[entry.dayOfWeek]}
+                </p>
+                <label className='inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300'>
+                  <input type='checkbox' checked={entry.enabled} onChange={(event) => onUpdateSchedule(entry.dayOfWeek, 'enabled', event.target.checked)} className='h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:text-slate-100 dark:focus:ring-slate-600' />
+                  {entry.enabled ? t.open : t.closed}
+                </label>
+              </div>
+              <div className='grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-4'>
+                <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
+                  {t.start}
+                  <ScheduleTimeSelect
+                    value={entry.startTime}
+                    onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'startTime', nextValue)}
+                    labels={timeSelectLabels}
+                  />
+                </label>
+                <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
+                  {t.end}
+                  <ScheduleTimeSelect
+                    value={entry.endTime}
+                    onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'endTime', nextValue)}
+                    labels={timeSelectLabels}
+                  />
+                </label>
+                <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
+                  {t.breakStart}
+                  <ScheduleTimeSelect
+                    value={entry.breakStart}
+                    onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'breakStart', nextValue)}
+                    allowEmpty={true}
+                    labels={timeSelectLabels}
+                  />
+                </label>
+                <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
+                  {t.breakEnd}
+                  <ScheduleTimeSelect
+                    value={entry.breakEnd}
+                    onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'breakEnd', nextValue)}
+                    allowEmpty={true}
+                    labels={timeSelectLabels}
+                  />
+                </label>
+              </div>
             </div>
-          </label>
-        ))}
+          ))}
+        </div>
+      </FormSectionCard>
+
+      <div className='grid gap-4 md:grid-cols-[1fr_auto] md:items-end'>
+        <FieldShell label={t.daysOff} hint={t.daysOffHint}>
+          <input value={form.daysOffText} onChange={(event) => onInput('daysOffText', event.target.value)} placeholder={t.daysOffHint} className={inputClass} />
+        </FieldShell>
+        <button type='submit' disabled={submitting || !canSubmit} className='admin-submit-button inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
+          {submitting ? <Loader2 size={16} className='animate-spin' /> : null}
+          <span className='admin-submit-label'>{submitLabel}</span>
+        </button>
       </div>
-    </div>
-
-    <div>
-      <p className='mb-3 text-sm font-black text-slate-900 dark:text-white'>{t.schedule}</p>
-      <div className='space-y-3'>
-        {form.workingHours.map((entry) => (
-          <div key={entry.dayOfWeek} className={`rounded-[1.15rem] p-4 ${mutedPanel}`}>
-            <div className='mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-              <p className='font-bold text-slate-900 dark:text-white'>
-                {dayLabels[lang]?.[entry.dayOfWeek] || dayLabels.en[entry.dayOfWeek]}
-              </p>
-              <label className='inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300'>
-                <input type='checkbox' checked={entry.enabled} onChange={(event) => onUpdateSchedule(entry.dayOfWeek, 'enabled', event.target.checked)} className='h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:text-slate-100 dark:focus:ring-slate-600' />
-                {entry.enabled ? t.open : t.closed}
-              </label>
-            </div>
-            <div className='grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-4'>
-              <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
-                {t.start}
-                <ScheduleTimeSelect
-                  value={entry.startTime}
-                  onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'startTime', nextValue)}
-                  labels={timeSelectLabels}
-                />
-              </label>
-              <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
-                {t.end}
-                <ScheduleTimeSelect
-                  value={entry.endTime}
-                  onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'endTime', nextValue)}
-                  labels={timeSelectLabels}
-                />
-              </label>
-              <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
-                {t.breakStart}
-                <ScheduleTimeSelect
-                  value={entry.breakStart}
-                  onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'breakStart', nextValue)}
-                  allowEmpty={true}
-                  labels={timeSelectLabels}
-                />
-              </label>
-              <label className='min-w-0 flex flex-col text-xs font-bold text-slate-500 dark:text-slate-300'>
-                {t.breakEnd}
-                <ScheduleTimeSelect
-                  value={entry.breakEnd}
-                  onChange={(nextValue) => onUpdateSchedule(entry.dayOfWeek, 'breakEnd', nextValue)}
-                  allowEmpty={true}
-                  labels={timeSelectLabels}
-                />
-              </label>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div className='grid gap-4 md:grid-cols-[1fr_auto] md:items-end'>
-      <FieldShell label={t.daysOff} hint={t.daysOffHint}>
-        <input value={form.daysOffText} onChange={(event) => onInput('daysOffText', event.target.value)} placeholder={t.daysOffHint} className={inputClass} />
-      </FieldShell>
-      <button type='submit' disabled={submitting || !canSubmit} className='admin-submit-button inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'>
-        {submitting ? <Loader2 size={16} className='animate-spin' /> : null}
-        <span className='admin-submit-label'>{submitLabel}</span>
-      </button>
-    </div>
-  </form>
+    </form>
   );
 };
 
@@ -1567,6 +1600,7 @@ export const AdminBookingsPanel = ({
     services.find((service) => String(service._id) === String(deskBookingForm.serviceId)) || null;
   const selectedBarber =
     barbers.find((barber) => String(barber._id) === String(deskBookingForm.barberId)) || null;
+  const isAutoAssignedBarber = deskBookingForm.barberId === AUTO_BARBER_SELECTION_ID;
   const canSubmitDeskBooking =
     Boolean(selectedCustomer?._id) &&
     Boolean(deskBookingForm.serviceId) &&
@@ -1630,7 +1664,7 @@ export const AdminBookingsPanel = ({
       <div className={activeBookingView === 'create' ? 'mb-5 grid gap-4 2xl:grid-cols-[1.12fr_0.88fr]' : 'space-y-4'}>
         {activeBookingView === 'create' ? (
         <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-          <form onSubmit={onDeskBookingSubmit} className='space-y-5'>
+          <form onSubmit={onDeskBookingSubmit} className={`space-y-5 ${mobileWorkspaceScrollClass}`}>
             <div>
               <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
                 {t.customerSearchLabel}
@@ -1645,8 +1679,9 @@ export const AdminBookingsPanel = ({
               <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
                 {t.customerSearchHint}
               </p>
-              <div className='mt-3 grid gap-3 lg:grid-cols-2'>
-                {customerResults.map((customer) => {
+              <div className='mt-3 max-h-72 overflow-y-auto pr-1'>
+                <div className='grid gap-3 lg:grid-cols-2'>
+                  {customerResults.map((customer) => {
                   const isSelected = String(selectedCustomer?._id) === String(customer._id);
 
                   return (
@@ -1667,7 +1702,8 @@ export const AdminBookingsPanel = ({
                       </p>
                     </button>
                   );
-                })}
+                  })}
+                </div>
               </div>
               {customerSearchLoading ? (
                 <p className='mt-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
@@ -1777,6 +1813,11 @@ export const AdminBookingsPanel = ({
                   disabled={!selectedCustomer || !deskBookingForm.serviceId}
                 >
                   <option value=''>{t.chooseBarber}</option>
+                  {barbers.length > 0 ? (
+                    <option value={AUTO_BARBER_SELECTION_ID}>
+                      {t.autoBarberSelection || (lang === 'ar' ? 'أول حلاق متاح' : 'First available')}
+                    </option>
+                  ) : null}
                   {barbers.map((barber) => (
                     <option key={barber._id} value={barber._id}>
                       {getLocalizedName(barber, lang)}
@@ -1784,7 +1825,7 @@ export const AdminBookingsPanel = ({
                   ))}
                 </select>
               </div>
-              {selectedService || selectedBarber ? (
+              {selectedService || selectedBarber || isAutoAssignedBarber ? (
                 <div className='grid gap-3 md:col-span-2 md:grid-cols-2'>
                   <div className={`rounded-[1.15rem] border p-3 ${selectedService ? 'border-brand-gold/20 bg-white/82 dark:border-brand-gold/18 dark:bg-white/6' : `border-dashed ${mutedPanel}`}`}>
                     <p className='text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
@@ -1857,6 +1898,10 @@ export const AdminBookingsPanel = ({
                           ) : null}
                         </div>
                       </div>
+                    ) : isAutoAssignedBarber ? (
+                      <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>
+                        {t.autoBarberSelection || (lang === 'ar' ? 'أول حلاق متاح' : 'First available')}
+                      </p>
                     ) : (
                       <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>{t.chooseBarber}</p>
                     )}
@@ -1867,11 +1912,15 @@ export const AdminBookingsPanel = ({
                 <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
                   {t.dateField}
                 </label>
-                {!selectedCustomer || !deskBookingForm.barberId ? (
+                {!selectedCustomer || !deskBookingForm.serviceId || !deskBookingForm.barberId ? (
                   <div
                     className={`rounded-[1.2rem] border border-dashed p-4 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
                   >
-                    {!selectedCustomer ? t.chooseCustomerFirst : t.chooseBarber}
+                    {!selectedCustomer
+                      ? t.chooseCustomerFirst
+                      : !deskBookingForm.serviceId
+                        ? t.chooseService
+                        : t.chooseBarber}
                   </div>
                 ) : (
                   <div className='overflow-hidden rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-950/45'>
@@ -1930,7 +1979,7 @@ export const AdminBookingsPanel = ({
                   {t.noSlotsAvailable}
                 </div>
               ) : (
-                <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+                <div className='grid max-h-72 grid-cols-2 gap-3 overflow-y-auto pr-1 sm:grid-cols-3'>
                   {deskBookingSlots.map((slot) => (
                     <button
                       key={slot}
@@ -2046,7 +2095,11 @@ export const AdminBookingsPanel = ({
                   {t.barberField}
                 </p>
                 <p className='mt-2 break-words text-sm font-black text-slate-900 dark:text-white'>
-                  {selectedBarber ? getLocalizedName(selectedBarber, lang) : t.chooseBarber}
+                  {isAutoAssignedBarber
+                    ? t.autoBarberSelection || (lang === 'ar' ? 'أول حلاق متاح' : 'First available')
+                    : selectedBarber
+                      ? getLocalizedName(selectedBarber, lang)
+                      : t.chooseBarber}
                 </p>
               </div>
                 <div className='grid gap-3 lg:grid-cols-2'>
@@ -2081,7 +2134,7 @@ export const AdminBookingsPanel = ({
       </div>
 
       {activeBookingView === 'manage' ? (
-        <div className='space-y-4'>
+        <div className={`space-y-4 ${mobileWorkspaceScrollClass}`}>
           {bookings.length === 0 ? (
             <div
               className={`rounded-[1.35rem] border border-dashed p-8 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
@@ -2614,7 +2667,7 @@ export const AdminCustomersPanel = ({
           </div>
           <div className='rounded-[0.9rem] border border-slate-200/80 px-4 py-3 dark:border-slate-800'>
             <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-              {t.sectionCustomers}
+              {lang === 'ar' ? 'إجمالي السجلات' : 'Total records'}
             </p>
             <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
               {formatNumber(customerDirectorySummary?.totalCustomers || 0, lang)}
@@ -2785,17 +2838,15 @@ export const AdminServicesPanel = ({
       >
         {serviceView === 'create' ? (
           <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-            <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
-              {t.newService}
-            </p>
             <p className='mt-3 text-sm leading-6 text-slate-500 dark:text-slate-300'>
               {lang === 'ar'
                 ? '\u064a\u062c\u0628 \u0623\u0646 \u062a\u062a\u0636\u0645\u0646 \u0627\u0644\u062e\u062f\u0645\u0627\u062a \u0627\u0644\u0646\u0634\u0637\u0629 \u0635\u0648\u0631\u0629 \u0648\u0646\u0633\u062e\u0629 \u0639\u0631\u0628\u064a\u0629 \u0639\u0627\u0645\u0629 \u0642\u0628\u0644 \u0623\u0646 \u062a\u0638\u0647\u0631 \u0628\u0634\u0643\u0644 \u0645\u0643\u062a\u0645\u0644 \u0641\u064a \u0627\u0644\u0635\u0641\u062d\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u0648\u0645\u0633\u0627\u0631 \u0627\u0644\u062d\u062c\u0632.'
                 : 'Active services should include an image and Arabic public copy before they appear polished on the homepage and booking flow.'}
             </p>
-            <div className='mt-4'>
+            <div className={`mt-4 ${mobileWorkspaceScrollClass}`}>
               <ServiceForm
                 t={t}
+                lang={lang}
                 form={createForm}
                 onInput={onCreateInput}
                 onSubmit={onCreateSubmit}
@@ -2809,16 +2860,13 @@ export const AdminServicesPanel = ({
             <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
               <div className='mb-4 flex items-end justify-between gap-3'>
                 <div>
-                  <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
-                    {t.catalog}
-                  </p>
                   <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
                     {formatNumber(services.length, lang)}
                   </p>
                 </div>
               </div>
 
-              <div className='space-y-4'>
+              <div className={`space-y-4 ${mobileWorkspaceScrollClass}`}>
                 {services.length === 0 ? (
                   <div
                     className={`rounded-[1.25rem] border border-dashed p-6 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
@@ -2930,6 +2978,7 @@ export const AdminServicesPanel = ({
       >
       <ServiceForm
         t={t}
+        lang={lang}
         form={editForm}
           onInput={handleEditInput}
           onSubmit={handleEditSubmit}
@@ -3050,9 +3099,6 @@ export const AdminBarbersPanel = ({
       >
         {barberView === 'create' ? (
           <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-            <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
-              {t.newBarber}
-            </p>
             <p className='mt-3 text-sm leading-6 text-slate-500 dark:text-slate-300'>
               {lang === 'ar'
                 ? '\u064a\u062c\u0628 \u0623\u0646 \u064a\u062a\u0636\u0645\u0646 \u0627\u0644\u062d\u0644\u0627\u0642 \u0627\u0644\u0646\u0634\u0637 \u0635\u0648\u0631\u0629 \u0648\u0646\u0633\u062e\u0629 \u0639\u0631\u0628\u064a\u0629 \u0644\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a \u0648\u062e\u062f\u0645\u0629 \u0648\u0627\u062d\u062f\u0629 \u0645\u0639\u064a\u0651\u0646\u0629 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644 \u0642\u0628\u0644 \u0623\u0646 \u064a\u0635\u0628\u062d \u062c\u0627\u0647\u0632\u0627\u064b \u0644\u0642\u0633\u0645 \u0627\u0644\u0641\u0631\u064a\u0642 \u0641\u064a \u0627\u0644\u0635\u0641\u062d\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629.'
@@ -3066,18 +3112,20 @@ export const AdminBarbersPanel = ({
                   {t.noServices}
                 </div>
               ) : (
-                <BarberForm
-                  t={t}
-                  lang={lang}
-                  form={createForm}
-                  services={services}
-                  onInput={onCreateInput}
-                  onToggleService={onCreateToggleService}
-                  onUpdateSchedule={onCreateUpdateSchedule}
-                  onSubmit={onCreateSubmit}
-                  submitting={submitting}
-                  submitLabel={t.addBarber}
-                />
+                <div className={mobileWorkspaceScrollClass}>
+                  <BarberForm
+                    t={t}
+                    lang={lang}
+                    form={createForm}
+                    services={services}
+                    onInput={onCreateInput}
+                    onToggleService={onCreateToggleService}
+                    onUpdateSchedule={onCreateUpdateSchedule}
+                    onSubmit={onCreateSubmit}
+                    submitting={submitting}
+                    submitLabel={t.addBarber}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -3087,15 +3135,12 @@ export const AdminBarbersPanel = ({
           <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
             <div className='mb-4 flex items-end justify-between gap-3'>
               <div>
-                <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
-                  {t.team}
-                </p>
                 <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
                   {formatNumber(barbers.length, lang)}
                 </p>
               </div>
             </div>
-            <div className='space-y-4'>
+            <div className={`space-y-4 ${mobileWorkspaceScrollClass}`}>
               {barbers.length === 0 ? (
                 <div
                   className={`rounded-[1.25rem] border border-dashed p-6 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
@@ -3171,7 +3216,7 @@ export const AdminBarbersPanel = ({
           </div>
         ) : null}
         {barberView === 'schedule' ? (
-          <div className='space-y-4'>
+          <div className={`space-y-4 ${mobileWorkspaceScrollClass}`}>
             {barbers.length === 0 ? (
               <div
                 className={`rounded-[1.25rem] border border-dashed p-6 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
@@ -3183,8 +3228,8 @@ export const AdminBarbersPanel = ({
                 const enabledDays = (barber.workingHours || []).filter((entry) => entry.enabled);
 
                 return (
-                  <div key={barber._id} className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-                    <div className='flex flex-col gap-4 md:flex-row md:items-start md:justify-between'>
+                  <details key={barber._id} className={`group rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
+                    <summary className='flex cursor-pointer list-none flex-col gap-4 md:flex-row md:items-start md:justify-between'>
                       <div className='min-w-0'>
                         <p className='text-lg font-black text-slate-900 dark:text-white'>
                           {getLocalizedName(barber, lang)}
@@ -3193,14 +3238,22 @@ export const AdminBarbersPanel = ({
                           {`${formatNumber(enabledDays.length, lang)} ${t.schedule}`}
                         </p>
                       </div>
-                      <button
-                        type='button'
-                        onClick={() => openEditor(barber)}
-                        className='inline-flex min-h-[2.9rem] items-center justify-center rounded-2xl border border-slate-200 px-4 py-2.5 text-sm font-black text-slate-700 transition hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white'
-                      >
-                        {t.editLabel || 'Edit'}
-                      </button>
-                    </div>
+                      <div className='flex items-center gap-3'>
+                        <button
+                          type='button'
+                          onClick={(event) => {
+                            event.preventDefault();
+                            openEditor(barber);
+                          }}
+                          className='inline-flex min-h-[2.9rem] items-center justify-center rounded-2xl border border-slate-200 px-4 py-2.5 text-sm font-black text-slate-700 transition hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white'
+                        >
+                          {t.editLabel || 'Edit'}
+                        </button>
+                        <span className='text-slate-400 transition group-open:rotate-180'>
+                          <ChevronDown size={18} />
+                        </span>
+                      </div>
+                    </summary>
 
                     <div className='mt-4 grid gap-3 lg:grid-cols-2'>
                       {(barber.workingHours || []).map((entry) => {
@@ -3223,7 +3276,7 @@ export const AdminBarbersPanel = ({
                         );
                       })}
                     </div>
-                  </div>
+                  </details>
                 );
               })
             )}

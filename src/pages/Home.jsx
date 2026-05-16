@@ -76,7 +76,12 @@ export default function Home({ lang, isRTL }) {
       void prefetchPublicBookingData();
 
       if (!user) {
-        navigate('/login');
+        if (service?._id || service?.title) {
+          navigate('/booking', { state: { preselectedService: service } });
+          return;
+        }
+
+        navigate('/booking');
         return;
       }
 

@@ -16,6 +16,7 @@ import {
   AdminCustomersPanel,
   AdminRescheduleModal,
   AdminServicesPanel,
+  AUTO_BARBER_SELECTION_ID,
   ActivityCard,
   ConfirmModal,
   MetricCard,
@@ -433,7 +434,8 @@ Object.assign(copy.en, {
   timeField: 'Time',
   chooseCustomerFirst: 'Choose a customer first.',
   chooseService: 'Choose a service',
-  chooseBarber: 'Choose a barber',
+    chooseBarber: 'Choose a barber',
+    autoBarberSelection: 'First available',
   chooseDate: 'Choose a date',
   chooseTime: 'Choose a time',
   noCustomerSelected: 'Pick a customer to start building the booking.',
@@ -491,7 +493,8 @@ Object.assign(copy.ar, {
   timeField: 'الوقت',
   chooseCustomerFirst: 'اختر العميل أولاً.',
   chooseService: 'اختر الخدمة',
-  chooseBarber: 'اختر الحلاق',
+    chooseBarber: 'اختر الحلاق',
+    autoBarberSelection: 'أول حلاق متاح',
   chooseDate: 'اختر التاريخ',
   chooseTime: 'اختر الوقت',
   noCustomerSelected: 'اختر عميلاً لبدء تجهيز الحجز.',
@@ -1410,6 +1413,10 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       return;
     }
 
+    if (deskBookingForm.barberId === AUTO_BARBER_SELECTION_ID) {
+      return;
+    }
+
     const barberStillAvailable = availableDeskBarbers.some(
       (barber) => String(barber._id) === String(deskBookingForm.barberId),
     );
@@ -1437,13 +1444,16 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     const loadDeskAvailability = async () => {
       try {
         setDeskBookingLoading(true);
-        const response = await api.get('/bookings/availability', {
-          params: {
-            barberId: deskBookingForm.barberId,
-            serviceId: deskBookingForm.serviceId,
-            date: deskBookingForm.date,
-          },
-        });
+        const params = {
+          serviceId: deskBookingForm.serviceId,
+          date: deskBookingForm.date,
+        };
+
+        if (deskBookingForm.barberId !== AUTO_BARBER_SELECTION_ID) {
+          params.barberId = deskBookingForm.barberId;
+        }
+
+        const response = await api.get('/bookings/availability', { params });
 
         if (!isActive) {
           return;
@@ -1590,7 +1600,11 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
         setDeskBookingSubmitting(true);
         const response = await api.post('/bookings/admin-create', {
           userId: selectedCustomer._id,
-          barberId: deskBookingForm.barberId,
+          barberId:
+            deskBookingForm.barberId === AUTO_BARBER_SELECTION_ID
+              ? undefined
+              : deskBookingForm.barberId,
+          autoAssignBarber: deskBookingForm.barberId === AUTO_BARBER_SELECTION_ID,
           date: deskBookingForm.date,
           time: deskBookingForm.time,
           serviceId: deskBookingForm.serviceId,
@@ -2073,7 +2087,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   ];
 
   const renderOverviewSection = () => {
-    const topActivity = recentActivity.slice(0, 3);
+    const topActivity = recentActivity.slice(0, 2);
     const topServices = analytics?.topServices || [];
     const topBarbers = analytics?.topBarbers || [];
     const allClear = !syncIssue && operationalHealth.followUp === 0;
@@ -2264,33 +2278,54 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           </SectionShell>
         </div>
 
-        <div className='grid gap-3.5 2xl:grid-cols-[1.2fr_0.9fr_0.9fr]'>
+        <div className='grid gap-3.5 xl:grid-cols-[1.35fr_0.65fr]'>
           <SectionShell title={t.lastSevenDays} compact={true}>
             <SparklineChart items={analytics?.dailyVolume || []} lang={lang} />
           </SectionShell>
 
-          <SectionShell title={t.topService} compact={true}>
-            {topServices.length > 0 ? (
-              <MiniBarChart items={topServices.slice(0, 4)} lang={lang} />
-            ) : (
-              <div
-                className={`rounded-[1.15rem] border border-dashed p-6 text-center text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
-              >
-                {analytics?.leaders?.mostBookedService?.label || t.noDataYet}
+          <SectionShell
+            title={lang === 'ar' ? 'لقطة سريعة' : 'Quick snapshot'}
+            compact={true}
+          >
+            <div className='grid gap-3'>
+              <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
+                <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                  {t.topService}
+                </p>
+                <p className='mt-2 text-base font-black text-slate-900 dark:text-white'>
+                  {analytics?.leaders?.mostBookedService?.label || t.noDataYet}
+                </p>
+                {topServices[0]?.count ? (
+                  <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
+                    {`${formatNumber(topServices[0].count, lang)} ${t.bookings}`}
+                  </p>
+                ) : null}
               </div>
-            )}
-          </SectionShell>
-
-          <SectionShell title={t.topBarber} compact={true}>
-            {topBarbers.length > 0 ? (
-              <MiniBarChart items={topBarbers.slice(0, 4)} lang={lang} />
-            ) : (
-              <div
-                className={`rounded-[1.15rem] border border-dashed p-6 text-center text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
-              >
-                {analytics?.leaders?.mostSelectedBarber?.label || t.noDataYet}
+              <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
+                <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                  {t.topBarber}
+                </p>
+                <p className='mt-2 text-base font-black text-slate-900 dark:text-white'>
+                  {analytics?.leaders?.mostSelectedBarber?.label || t.noDataYet}
+                </p>
+                {topBarbers[0]?.count ? (
+                  <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
+                    {`${formatNumber(topBarbers[0].count, lang)} ${t.bookings}`}
+                  </p>
+                ) : null}
               </div>
-            )}
+              <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
+                <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                  {t.heroFollowUp}
+                </p>
+                <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
+                  {formatNumber(operationalHealth.followUp, lang)}
+                </p>
+                <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
+                  {operationalHealth.detail}
+                </p>
+              </div>
+            </div>
           </SectionShell>
         </div>
       </div>

@@ -53,7 +53,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
     onClose();
 
     if (!user) {
-      navigate('/login');
+      navigate('/booking', { state: { preselectedService: service } });
       return;
     }
 

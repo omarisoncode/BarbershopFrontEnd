@@ -43,6 +43,9 @@ const copy = {
     loadingServices: 'Loading services...',
     stepService: 'Service',
     stepBarber: 'Barber',
+    autoBarber: 'First available',
+    autoBarberHint: 'We will assign any barber who can take this slot.',
+    autoBarberSummary: 'Assigned automatically',
     stepDate: 'Date',
     stepTime: 'Time',
     stepConfirm: 'Confirm',
@@ -95,6 +98,9 @@ const copy = {
     loadingServices: 'جار تحميل الخدمات...',
     stepService: 'الخدمة',
     stepBarber: 'الحلاق',
+    autoBarber: 'أول حلاق متاح',
+    autoBarberHint: 'سنختار أي حلاق متاح لهذا الموعد.',
+    autoBarberSummary: 'يتم التعيين تلقائياً',
     stepDate: 'التاريخ',
     stepTime: 'الوقت',
     stepConfirm: 'التأكيد',
@@ -181,9 +187,11 @@ const formatDuration = (durationMinutes, lang) =>
   lang === 'ar' ? `${durationMinutes} دقيقة` : `${durationMinutes} min`;
 
 const formatPrice = (price, lang) => {
+  const numericValue = Number(price) || 0;
   const amount = new Intl.NumberFormat(lang === 'ar' ? 'ar-KW' : 'en-US', {
-    maximumFractionDigits: 0,
-  }).format(Number(price) || 0);
+    minimumFractionDigits: Number.isInteger(numericValue) ? 0 : 1,
+    maximumFractionDigits: 2,
+  }).format(numericValue);
 
   return lang === 'ar' ? `${amount} د.ك` : `KD ${amount}`;
 };
@@ -215,6 +223,8 @@ const formatDisplayTime = (time) => {
     minute: '2-digit',
   }).format(new Date(2000, 0, 1, safeHour, safeMinute));
 };
+
+const AUTO_BARBER_ID = 'auto-barber';
 
 const matchesPreselectedService = (service, preselectedTitle) => {
   const normalizedTitle = String(preselectedTitle || '').trim().toLowerCase();
@@ -339,12 +349,24 @@ const MobileBarberOption = ({
 
       <div className='mt-2 flex flex-wrap items-center gap-2'>
         <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold'>
-          {barber.experienceYears} {t.yearsExperience}
+          {barber._id === AUTO_BARBER_ID
+            ? t.autoBarberHint
+            : `${barber.experienceYears} ${t.yearsExperience}`}
         </span>
       </div>
     </div>
   </button>
 );
+
+const getAutoBarberOption = (t) => ({
+  _id: AUTO_BARBER_ID,
+  name: t.autoBarber,
+  nameAr: t.autoBarber,
+  bio: t.autoBarberHint,
+  bioAr: t.autoBarberHint,
+  experienceYears: 0,
+  serviceIds: [],
+});
 
 export default function BookingPage({ lang, isRTL }) {
   const navigate = useNavigate();
@@ -379,6 +401,12 @@ export default function BookingPage({ lang, isRTL }) {
     isRefreshing: barbersRefreshing,
   } = usePublicBarbersByService(selectedService?._id);
   const refreshingLabel = lang === 'ar' ? 'جار التحديث' : 'Refreshing';
+  const autoBarberOption = useMemo(() => getAutoBarberOption(t), [t]);
+  const isAutoBarberSelection = selectedBarber?._id === AUTO_BARBER_ID;
+  const visibleBarberOptions = useMemo(
+    () => (barbers.length > 0 ? [autoBarberOption, ...barbers] : []),
+    [autoBarberOption, barbers],
+  );
 
   const steps = useMemo(
     () => [
@@ -438,7 +466,9 @@ export default function BookingPage({ lang, isRTL }) {
         selectedBarber
           ? {
               label: t.barberLabel,
-              value: getBarberName(selectedBarber, lang),
+              value: isAutoBarberSelection
+                ? t.autoBarberSummary
+                : getBarberName(selectedBarber, lang),
             }
           : null,
         selectedDate
@@ -454,7 +484,7 @@ export default function BookingPage({ lang, isRTL }) {
             }
           : null,
       ].filter(Boolean),
-    [lang, selectedBarber, selectedDate, selectedService, selectedTime, t],
+    [isAutoBarberSelection, lang, selectedBarber, selectedDate, selectedService, selectedTime, t],
   );
 
   const isCurrentStepReady =
@@ -561,9 +591,16 @@ export default function BookingPage({ lang, isRTL }) {
     const fetchSlots = async () => {
       setLoadingSlots(true);
       try {
-        const response = await api.get(
-          `/bookings/availability?barberId=${selectedBarber._id}&date=${selectedDate}&serviceId=${selectedService._id}`,
-        );
+        const query = new URLSearchParams({
+          date: selectedDate,
+          serviceId: selectedService._id,
+        });
+
+        if (!isAutoBarberSelection) {
+          query.set('barberId', selectedBarber._id);
+        }
+
+        const response = await api.get(`/bookings/availability?${query.toString()}`);
         setSlots(Array.isArray(response.data) ? response.data : []);
       } catch {
         setSlots([]);
@@ -573,7 +610,7 @@ export default function BookingPage({ lang, isRTL }) {
     };
 
     fetchSlots();
-  }, [selectedBarber, selectedDate, selectedService]);
+  }, [isAutoBarberSelection, selectedBarber, selectedDate, selectedService]);
 
   const resetAfterServiceChange = (service) => {
     setSelectedService(service);
@@ -635,15 +672,20 @@ export default function BookingPage({ lang, isRTL }) {
   const handleBooking = async () => {
     try {
       setBookingLoading(true);
-      await api.post('/bookings', {
-        barberId: selectedBarber._id,
+      const response = await api.post('/bookings', {
+        barberId: isAutoBarberSelection ? undefined : selectedBarber._id,
+        autoAssignBarber: isAutoBarberSelection,
         date: selectedDate,
         time: selectedTime,
         serviceId: selectedService._id,
       });
+      const confirmedBarberName =
+        response.data?.barber?.name ||
+        response.data?.barberName ||
+        (isAutoBarberSelection ? t.autoBarberSummary : getBarberName(selectedBarber, lang));
       setBookingSuccessState({
         serviceName: getServiceName(selectedService, lang),
-        barberName: getBarberName(selectedBarber, lang),
+        barberName: confirmedBarberName,
         dateLabel: formatDisplayDate(selectedDate, lang),
         timeLabel: formatDisplayTime(selectedTime),
       });
@@ -1086,7 +1128,7 @@ export default function BookingPage({ lang, isRTL }) {
                   ) : (
                     <>
                       <div className='space-y-2.5 sm:hidden'>
-                        {barbers.map((barber) => (
+                        {visibleBarberOptions.map((barber) => (
                           <MobileBarberOption
                             key={barber._id}
                             barber={barber}
@@ -1099,7 +1141,7 @@ export default function BookingPage({ lang, isRTL }) {
                       </div>
 
                       <div className='hidden gap-3 md:grid-cols-2 sm:grid'>
-                        {barbers.map((barber) => (
+                        {visibleBarberOptions.map((barber) => (
                           <button
                             key={barber._id}
                             type='button'
@@ -1132,24 +1174,36 @@ export default function BookingPage({ lang, isRTL }) {
                                 {getBarberBio(barber, lang, t)}
                               </p>
                               <div className='mt-3 flex flex-wrap items-center gap-2'>
-                                <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold sm:px-3 sm:text-xs'>
-                                  {barber.experienceYears} {t.yearsExperience}
-                                </span>
+                                {barber._id === AUTO_BARBER_ID ? (
+                                  <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold sm:px-3 sm:text-xs'>
+                                    {t.autoBarberHint}
+                                  </span>
+                                ) : (
+                                  <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold sm:px-3 sm:text-xs'>
+                                    {barber.experienceYears} {t.yearsExperience}
+                                  </span>
+                                )}
                               </div>
                               <div className='mt-3 hidden sm:block'>
                                 <p className='mb-2 text-[11px] font-black uppercase tracking-[0.25em] text-gray-400'>
                                   {t.specialties}
                                 </p>
-                                <div className='flex flex-wrap gap-2'>
-                                  {(barber.serviceIds || []).map((service) => (
-                                    <span
-                                      key={service._id}
-                                      className='rounded-full border border-brand-gold/10 bg-white/62 px-2.5 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-300'
-                                    >
-                                      {getServiceName(service, lang)}
-                                    </span>
-                                  ))}
-                                </div>
+                                {barber._id === AUTO_BARBER_ID ? (
+                                  <p className='text-xs text-slate-500 dark:text-slate-300'>
+                                    {t.autoBarberHint}
+                                  </p>
+                                ) : (
+                                  <div className='flex flex-wrap gap-2'>
+                                    {(barber.serviceIds || []).map((service) => (
+                                      <span
+                                        key={service._id}
+                                        className='rounded-full border border-brand-gold/10 bg-white/62 px-2.5 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-300'
+                                      >
+                                        {getServiceName(service, lang)}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1293,7 +1347,9 @@ export default function BookingPage({ lang, isRTL }) {
                         {
                           icon: <ShieldCheck size={15} className='text-brand-gold' />,
                           label: t.barberLabel,
-                          value: getBarberName(selectedBarber, lang),
+                          value: isAutoBarberSelection
+                            ? t.autoBarberSummary
+                            : getBarberName(selectedBarber, lang),
                         },
                         {
                           icon: <CalendarClock size={15} className='text-brand-gold' />,

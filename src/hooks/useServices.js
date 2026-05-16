@@ -12,9 +12,11 @@ import {
 } from '../utils/serviceCategories';
 
 const formatPrice = (value, lang) => {
+  const numericValue = Number(value) || 0;
   const amount = new Intl.NumberFormat(lang === 'ar' ? 'ar-KW' : 'en-US', {
-    maximumFractionDigits: 0,
-  }).format(Number(value) || 0);
+    minimumFractionDigits: Number.isInteger(numericValue) ? 0 : 1,
+    maximumFractionDigits: 2,
+  }).format(numericValue);
 
   return lang === 'ar' ? `${amount} د.ك` : `KD ${amount}`;
 };
