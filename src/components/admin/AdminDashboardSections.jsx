@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+  ArrowLeft,
   BellRing,
   CalendarClock,
   ChevronDown,
@@ -1607,6 +1608,7 @@ export const AdminBookingsPanel = ({
     Boolean(deskBookingForm.barberId) &&
     Boolean(deskBookingForm.date) &&
     Boolean(deskBookingForm.time);
+  const isDeskBookingComplete = canSubmitDeskBooking;
 
   const bookingViewTabs = [
     {
@@ -1665,6 +1667,22 @@ export const AdminBookingsPanel = ({
         {activeBookingView === 'create' ? (
         <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
           <form onSubmit={onDeskBookingSubmit} className={`space-y-5 ${mobileWorkspaceScrollClass}`}>
+            <div className='flex items-center justify-between gap-3'>
+              <button
+                type='button'
+                onClick={() => handleBookingViewChange('manage')}
+                className='inline-flex min-h-[2.9rem] items-center gap-2 rounded-2xl border border-slate-200 px-4 py-2.5 text-sm font-black text-slate-700 transition hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white'
+              >
+                <ArrowLeft size={16} className={lang === 'ar' ? 'rotate-180' : ''} />
+                {t.backToBookings || 'Back to bookings'}
+              </button>
+              {isDeskBookingComplete ? (
+                <span className='rounded-full border border-brand-gold/20 bg-brand-gold/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-brand-gold'>
+                  {t.bookingSummary}
+                </span>
+              ) : null}
+            </div>
+
             <div>
               <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
                 {t.customerSearchLabel}
@@ -1829,7 +1847,7 @@ export const AdminBookingsPanel = ({
                 <div className='grid gap-3 md:col-span-2 md:grid-cols-2'>
                   <div className={`rounded-[1.15rem] border p-3 ${selectedService ? 'border-brand-gold/20 bg-white/82 dark:border-brand-gold/18 dark:bg-white/6' : `border-dashed ${mutedPanel}`}`}>
                     <p className='text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
-                      {t.serviceField}
+                      {t.selectedServiceLabel || t.serviceField}
                     </p>
                     {selectedService ? (
                       <div className='mt-2 flex items-start gap-3'>
@@ -1864,7 +1882,7 @@ export const AdminBookingsPanel = ({
                   </div>
                   <div className={`rounded-[1.15rem] border p-3 ${selectedBarber ? 'border-brand-gold/20 bg-white/82 dark:border-brand-gold/18 dark:bg-white/6' : `border-dashed ${mutedPanel}`}`}>
                     <p className='text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
-                      {t.barberField}
+                      {t.selectedBarberLabel || t.barberField}
                     </p>
                     {selectedBarber ? (
                       <div className='mt-2 flex items-start gap-3'>
@@ -2012,7 +2030,7 @@ export const AdminBookingsPanel = ({
         </div>
         ) : null}
 
-        <div className='space-y-4'>
+        <div className={`space-y-4 ${activeBookingView === 'create' && !isDeskBookingComplete ? 'hidden lg:block' : ''}`}>
           {activeBookingView === 'manage' ? (
           <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
             <div className='flex flex-col gap-4'>
@@ -2084,7 +2102,7 @@ export const AdminBookingsPanel = ({
               </div>
               <div className={`min-w-0 rounded-[1rem] p-3 ${mutedPanel}`}>
                 <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-                  {t.serviceField}
+                  {t.selectedServiceLabel || t.serviceField}
                 </p>
                 <p className='mt-2 break-words text-sm font-black text-slate-900 dark:text-white'>
                   {selectedService ? getLocalizedName(selectedService, lang) : t.chooseService}
@@ -2092,7 +2110,7 @@ export const AdminBookingsPanel = ({
               </div>
               <div className={`min-w-0 rounded-[1rem] p-3 ${mutedPanel}`}>
                 <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-                  {t.barberField}
+                  {t.selectedBarberLabel || t.barberField}
                 </p>
                 <p className='mt-2 break-words text-sm font-black text-slate-900 dark:text-white'>
                   {isAutoAssignedBarber

@@ -442,6 +442,9 @@ Object.assign(copy.en, {
   bookingSummary: 'Booking summary',
   bookingSummaryHint:
     'The selected customer will receive the normal booking confirmation after you place this appointment.',
+  backToBookings: 'Back to bookings',
+  selectedServiceLabel: 'Selected service',
+  selectedBarberLabel: 'Selected barber',
   bookForCustomer: 'Create booking',
   bookingCreatedForCustomer: 'Booking created for the selected customer.',
   customerMaxBookings: 'This customer already has 3 active bookings.',
@@ -501,6 +504,9 @@ Object.assign(copy.ar, {
   bookingSummary: 'ملخص الحجز',
   bookingSummaryHint:
     'سيصل للعميل المحدد إشعار الحجز المعتاد مباشرة بعد إنشاء هذا الموعد.',
+  backToBookings: 'العودة إلى الحجوزات',
+  selectedServiceLabel: 'الخدمة المحددة',
+  selectedBarberLabel: 'الحلاق المحدد',
   bookForCustomer: 'إنشاء الحجز',
   bookingCreatedForCustomer: 'تم إنشاء الحجز للعميل المحدد.',
   customerMaxBookings: 'هذا العميل لديه بالفعل 3 حجوزات نشطة.',
@@ -2051,12 +2057,6 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     <AdminShellActions
       isRTL={isRTL}
       actions={[
-        {
-          id: 'back',
-          label: t.backToSite,
-          icon: ArrowLeft,
-          onClick: handleBackToSite,
-        },
         {
           id: 'refresh',
           label: refreshing ? t.refreshing || (lang === 'ar' ? 'جار التحديث...' : 'Refreshing...') : t.shellRefresh || t.retry,
