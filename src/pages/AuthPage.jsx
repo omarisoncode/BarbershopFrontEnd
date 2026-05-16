@@ -9,7 +9,10 @@ import {
   Loader2,
   Lock,
   Mail,
+  MoonStar,
   ShieldAlert,
+  Sun,
+  Sunrise,
   User,
 } from 'lucide-react';
 
@@ -117,6 +120,29 @@ const getAuthFieldClass = (error) =>
       ? 'border-red-300/70 bg-red-50/70 shadow-[0_12px_28px_rgba(239,68,68,0.06)] dark:border-red-500/40 dark:bg-red-950/10 dark:shadow-[0_14px_32px_rgba(0,0,0,0.18)]'
       : 'border-brand-gold/12 bg-white/72 shadow-[0_14px_30px_rgba(15,23,42,0.04)] focus-within:border-brand-gold/30 focus-within:bg-white/82 focus-within:shadow-[0_16px_34px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/22 dark:focus-within:shadow-[0_18px_38px_rgba(0,0,0,0.24)]'
   }`;
+
+const getLoginGreeting = (lang) => {
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+    return {
+      icon: Sunrise,
+      title: lang === 'ar' ? 'صباح الخير' : 'Good morning',
+    };
+  }
+
+  if (hour < 18) {
+    return {
+      icon: Sun,
+      title: lang === 'ar' ? 'مساء الخير' : 'Good afternoon',
+    };
+  }
+
+  return {
+    icon: MoonStar,
+    title: lang === 'ar' ? 'مساء الخير' : 'Good evening',
+  };
+};
 
 const AuthPage = ({ lang, isRTL }) => {
   const navigate = useNavigate();
@@ -330,6 +356,8 @@ const AuthPage = ({ lang, isRTL }) => {
           : t.btnRegister;
 
   const [logoPrimary, logoAccent] = String(t.logo || 'THE CUT').split(' ');
+  const loginGreeting = getLoginGreeting(lang);
+  const GreetingIcon = loginGreeting.icon;
 
   return (
     <div
@@ -380,8 +408,15 @@ const AuthPage = ({ lang, isRTL }) => {
 
           <div className='lux-panel space-y-7 border-white/45 p-5 sm:p-8 md:space-y-8 md:p-10 dark:border-white/10'>
             <div className='text-center space-y-2'>
+              <div className='flex justify-center'>
+                {isLogin && !isResetRequest && !isResetForm ? (
+                  <span className='inline-flex h-12 w-12 items-center justify-center rounded-full border border-brand-gold/16 bg-brand-gold/10 text-brand-gold'>
+                    <GreetingIcon size={20} />
+                  </span>
+                ) : null}
+              </div>
               <h2 className='text-3xl font-display font-bold text-slate-900 dark:text-white'>
-                {panelTitle}
+                {isLogin && !isResetRequest && !isResetForm ? loginGreeting.title : panelTitle}
               </h2>
               <p className='text-sm leading-7 text-slate-500 dark:text-white/68'>
                 {panelSubtitle}

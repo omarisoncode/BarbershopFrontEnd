@@ -2496,10 +2496,14 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
             <AdminDashboardHeader
               action={headerAction}
               dateLabel={headerDateLabel}
-              description={activeSectionMeta?.caption}
+              description={
+                activeSection === 'catalog' || activeSection === 'customers'
+                  ? ''
+                  : activeSectionMeta?.caption
+              }
               isRTL={isRTL}
               onOpenSidebar={() => setMobileSidebarOpen(true)}
-              statusText={syncIssue ? t.livePaused : t.liveHealthy}
+              statusText={syncIssue ? t.livePaused : ''}
               statusTone={syncIssue ? 'warning' : 'healthy'}
               title={activeSectionMeta?.label || t.overview}
             />

@@ -348,11 +348,11 @@ const MobileBarberOption = ({
       </div>
 
       <div className='mt-2 flex flex-wrap items-center gap-2'>
-        <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold'>
-          {barber._id === AUTO_BARBER_ID
-            ? t.autoBarberHint
-            : `${barber.experienceYears} ${t.yearsExperience}`}
-        </span>
+        {barber._id === AUTO_BARBER_ID ? null : (
+          <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold'>
+            {barber.experienceYears} {t.yearsExperience}
+          </span>
+        )}
       </div>
     </div>
   </button>
@@ -1176,7 +1176,7 @@ export default function BookingPage({ lang, isRTL }) {
                               <div className='mt-3 flex flex-wrap items-center gap-2'>
                                 {barber._id === AUTO_BARBER_ID ? (
                                   <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold sm:px-3 sm:text-xs'>
-                                    {t.autoBarberHint}
+                                    {t.autoBarber}
                                   </span>
                                 ) : (
                                   <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold sm:px-3 sm:text-xs'>
@@ -1185,24 +1185,26 @@ export default function BookingPage({ lang, isRTL }) {
                                 )}
                               </div>
                               <div className='mt-3 hidden sm:block'>
-                                <p className='mb-2 text-[11px] font-black uppercase tracking-[0.25em] text-gray-400'>
-                                  {t.specialties}
-                                </p>
                                 {barber._id === AUTO_BARBER_ID ? (
                                   <p className='text-xs text-slate-500 dark:text-slate-300'>
                                     {t.autoBarberHint}
                                   </p>
                                 ) : (
-                                  <div className='flex flex-wrap gap-2'>
-                                    {(barber.serviceIds || []).map((service) => (
-                                      <span
-                                        key={service._id}
-                                        className='rounded-full border border-brand-gold/10 bg-white/62 px-2.5 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-300'
-                                      >
-                                        {getServiceName(service, lang)}
-                                      </span>
-                                    ))}
-                                  </div>
+                                  <>
+                                    <p className='mb-2 text-[11px] font-black uppercase tracking-[0.25em] text-gray-400'>
+                                      {t.specialties}
+                                    </p>
+                                    <div className='flex flex-wrap gap-2'>
+                                      {(barber.serviceIds || []).map((service) => (
+                                        <span
+                                          key={service._id}
+                                          className='rounded-full border border-brand-gold/10 bg-white/62 px-2.5 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-300'
+                                        >
+                                          {getServiceName(service, lang)}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </>
                                 )}
                               </div>
                             </div>

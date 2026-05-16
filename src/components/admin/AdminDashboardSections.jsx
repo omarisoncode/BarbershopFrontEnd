@@ -2559,7 +2559,7 @@ const CustomerDirectoryList = ({
   selectedCustomerRecord,
   onSelectCustomer,
 }) => (
-  <div className='grid gap-2.5'>
+  <div className='grid gap-3'>
     {customers.map((customer) => {
       const isSelected = String(selectedCustomerRecord?._id || '') === String(customer._id);
 
@@ -2568,13 +2568,13 @@ const CustomerDirectoryList = ({
           key={customer._id}
           type='button'
           onClick={() => onSelectCustomer(customer)}
-          className={`rounded-[0.95rem] border p-3.5 text-left transition ${
+          className={`rounded-[1rem] border p-4 text-left shadow-[0_10px_24px_rgba(15,23,42,0.04)] transition ${
             isSelected
-              ? 'border-brand-gold/45 bg-brand-gold/8'
-              : 'border-white/10 bg-transparent hover:border-brand-gold/24'
+              ? 'border-brand-gold/45 bg-brand-gold/8 ring-1 ring-brand-gold/14'
+              : 'border-slate-200/80 bg-white/65 hover:border-brand-gold/24 dark:border-white/10 dark:bg-white/[0.03]'
           } ${mutedPanel}`}
         >
-          <div className='flex items-start justify-between gap-3'>
+          <div className='flex items-start justify-between gap-3 border-b border-slate-200/70 pb-3 dark:border-white/10'>
             <div className='min-w-0'>
               <p className='truncate text-base font-black text-slate-900 dark:text-white'>
                 {customer.name}
@@ -2597,13 +2597,13 @@ const CustomerDirectoryList = ({
             </span>
           </div>
 
-          <div className='mt-3 flex flex-wrap gap-3 text-sm text-slate-500 dark:text-slate-300'>
-            <span>
+          <div className='mt-3 grid gap-2 text-sm text-slate-500 dark:text-slate-300 sm:grid-cols-[minmax(0,1fr)_auto]'>
+            <span className='truncate'>
               {customer.latestBookingDate
                 ? formatDateTime(customer.latestBookingDate, customer.latestBookingTime || '', lang)
                 : '—'}
             </span>
-            <span>
+            <span className='truncate'>
               {customer.phone
                 ? formatPhoneDisplay(customer.phone, customer.countryCode || '+965', lang)
                 : lang === 'ar'
@@ -2611,7 +2611,7 @@ const CustomerDirectoryList = ({
                   : 'N/A'}
             </span>
             {customer.latestBookingService ? (
-              <span className='font-bold text-slate-700 dark:text-slate-200'>
+              <span className='truncate font-bold text-slate-700 dark:text-slate-200 sm:col-span-2'>
                 {getLocalizedServiceLabel(customer, lang, customer.latestBookingService)}
               </span>
             ) : null}
@@ -2644,7 +2644,6 @@ export const AdminCustomersPanel = ({
 }) => (
   <SectionShell
     title={t.sectionCustomers}
-    subtitle={t.sectionCustomersDescription}
     compact={true}
   >
     <div className='space-y-4'>
@@ -2826,7 +2825,6 @@ export const AdminServicesPanel = ({
     <>
       <SectionShell
         title={t.catalog}
-        subtitle={t.sectionCatalogDescription}
         compact={true}
         right={
           <AdminSubviewTabs
@@ -2838,12 +2836,7 @@ export const AdminServicesPanel = ({
       >
         {serviceView === 'create' ? (
           <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-            <p className='mt-3 text-sm leading-6 text-slate-500 dark:text-slate-300'>
-              {lang === 'ar'
-                ? '\u064a\u062c\u0628 \u0623\u0646 \u062a\u062a\u0636\u0645\u0646 \u0627\u0644\u062e\u062f\u0645\u0627\u062a \u0627\u0644\u0646\u0634\u0637\u0629 \u0635\u0648\u0631\u0629 \u0648\u0646\u0633\u062e\u0629 \u0639\u0631\u0628\u064a\u0629 \u0639\u0627\u0645\u0629 \u0642\u0628\u0644 \u0623\u0646 \u062a\u0638\u0647\u0631 \u0628\u0634\u0643\u0644 \u0645\u0643\u062a\u0645\u0644 \u0641\u064a \u0627\u0644\u0635\u0641\u062d\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u0648\u0645\u0633\u0627\u0631 \u0627\u0644\u062d\u062c\u0632.'
-                : 'Active services should include an image and Arabic public copy before they appear polished on the homepage and booking flow.'}
-            </p>
-            <div className={`mt-4 ${mobileWorkspaceScrollClass}`}>
+            <div className={mobileWorkspaceScrollClass}>
               <ServiceForm
                 t={t}
                 lang={lang}

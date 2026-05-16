@@ -18,6 +18,7 @@ import {
   Scissors,
   Settings,
   Sparkles,
+  Sunrise,
   SunMedium,
   UserCheck,
   UserRound,
@@ -71,6 +72,29 @@ const getLocalizedBookingService = (booking, lang) =>
   lang === 'ar'
     ? booking?.serviceAr || booking?.service || 'Booking'
     : booking?.service || booking?.serviceAr || 'Booking';
+
+const getDashboardGreeting = (lang) => {
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+    return {
+      label: lang === 'ar' ? 'صباح الخير' : 'Good morning',
+      Icon: Sunrise,
+    };
+  }
+
+  if (hour < 18) {
+    return {
+      label: lang === 'ar' ? 'مساء الخير' : 'Good afternoon',
+      Icon: SunMedium,
+    };
+  }
+
+  return {
+    label: lang === 'ar' ? 'مساء الخير' : 'Good evening',
+    Icon: Moon,
+  };
+};
 
 const copy = {
   en: {
@@ -1050,6 +1074,8 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
     () => ({ ...sharedDashboardCopy, ...copy.en, ...(copy[lang] || {}) }),
     [lang, sharedDashboardCopy],
   );
+  const dashboardGreeting = useMemo(() => getDashboardGreeting(lang), [lang]);
+  const DashboardGreetingIcon = dashboardGreeting.Icon;
   const galleryInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
@@ -1341,9 +1367,12 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                   <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
                       <div className='min-w-0'>
-                        <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
-                          {dashboardCopy.welcomeBack}
-                        </p>
+                        <div className='flex items-center gap-2 text-brand-gold'>
+                          <DashboardGreetingIcon size={14} />
+                          <p className='text-[10px] font-extrabold uppercase tracking-[0.16em]'>
+                            {dashboardGreeting.label}
+                          </p>
+                        </div>
                         <h1 className='mt-2 text-[1.55rem] font-black leading-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.8rem]'>
                           {user?.name || ''}
                         </h1>
