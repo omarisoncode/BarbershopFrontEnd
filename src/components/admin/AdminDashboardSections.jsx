@@ -411,12 +411,12 @@ export const SectionShell = ({
 }) => (
   <section className={`rounded-[0.9rem] ${compact ? 'p-4 sm:p-4' : 'p-4.5 sm:p-4.5'} ${glassPanel}`}>
     <div
-      className={`${hideHeaderOnMobile ? 'hidden sm:flex' : 'flex'} flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ${
+      className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ${
         compact ? 'mb-3 pb-3' : 'mb-3.5 pb-3.5'
       }`}
       style={{ borderBottom: '1px solid rgba(148, 163, 184, 0.16)' }}
     >
-      <div>
+      <div className={hideHeaderOnMobile ? 'hidden sm:block' : ''}>
         <h2 className='text-[1rem] font-black text-slate-900 dark:text-white sm:text-[1.06rem]'>
           {title}
         </h2>

@@ -461,9 +461,6 @@ export function BarbersPreviewSection({
   onBook,
   onViewAll,
 }) {
-  const featuredBarber = items[0] || null;
-  const supportingBarbers = items.slice(1, 4);
-
   return (
     <SectionShell
       id={HOME_SECTION_IDS.barbers}
@@ -522,125 +519,64 @@ export function BarbersPreviewSection({
             whileInView='visible'
             viewport={sectionViewport}
             variants={staggerContainer}
-            className={`grid gap-5 ${supportingBarbers.length > 0 ? 'xl:grid-cols-[1.08fr_0.92fr]' : ''}`}
+            className='grid gap-5 md:grid-cols-2 xl:grid-cols-4'
           >
-            {featuredBarber ? (
-              <motion.article custom={0} variants={sequentialReveal}>
+            {items.map((barber, index) => (
+              <motion.article key={barber.key} custom={index} variants={sequentialReveal}>
                 <PremiumCard className='group h-full overflow-hidden p-0'>
-                  <div className='grid h-full lg:grid-cols-[0.88fr_1.12fr]'>
-                    <div className='relative min-h-[320px] overflow-hidden'>
-                      <img
-                        src={featuredBarber.image}
-                        alt={featuredBarber.title}
-                        loading='lazy'
-                        className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
-                      />
-                      <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.1)_0%,rgba(7,7,7,0.72)_100%)]' />
-                      <div className='absolute inset-x-4 bottom-4 flex items-center justify-between gap-3'>
-                        <StatusBadge tone='accent'>{t.homeFeaturedBadge}</StatusBadge>
-                        <div className='rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-gold backdrop-blur-xl'>
-                          {featuredBarber.experienceYears > 0
-                            ? `${featuredBarber.experienceYears} ${t.homeYearsShort}`
-                            : t.homeFeaturedBadge}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className='flex flex-col justify-between p-6 sm:p-8'>
-                      <div>
-                        <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
-                          {t.homeMeetTeamCta}
-                        </p>
-                        <h3 className='mt-3 text-3xl font-semibold text-slate-900 dark:text-white'>
-                          {featuredBarber.title}
-                        </h3>
-                        <p className='mt-4 text-sm leading-7 text-slate-600 dark:text-white/70'>
-                          {featuredBarber.bio}
-                        </p>
-                        <div className='mt-5 flex flex-wrap gap-2'>
-                          {featuredBarber.specialties.slice(0, 3).map((specialty) => (
-                            <span
-                              key={specialty}
-                              className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
-                            >
-                              {specialty}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className='mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-                        <div className='rounded-[1.2rem] border border-black/8 bg-black/[0.03] px-4 py-3 text-sm font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-white/75'>
-                          {featuredBarber.experienceYears > 0
-                            ? `${featuredBarber.experienceYears} ${t.homeYearsShort}`
-                            : t.homeFeaturedBadge}
-                        </div>
-                        <PrimaryButton
-                          type='button'
-                          onClick={() => onBook(featuredBarber.isFallback ? null : featuredBarber.bookingService)}
-                          className='sm:min-w-[220px]'
-                        >
-                          {`${t.homeBarberCardCta} ${featuredBarber.title}`}
-                          {renderArrow(isRTL)}
-                        </PrimaryButton>
+                  <div className='relative min-h-[320px] overflow-hidden'>
+                    <img
+                      src={barber.image}
+                      alt={barber.title}
+                      loading='lazy'
+                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+                    />
+                    <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.1)_0%,rgba(7,7,7,0.22)_36%,rgba(7,7,7,0.82)_100%)]' />
+                    <div className='absolute inset-x-4 bottom-4 flex items-center justify-between gap-3'>
+                      <StatusBadge tone='accent'>{t.homeFeaturedBadge}</StatusBadge>
+                      <div className='rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-gold backdrop-blur-xl'>
+                        {barber.experienceYears > 0
+                          ? `${barber.experienceYears} ${t.homeYearsShort}`
+                          : t.homeFeaturedBadge}
                       </div>
                     </div>
                   </div>
+
+                  <div className='flex h-full flex-col justify-between p-5 sm:p-6'>
+                    <div>
+                      <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
+                        {t.homeMeetTeamCta}
+                      </p>
+                      <h3 className='mt-3 text-2xl font-semibold text-slate-900 dark:text-white'>
+                        {barber.title}
+                      </h3>
+                      <p className='mt-3 text-sm leading-7 text-slate-600 dark:text-white/70'>
+                        {barber.bio}
+                      </p>
+                      <div className='mt-4 flex flex-wrap gap-2'>
+                        {barber.specialties.slice(0, 3).map((specialty) => (
+                          <span
+                            key={specialty}
+                            className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
+                          >
+                            {specialty}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <PrimaryButton
+                      type='button'
+                      onClick={() => onBook(barber.isFallback ? null : barber.bookingService)}
+                      className='mt-6 w-full'
+                    >
+                      {`${t.homeBarberCardCta} ${barber.title}`}
+                      {renderArrow(isRTL)}
+                    </PrimaryButton>
+                  </div>
                 </PremiumCard>
               </motion.article>
-            ) : null}
-
-            {supportingBarbers.length > 0 ? (
-              <div className='grid gap-4'>
-                {supportingBarbers.map((barber, index) => (
-                  <motion.div key={barber.key} custom={index + 1} variants={sequentialReveal}>
-                    <GlassPanel className='h-full p-4 sm:p-5'>
-                      <div className='flex h-full flex-col gap-4 sm:flex-row sm:items-center'>
-                        <img
-                          src={barber.image}
-                          alt={barber.title}
-                          loading='lazy'
-                          className='h-24 w-24 rounded-[1.3rem] object-cover sm:h-28 sm:w-28'
-                        />
-                        <div className='min-w-0 flex-1'>
-                          <div className='flex flex-wrap items-center gap-2'>
-                            <p className='text-xl font-semibold text-slate-900 dark:text-white'>
-                              {barber.title}
-                            </p>
-                            <span className='rounded-full border border-brand-gold/25 bg-brand-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-gold'>
-                              {barber.experienceYears > 0
-                                ? `${barber.experienceYears} ${t.homeYearsShort}`
-                                : t.homeFeaturedBadge}
-                            </span>
-                          </div>
-                          <p className='mt-2 text-sm leading-6 text-slate-600 dark:text-white/70'>
-                            {barber.bio}
-                          </p>
-                          <div className='mt-3 flex flex-wrap gap-2'>
-                            {barber.specialties.slice(0, 2).map((specialty) => (
-                              <span
-                                key={specialty}
-                                className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
-                              >
-                                {specialty}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <PrimaryButton
-                          type='button'
-                          onClick={() => onBook(barber.isFallback ? null : barber.bookingService)}
-                          className='w-full sm:w-auto'
-                        >
-                          {t.homeBarberCardCta}
-                          {renderArrow(isRTL)}
-                        </PrimaryButton>
-                      </div>
-                    </GlassPanel>
-                  </motion.div>
-                ))}
-              </div>
-            ) : null}
+            ))}
           </motion.div>
         ) : null}
       </AnimatePresence>

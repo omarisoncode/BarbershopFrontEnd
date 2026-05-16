@@ -17,21 +17,15 @@ import { ScissorsIcon } from './Icons';
 import { HOME_SECTION_IDS } from './home/homeContent';
 
 const footerSectionLinks = (t) => [
-  { to: `/#${HOME_SECTION_IDS.hero}`, label: t.navHome },
-  { to: `/#${HOME_SECTION_IDS.services}`, label: t.navServices },
-  { to: `/#${HOME_SECTION_IDS.barbers}`, label: t.navBarbers },
-  { to: `/#${HOME_SECTION_IDS.gallery}`, label: t.navGallery },
-  { to: `/#${HOME_SECTION_IDS.reviews}`, label: t.homeReviewsTitle },
-  { to: `/#${HOME_SECTION_IDS.about}`, label: t.navAbout },
-  { to: `/#${HOME_SECTION_IDS.location}`, label: t.navLocation },
-  { to: `/#${HOME_SECTION_IDS.faq}`, label: t.navFAQ },
+  { href: `/#${HOME_SECTION_IDS.hero}`, label: t.navHome },
+  { href: `/#${HOME_SECTION_IDS.services}`, label: t.navServices },
+  { href: `/#${HOME_SECTION_IDS.barbers}`, label: t.navBarbers },
+  { href: `/#${HOME_SECTION_IDS.gallery}`, label: t.navGallery },
+  { href: `/#${HOME_SECTION_IDS.reviews}`, label: t.homeReviewsTitle },
+  { href: `/#${HOME_SECTION_IDS.about}`, label: t.navAbout },
+  { href: `/#${HOME_SECTION_IDS.location}`, label: t.navLocation },
+  { href: `/#${HOME_SECTION_IDS.faq}`, label: t.navFAQ },
 ];
-
-const footerSupportLinks = (t) => [
-  { to: `/#${HOME_SECTION_IDS.faq}`, label: t.footerSupportLink1 },
-  { to: `/#${HOME_SECTION_IDS.faq}`, label: t.footerSupportLink2 },
-  { to: `/#${HOME_SECTION_IDS.faq}`, label: t.footerSupportLink3 },
-].filter((link) => link.label);
 
 export default function Footer({ lang }) {
   const { user } = useContext(AuthContext);
@@ -39,7 +33,6 @@ export default function Footer({ lang }) {
   const [logoPrimary, logoAccent] = String(t.logo || 'THE CUT').split(' ');
 
   const quickLinks = footerSectionLinks(t);
-  const supportLinks = footerSupportLinks(t);
   const locationAddress = getBusinessValue(businessInfo.address, lang) || t.locationAddress;
   const locationHours = getBusinessValue(businessInfo.hours, lang) || t.locationHours;
   const locationEmail = getBusinessValue(businessInfo.email, lang) || t.locationEmail;
@@ -117,27 +110,13 @@ export default function Footer({ lang }) {
             </p>
             <div className='mt-5 grid gap-3'>
               {quickLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
+                <a
+                  key={link.href}
+                  href={link.href}
                   className='text-sm text-slate-600 transition hover:text-brand-gold dark:text-white/70 dark:hover:text-brand-gold'
                 >
                   {link.label}
-                </Link>
-              ))}
-            </div>
-            <p className='mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold'>
-              {t.footerSupportTitle}
-            </p>
-            <div className='mt-3 grid gap-3'>
-              {supportLinks.map((link) => (
-                <Link
-                  key={`${link.to}-${link.label}`}
-                  to={link.to}
-                  className='text-sm text-slate-600 transition hover:text-brand-gold dark:text-white/70 dark:hover:text-brand-gold'
-                >
-                  {link.label}
-                </Link>
+                </a>
               ))}
             </div>
           </div>
