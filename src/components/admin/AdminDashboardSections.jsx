@@ -50,7 +50,7 @@ export const glassPanel = dashboardGlassPanel;
 export const mutedPanel = dashboardInsetPanelClass;
 export const AUTO_BARBER_SELECTION_ID = 'auto-barber';
 export const mobileWorkspaceScrollClass =
-  'max-h-[calc(100vh-15.5rem)] overflow-y-auto pr-1 lg:max-h-none';
+  'lg:max-h-[calc(100vh-15.5rem)] lg:overflow-y-auto lg:pr-1';
 
 export const inputClass =
   'admin-form-input w-full rounded-[1rem] border border-brand-gold/12 bg-white/72 px-3.5 py-3 text-base text-slate-900 caret-slate-900 shadow-[0_16px_38px_rgba(15,23,42,0.04)] backdrop-blur-xl transition placeholder:text-slate-400 focus:border-brand-gold/42 focus:bg-white focus:outline-none dark:border-brand-gold/14 dark:bg-slate-950/70 dark:text-white dark:caret-white dark:placeholder:text-white/38 dark:focus:border-brand-gold/34 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]';
@@ -401,10 +401,17 @@ export const MetricCard = ({ icon, label, value, accent }) => {
   );
 };
 
-export const SectionShell = ({ title, subtitle, children, right, compact = false }) => (
+export const SectionShell = ({
+  title,
+  subtitle,
+  children,
+  right,
+  compact = false,
+  hideHeaderOnMobile = false,
+}) => (
   <section className={`rounded-[0.9rem] ${compact ? 'p-4 sm:p-4' : 'p-4.5 sm:p-4.5'} ${glassPanel}`}>
     <div
-      className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ${
+      className={`${hideHeaderOnMobile ? 'hidden sm:flex' : 'flex'} flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ${
         compact ? 'mb-3 pb-3' : 'mb-3.5 pb-3.5'
       }`}
       style={{ borderBottom: '1px solid rgba(148, 163, 184, 0.16)' }}
@@ -538,29 +545,117 @@ export const MiniBarChart = ({ title, items, lang }) => {
 };
 
 export const SparklineChart = ({ title, items, lang }) => {
-  const max = Math.max(...items.map((item) => item.count), 1);
+  const safeItems = items.length > 0 ? items : Array.from({ length: 7 }, (_, index) => ({
+    label: String(index + 1),
+    count: 0,
+  }));
+  const max = Math.max(...safeItems.map((item) => item.count), 1);
+  const min = Math.min(...safeItems.map((item) => item.count), 0);
+  const viewWidth = 100;
+  const viewHeight = 44;
+  const points = safeItems.map((item, index) => {
+    const x = safeItems.length === 1 ? viewWidth / 2 : (index / (safeItems.length - 1)) * viewWidth;
+    const normalized =
+      max === min ? 0.5 : (item.count - min) / Math.max(max - min, 1);
+    const y = viewHeight - normalized * (viewHeight - 6) - 3;
+    return { ...item, x, y };
+  });
+  const linePath = points
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+    .join(' ');
+  const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(2)} ${viewHeight} L ${points[0].x.toFixed(2)} ${viewHeight} Z`;
+  const totalCount = safeItems.reduce((sum, item) => sum + Number(item.count || 0), 0);
+  const averageCount = Math.round(totalCount / Math.max(safeItems.length, 1));
+  const latestCount = safeItems[safeItems.length - 1]?.count || 0;
+  const gradientId = `admin-overview-area-${String(title || 'trend')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')}`;
 
   return (
     <div className={`rounded-[1.35rem] p-4 sm:p-5 ${mutedPanel}`}>
       <h3 className='text-[11px] font-black uppercase tracking-[0.24em] text-slate-500 dark:text-slate-300'>
         {title}
       </h3>
-      <div className='mt-6 pb-2'>
-        <div className='grid grid-cols-7 gap-2 sm:gap-3'>
-          {items.map((item) => (
-            <div key={item.label} className='flex flex-col items-center gap-3'>
-              <div className='flex h-28 items-end sm:h-32'>
-                <div
-                  className='w-4 rounded-t-xl bg-linear-to-t from-slate-800 via-slate-500 to-slate-300 shadow-[0_10px_24px_rgba(15,23,42,0.14)] dark:from-slate-200 dark:via-slate-400 dark:to-slate-600 sm:w-8'
-                  style={{ height: `${Math.max((item.count / max) * 100, item.count ? 18 : 6)}%` }}
-                />
-              </div>
-              <span className='text-xs font-bold text-slate-500 dark:text-slate-300'>
+      <div className='mt-5 rounded-[1.1rem] border border-slate-200/80 bg-white/68 p-3.5 dark:border-white/10 dark:bg-white/[0.03]'>
+        <div className='grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start'>
+          <div className='min-w-0'>
+            <div className='flex items-end gap-3'>
+              <p className='text-3xl font-black leading-none text-slate-900 dark:text-white'>
+                {formatNumber(latestCount, lang)}
+              </p>
+              <p className='pb-1 text-xs font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                {lang === 'ar' ? 'آخر قيمة' : 'Latest'}
+              </p>
+            </div>
+            <p className='mt-2 text-sm text-slate-500 dark:text-slate-300'>
+              {lang === 'ar'
+                ? `المتوسط ${formatNumber(averageCount, lang)}`
+                : `Average ${formatNumber(averageCount, lang)}`}
+            </p>
+          </div>
+          <div className='flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500'>
+            <span className='h-2.5 w-2.5 rounded-full bg-brand-gold' />
+            {lang === 'ar' ? 'اتجاه الحجوزات' : 'Booking trend'}
+          </div>
+        </div>
+
+        <div className='mt-4'>
+          <svg
+            viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+            className='h-36 w-full overflow-visible'
+            preserveAspectRatio='none'
+            aria-hidden='true'
+          >
+            <defs>
+              <linearGradient id={gradientId} x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='0%' stopColor='rgba(201,164,92,0.34)' />
+                <stop offset='100%' stopColor='rgba(201,164,92,0.04)' />
+              </linearGradient>
+            </defs>
+            {[0.25, 0.5, 0.75].map((line) => (
+              <line
+                key={line}
+                x1='0'
+                x2={viewWidth}
+                y1={line * viewHeight}
+                y2={line * viewHeight}
+                stroke='rgba(148,163,184,0.18)'
+                strokeDasharray='2 3'
+                strokeWidth='0.6'
+              />
+            ))}
+            <path d={areaPath} fill={`url(#${gradientId})`} />
+            <path
+              d={linePath}
+              fill='none'
+              stroke='rgba(201,164,92,0.98)'
+              strokeWidth='2.1'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            {points.map((point) => (
+              <circle
+                key={`${point.label}-${point.x}`}
+                cx={point.x}
+                cy={point.y}
+                r='1.8'
+                fill='rgba(255,255,255,0.95)'
+                stroke='rgba(201,164,92,1)'
+                strokeWidth='1.2'
+              />
+            ))}
+          </svg>
+        </div>
+
+        <div className='mt-3 grid grid-cols-7 gap-2'>
+          {safeItems.map((item) => (
+            <div key={item.label} className='min-w-0 text-center'>
+              <p className='truncate text-[11px] font-bold text-slate-500 dark:text-slate-300'>
                 {item.label}
-              </span>
-              <span className='text-xs text-slate-400 dark:text-slate-500'>
+              </p>
+              <p className='mt-1 text-[11px] text-slate-400 dark:text-slate-500'>
                 {formatNumber(item.count, lang)}
-              </span>
+              </p>
             </div>
           ))}
         </div>
@@ -570,18 +665,18 @@ export const SparklineChart = ({ title, items, lang }) => {
 };
 
 export const ActivityCard = ({ item, lang }) => (
-  <div className={`rounded-[1.25rem] p-4 ${mutedPanel}`}>
+  <div className={`rounded-[1rem] border border-slate-200/70 p-3.5 shadow-none ${mutedPanel}`}>
     <div className='flex items-start gap-3'>
-      <div className='rounded-xl bg-slate-100 p-2.5 text-slate-700 dark:bg-slate-800 dark:text-slate-200'>
-        {item.type === 'booking.created' ? <BellRing size={18} /> : <CalendarClock size={18} />}
+      <div className='rounded-[0.85rem] bg-slate-100 p-2 text-slate-500 dark:bg-slate-900 dark:text-slate-300'>
+        {item.type === 'booking.created' ? <BellRing size={16} /> : <CalendarClock size={16} />}
       </div>
       <div className='min-w-0 flex-1'>
-        <p className='text-sm font-bold text-slate-900 dark:text-white'>{item.message}</p>
-        <p className='mt-1 text-sm leading-6 text-slate-500 dark:text-slate-300'>
+        <p className='text-sm font-semibold text-slate-800 dark:text-slate-100'>{item.message}</p>
+        <p className='mt-1 text-xs leading-5 text-slate-500 dark:text-slate-300'>
           {item.booking?.service || ''}
           {item.booking?.barberName ? ` • ${item.booking.barberName}` : ''}
         </p>
-        <p className='mt-2 text-xs text-slate-400 dark:text-slate-500'>
+        <p className='mt-1.5 text-[11px] text-slate-400 dark:text-slate-500'>
           {item.booking?.date
             ? formatDateTime(
                 item.booking.date,
@@ -1682,6 +1777,7 @@ export const AdminBookingsPanel = ({
             : 'Review current bookings, adjust status, and open a focused create flow when you need a new booking.'
       }
       compact={true}
+      hideHeaderOnMobile={true}
       right={
         <AdminSubviewTabs
           activeView={activeBookingView}
@@ -2838,6 +2934,7 @@ export const AdminCustomersPanel = ({
     <SectionShell
       title={t.sectionCustomers}
       compact={true}
+      hideHeaderOnMobile={true}
     >
       <div className='space-y-4'>
         <div className={`rounded-[0.95rem] border p-4 ${mutedPanel}`}>
@@ -3005,6 +3102,7 @@ export const AdminServicesPanel = ({
       <SectionShell
         title={t.catalog}
         compact={true}
+        hideHeaderOnMobile={true}
         right={
           <AdminSubviewTabs
             activeView={serviceView}
@@ -3260,6 +3358,7 @@ export const AdminBarbersPanel = ({
         title={t.team}
         subtitle={t.barbersSubtitle}
         compact={true}
+        hideHeaderOnMobile={true}
         right={
           <AdminSubviewTabs
             activeView={barberView}

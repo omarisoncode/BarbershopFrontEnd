@@ -36,6 +36,7 @@ import {
 import {
   AdminDashboardContent,
   AdminDashboardHeader,
+  AdminMobileTabBar,
   AdminDashboardPlaceholder,
   AdminShellActions,
   AdminDashboardSidebar,
@@ -1328,6 +1329,9 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   const handleSectionChange = useCallback((sectionId) => {
     setActiveSection(sectionId);
     setMobileSidebarOpen(false);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   const handleBookingStatusFilterChange = useCallback((nextStatus) => {
@@ -2115,13 +2119,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           </div>
         ) : null}
 
-        <div>
-          <p className='text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500'>
-            {t.todayOverview}
-          </p>
-        </div>
-
-        <div className='grid gap-3 md:grid-cols-2 xl:grid-cols-4'>
+        <div className='grid gap-3 grid-cols-2 xl:grid-cols-4'>
           <MetricCard
             icon={Sparkles}
             label={t.todayBookings}
@@ -2148,7 +2146,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           />
         </div>
 
-        <div className='grid gap-3 lg:grid-cols-3'>
+        <div className='grid gap-3 grid-cols-2 lg:grid-cols-3'>
           <button
             type='button'
             onClick={() => {
@@ -2169,13 +2167,13 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           <button
             type='button'
             onClick={() => handleSectionChange('team')}
-            className='inline-flex min-h-[3.2rem] items-center justify-center rounded-[1.1rem] border border-brand-gold/16 bg-white/72 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl transition hover:border-brand-gold/28 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-white/84 dark:hover:text-brand-gold-soft'
+            className='hidden min-h-[3.2rem] items-center justify-center rounded-[1.1rem] border border-brand-gold/16 bg-white/72 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl transition hover:border-brand-gold/28 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-white/84 dark:hover:text-brand-gold-soft lg:inline-flex'
           >
             {t.heroGoBarbers}
           </button>
         </div>
 
-        <div className='grid gap-3.5 2xl:grid-cols-[1.2fr_1fr_0.8fr]'>
+        <div className='grid gap-3.5 xl:grid-cols-[1.15fr_0.85fr]'>
           <SectionShell title={t.heroNextAppointment} compact={true}>
             {nextUpcomingBooking ? (
               <div className={`rounded-[1.15rem] p-4 ${mutedPanel}`}>
@@ -2209,7 +2207,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
             )}
           </SectionShell>
 
-          <SectionShell title={t.recentActivity} subtitle={t.recentActivitySub} compact={true}>
+          <SectionShell title={t.recentActivity} compact={true}>
             <div className='space-y-3'>
               {topActivity.length === 0 ? (
                 <div
@@ -2219,61 +2217,11 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
                 </div>
               ) : (
                 topActivity.map((item, index) => (
-                  <ActivityCard key={`${item.timestamp}-${index}`} item={item} lang={lang} />
+                  <div key={`${item.timestamp}-${index}`} className={index > 0 ? 'hidden sm:block' : ''}>
+                    <ActivityCard item={item} lang={lang} />
+                  </div>
                 ))
               )}
-            </div>
-          </SectionShell>
-
-          <SectionShell title={t.heroOperationalHealth} compact={true}>
-            <div
-              className={`rounded-[1.15rem] p-5 text-center ${
-                allClear
-                  ? 'border border-brand-gold/14 bg-white/62 backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/6'
-                  : 'border border-brand-gold/14 bg-white/62 backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/6'
-              }`}
-            >
-              <div
-                className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${
-                  allClear
-                    ? 'border border-brand-gold/16 bg-brand-gold/14 text-brand-gold'
-                    : 'border border-brand-gold/16 bg-brand-gold/14 text-brand-gold'
-                }`}
-              >
-                {allClear ? <CheckCircle2 size={28} /> : <ShieldAlert size={28} />}
-              </div>
-              <p className='mt-4 text-xl font-black text-slate-900 dark:text-white'>
-                {allClear ? t.heroHealthCalm : t.heroHealthAttention}
-              </p>
-              <p className='mt-2 text-sm leading-6 text-slate-500 dark:text-slate-300'>
-                {operationalHealth.detail}
-              </p>
-              <div className='mt-5 grid grid-cols-3 gap-3 text-left'>
-                <div>
-                  <p className='text-xl font-black text-slate-900 dark:text-white'>
-                    {formatNumber(operationalHealth.noShow, lang)}
-                  </p>
-                  <p className='mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
-                    {t.heroNoShowToday}
-                  </p>
-                </div>
-                <div>
-                  <p className='text-xl font-black text-slate-900 dark:text-white'>
-                    {formatNumber(operationalHealth.cancelled, lang)}
-                  </p>
-                  <p className='mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
-                    {t.heroCancelledToday}
-                  </p>
-                </div>
-                <div>
-                  <p className='text-xl font-black text-slate-900 dark:text-white'>
-                    {formatNumber(operationalHealth.followUp, lang)}
-                  </p>
-                  <p className='mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
-                    {t.heroFollowUp}
-                  </p>
-                </div>
-              </div>
             </div>
           </SectionShell>
         </div>
@@ -2284,10 +2232,51 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           </SectionShell>
 
           <SectionShell
-            title={lang === 'ar' ? 'لقطة سريعة' : 'Quick snapshot'}
+            title={t.heroOperationalHealth}
             compact={true}
           >
             <div className='grid gap-3'>
+              <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
+                <div className='flex items-start gap-3'>
+                  <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-gold/16 bg-brand-gold/14 text-brand-gold'>
+                    {allClear ? <CheckCircle2 size={20} /> : <ShieldAlert size={20} />}
+                  </div>
+                  <div className='min-w-0'>
+                    <p className='text-base font-black text-slate-900 dark:text-white'>
+                      {allClear ? t.heroHealthCalm : t.heroHealthAttention}
+                    </p>
+                    <p className='mt-1 text-xs leading-6 text-slate-500 dark:text-slate-300'>
+                      {operationalHealth.detail}
+                    </p>
+                  </div>
+                </div>
+                <div className='mt-4 grid grid-cols-3 gap-3'>
+                  <div>
+                    <p className='text-lg font-black text-slate-900 dark:text-white'>
+                      {formatNumber(operationalHealth.noShow, lang)}
+                    </p>
+                    <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+                      {t.heroNoShowToday}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-lg font-black text-slate-900 dark:text-white'>
+                      {formatNumber(operationalHealth.cancelled, lang)}
+                    </p>
+                    <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+                      {t.heroCancelledToday}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-lg font-black text-slate-900 dark:text-white'>
+                      {formatNumber(operationalHealth.followUp, lang)}
+                    </p>
+                    <p className='mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300'>
+                      {t.heroFollowUp}
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
                 <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
                   {t.topService}
@@ -2467,7 +2456,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   // The shell keeps a single admin render path while reusing the existing panel logic.
   const dashboardShell = (
     <div
-      className='lux-page-shell min-h-screen overflow-x-hidden p-3 sm:p-4 md:p-8 lg:p-10'
+      className='lux-page-shell min-h-screen overflow-x-hidden p-2.5 sm:p-4 md:p-8 lg:p-10'
       dir={isRTL ? 'rtl' : 'ltr'}
     >
         <div className='mx-auto flex max-w-[96rem] gap-4 lg:gap-6'>
@@ -2503,6 +2492,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
               }
               isRTL={isRTL}
               onOpenSidebar={() => setMobileSidebarOpen(true)}
+              showMenuButton={false}
               statusText={syncIssue ? t.livePaused : ''}
               statusTone={syncIssue ? 'warning' : 'healthy'}
               title={activeSectionMeta?.label || t.overview}
@@ -2517,6 +2507,14 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
             </AdminDashboardContent>
           </div>
         </div>
+
+        <AdminMobileTabBar
+          activeSection={activeSection}
+          items={visibleSections}
+          moreLabel={lang === 'ar' ? 'المزيد' : 'More'}
+          onOpenSidebar={() => setMobileSidebarOpen(true)}
+          onSelect={handleSectionChange}
+        />
 
         <AdminRescheduleModal
           open={Boolean(rescheduleBooking)}

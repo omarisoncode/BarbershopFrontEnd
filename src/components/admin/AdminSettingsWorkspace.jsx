@@ -45,6 +45,7 @@ export default function AdminSettingsWorkspace({
       title={t.settingsWorkspaceTitle}
       subtitle={t.settingsWorkspaceBody}
       compact={true}
+      hideHeaderOnMobile={true}
     >
       <div className='grid gap-4 xl:grid-cols-2'>
         <div className={`rounded-[1.1rem] p-4 ${mutedPanel}`}>

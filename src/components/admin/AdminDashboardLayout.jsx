@@ -198,6 +198,7 @@ export const AdminDashboardHeader = ({
   description,
   isRTL,
   onOpenSidebar,
+  showMenuButton = true,
   statusTone = 'healthy',
   statusText,
   title,
@@ -208,27 +209,29 @@ export const AdminDashboardHeader = ({
       : 'border-brand-gold/18 bg-brand-gold/10 text-slate-700 shadow-[0_12px_26px_rgba(201,164,92,0.1)] dark:border-brand-gold/18 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
 
   return (
-    <header className={`rounded-[0.95rem] p-4 sm:p-4 ${shellSurface}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className='flex flex-col gap-2'>
+    <header className={`rounded-[0.95rem] p-3.5 sm:p-4 ${shellSurface}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className='flex flex-col gap-2 sm:gap-2.5'>
         <div className={`flex items-start justify-between gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className={`flex min-w-0 items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <button
-              type='button'
-              onClick={onOpenSidebar}
-              className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.8rem] lg:hidden ${shellSubtle}`}
-              aria-label='Open admin navigation'
-            >
-              <Menu size={18} />
-            </button>
+            {showMenuButton ? (
+              <button
+                type='button'
+                onClick={onOpenSidebar}
+                className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.8rem] lg:hidden ${shellSubtle}`}
+                aria-label='Open admin navigation'
+              >
+                <Menu size={18} />
+              </button>
+            ) : null}
             <div className='min-w-0'>
               <p className='text-[10px] font-black uppercase tracking-[0.2em] text-brand-gold dark:text-brand-gold-soft'>
                 {isRTL ? 'مساحة الإدارة' : 'Admin workspace'}
               </p>
-              <h1 className='mt-1 text-[1.55rem] font-black leading-tight text-slate-900 dark:text-white sm:text-[1.8rem]'>
+              <h1 className='mt-1 text-[1.35rem] font-black leading-tight text-slate-900 dark:text-white sm:text-[1.8rem]'>
                 {title}
               </h1>
               {description ? (
-                <p className='mt-1 max-w-3xl text-sm leading-6 text-slate-500 dark:text-slate-300'>
+                <p className='mt-1 hidden max-w-3xl text-sm leading-6 text-slate-500 dark:text-slate-300 sm:block'>
                   {description}
                 </p>
               ) : null}
@@ -238,7 +241,23 @@ export const AdminDashboardHeader = ({
           {action ? <div className='hidden lg:block'>{action}</div> : null}
         </div>
 
-        <div className={`flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+        {statusText ? (
+          <div className='sm:hidden'>
+            <span
+              className={`inline-flex min-h-9 items-center gap-2 rounded-[0.8rem] border px-3 text-xs font-black ${statusToneClass}`}
+            >
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  statusTone === 'warning' ? 'bg-amber-500' : 'bg-emerald-500'
+                }`}
+              />
+              {statusText}
+            </span>
+          </div>
+        ) : null}
+        {action ? <div className='sm:hidden'>{action}</div> : null}
+
+        <div className={`hidden flex-col gap-2.5 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:justify-between ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
           <div className={`flex flex-wrap items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
             {dateLabel ? (
               <span className={`inline-flex min-h-10 items-center rounded-[0.8rem] px-3.5 text-sm font-bold text-slate-600 dark:text-slate-200 ${shellInset}`}>
@@ -267,8 +286,69 @@ export const AdminDashboardHeader = ({
 };
 
 export const AdminDashboardContent = ({ children }) => (
-  <main className='min-w-0 space-y-3 sm:space-y-3.5'>{children}</main>
+  <main className='min-w-0 space-y-3 pb-[5.5rem] sm:space-y-3.5 lg:pb-0'>{children}</main>
 );
+
+export const AdminMobileTabBar = ({
+  activeSection,
+  items,
+  moreLabel,
+  onOpenSidebar,
+  onSelect,
+}) => {
+  const primaryItems = ['overview', 'bookings', 'catalog', 'customers']
+    .map((id) => items.find((item) => item.id === id))
+    .filter(Boolean);
+
+  if (primaryItems.length === 0) return null;
+
+  const isMoreActive = !primaryItems.some((item) => item.id === activeSection);
+
+  return (
+    <div className='fixed inset-x-0 bottom-0 z-[65] border-t border-black/8 bg-[#f5efe4]/96 px-2 pb-[max(0.45rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl dark:border-white/10 dark:bg-[#090807]/96 lg:hidden'>
+      <div className='mx-auto max-w-[30rem]'>
+        <div
+          className='grid gap-2'
+          style={{ gridTemplateColumns: `repeat(${primaryItems.length + 1}, minmax(0, 1fr))` }}
+        >
+          {primaryItems.map((item) => {
+            const Icon = navIcons[item.id] || LayoutDashboard;
+            const active = item.id === activeSection;
+
+            return (
+              <button
+                key={item.id}
+                type='button'
+                onClick={() => onSelect(item.id)}
+                className={`flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
+                  active
+                    ? 'border-brand-gold/24 bg-brand-gold/12 text-slate-900 dark:border-brand-gold/24 dark:bg-brand-gold/12 dark:text-white'
+                    : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
+                }`}
+              >
+                <Icon size={17} />
+                <span className='text-[10px] font-black leading-none'>{item.label}</span>
+              </button>
+            );
+          })}
+
+          <button
+            type='button'
+            onClick={onOpenSidebar}
+            className={`flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
+              isMoreActive
+                ? 'border-brand-gold/24 bg-brand-gold/12 text-slate-900 dark:border-brand-gold/24 dark:bg-brand-gold/12 dark:text-white'
+                : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
+            }`}
+          >
+            <Menu size={17} />
+            <span className='text-[10px] font-black leading-none'>{moreLabel}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const AdminShellActions = ({ actions, isRTL = false }) => {
   if (!actions?.length) return null;
