@@ -3010,7 +3010,7 @@ export const AdminServicesPanel = ({
 }) => {
   const [editingService, setEditingService] = useState(null);
   const [editForm, setEditForm] = useState(createServiceState());
-  const [serviceView, setServiceView] = useState('create');
+  const [serviceView, setServiceView] = useState('catalog');
 
   const openEditor = (service) => {
     setEditingService(service);

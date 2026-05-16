@@ -296,7 +296,7 @@ export const AdminMobileTabBar = ({
   onOpenSidebar,
   onSelect,
 }) => {
-  const primaryItems = ['overview', 'bookings', 'catalog', 'customers']
+  const primaryItems = ['overview', 'bookings', 'catalog', 'team']
     .map((id) => items.find((item) => item.id === id))
     .filter(Boolean);
 

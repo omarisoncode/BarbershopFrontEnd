@@ -21,18 +21,11 @@ const footerSectionLinks = (t) => [
   { to: `/#${HOME_SECTION_IDS.services}`, label: t.navServices },
   { to: `/#${HOME_SECTION_IDS.barbers}`, label: t.navBarbers },
   { to: `/#${HOME_SECTION_IDS.gallery}`, label: t.navGallery },
+  { to: `/#${HOME_SECTION_IDS.reviews}`, label: t.homeReviewsTitle },
   { to: `/#${HOME_SECTION_IDS.about}`, label: t.navAbout },
   { to: `/#${HOME_SECTION_IDS.location}`, label: t.navLocation },
   { to: `/#${HOME_SECTION_IDS.faq}`, label: t.navFAQ },
-  { to: `/#${HOME_SECTION_IDS.contact}`, label: t.navContact },
 ];
-
-const footerServiceLinks = (t) => [
-  t.footerServiceLink1,
-  t.footerServiceLink2,
-  t.footerServiceLink3,
-  t.footerServiceLink4,
-].filter(Boolean);
 
 const footerSupportLinks = (t) => [
   { to: `/#${HOME_SECTION_IDS.faq}`, label: t.footerSupportLink1 },
@@ -46,7 +39,6 @@ export default function Footer({ lang }) {
   const [logoPrimary, logoAccent] = String(t.logo || 'THE CUT').split(' ');
 
   const quickLinks = footerSectionLinks(t);
-  const services = footerServiceLinks(t).slice(0, 3);
   const supportLinks = footerSupportLinks(t);
   const locationAddress = getBusinessValue(businessInfo.address, lang) || t.locationAddress;
   const locationHours = getBusinessValue(businessInfo.hours, lang) || t.locationHours;
@@ -105,7 +97,7 @@ export default function Footer({ lang }) {
           </div>
         </div>
 
-        <div className='grid gap-8 md:grid-cols-2 xl:grid-cols-[1.15fr_0.9fr_0.75fr_0.95fr]'>
+        <div className='grid gap-8 md:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_0.95fr]'>
           <div>
             <Link to='/' className='flex items-center gap-3'>
               <div className='text-brand-gold'>
@@ -124,7 +116,7 @@ export default function Footer({ lang }) {
               {t.footerQuickLinksTitle}
             </p>
             <div className='mt-5 grid gap-3'>
-              {quickLinks.slice(0, 6).map((link) => (
+              {quickLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
@@ -145,23 +137,6 @@ export default function Footer({ lang }) {
                   className='text-sm text-slate-600 transition hover:text-brand-gold dark:text-white/70 dark:hover:text-brand-gold'
                 >
                   {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className='text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold'>
-              {t.footerServicesTitle}
-            </p>
-            <div className='mt-5 grid gap-3'>
-              {services.map((label) => (
-                <Link
-                  key={label}
-                  to={`/#${HOME_SECTION_IDS.services}`}
-                  className='text-sm text-slate-600 transition hover:text-brand-gold dark:text-white/70 dark:hover:text-brand-gold'
-                >
-                  {label}
                 </Link>
               ))}
             </div>
