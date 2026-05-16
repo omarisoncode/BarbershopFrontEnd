@@ -47,6 +47,7 @@ import {
   getBookingDisplayDate,
 } from '../utils/bookingDateTime';
 import { getDashboardSharedCopy } from '../utils/dashboardCopy';
+import { localizeDigits } from '../utils/localizeDigits';
 import { repairArabicObject } from '../utils/repairArabicText';
 
 const isBookingUpcoming = (booking, now = Date.now()) =>
@@ -332,19 +333,19 @@ const DashboardSection = ({
   titleClassName = '',
   contentClassName = '',
 }) => (
-  <section className={`rounded-[1.2rem] p-4 sm:p-5 ${glassPanel}`}>
-    <div className='flex flex-col gap-3 border-b border-brand-gold/14 pb-3 sm:flex-row sm:items-end sm:justify-between'>
+  <section className={`rounded-[1.1rem] p-3.5 sm:p-4 ${glassPanel}`}>
+    <div className='flex flex-col gap-2.5 border-b border-brand-gold/14 pb-2.5 sm:flex-row sm:items-end sm:justify-between'>
       <div>
         {eyebrow ? (
           <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
             {eyebrow}
           </p>
         ) : null}
-        <h2 className={`mt-1 font-display text-[1.9rem] font-semibold tracking-tight text-slate-900 dark:text-[#f6eddc] ${titleClassName}`}>{title}</h2>
+        <h2 className={`mt-1 text-[1.08rem] font-black tracking-[0.02em] text-slate-900 dark:text-[#f6eddc] sm:text-[1.16rem] ${titleClassName}`}>{title}</h2>
       </div>
       {action ? <div>{action}</div> : null}
     </div>
-    <div className={`mt-3 ${contentClassName}`}>{children}</div>
+    <div className={`mt-2.5 ${contentClassName}`}>{children}</div>
   </section>
 );
 
@@ -566,16 +567,16 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
   }
 
   return (
-    <div className={`rounded-[1.05rem] border border-brand-gold/14 p-3.5 sm:p-4 ${insetPanelClass}`}>
-      <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+    <div className={`rounded-[1rem] border border-brand-gold/14 p-3 sm:p-3.5 ${insetPanelClass}`}>
+      <div className='flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'>
         <div className='min-w-0 flex-1'>
           <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
             {dashboardCopy.nextAppointment}
           </p>
-          <h3 className='mt-2 text-[1.35rem] font-black tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.55rem]'>
+          <h3 className='mt-1.5 text-[1.15rem] font-black tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.3rem]'>
             {getLocalizedBookingService(booking, lang)}
           </h3>
-          <div className='mt-3 grid gap-2 text-slate-700 dark:text-white/78 sm:grid-cols-3'>
+          <div className='mt-2.5 grid gap-2 text-slate-700 dark:text-white/78 sm:grid-cols-3'>
             <div className='flex items-center gap-3 text-sm'>
               <CalendarDays size={17} className='text-brand-gold' />
               <span>{formatBookingDateLabel(booking, lang)} • {formatBookingTime(booking.time, lang)}</span>
@@ -592,18 +593,18 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
 
         </div>
 
-        <div className='flex flex-col items-center gap-3 lg:w-[9.5rem]'>
-          <div className='relative flex h-[6.8rem] w-[6.8rem] items-center justify-center rounded-[1.35rem] border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,239,226,0.84))] shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(14,12,10,0.98))] dark:shadow-[0_12px_28px_rgba(0,0,0,0.22)] sm:h-[7.4rem] sm:w-[7.4rem]'>
-            <div className='absolute inset-2 rounded-[1.2rem] border border-brand-gold/10' />
+        <div className='flex flex-col items-center gap-2.5 lg:w-[8.25rem]'>
+          <div className='relative flex h-[5.9rem] w-[5.9rem] items-center justify-center rounded-[1.15rem] border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,239,226,0.84))] shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(14,12,10,0.98))] dark:shadow-[0_12px_28px_rgba(0,0,0,0.22)] sm:h-[6.5rem] sm:w-[6.5rem]'>
+            <div className='absolute inset-2 rounded-[1rem] border border-brand-gold/10' />
             {booking.barber?.image || booking.barber?.profileImage ? (
               <img
                 src={booking.barber.image || booking.barber.profileImage}
                 alt={booking.barber?.name || getLocalizedBookingService(booking, lang)}
-                className='relative z-10 h-[5.05rem] w-[5.05rem] rounded-[0.95rem] object-cover shadow-[0_10px_22px_rgba(0,0,0,0.22)] sm:h-[5.55rem] sm:w-[5.55rem]'
+                className='relative z-10 h-[4.35rem] w-[4.35rem] rounded-[0.85rem] object-cover shadow-[0_10px_22px_rgba(0,0,0,0.22)] sm:h-[4.95rem] sm:w-[4.95rem]'
               />
             ) : (
-              <div className='relative z-10 flex h-[5.05rem] w-[5.05rem] items-center justify-center rounded-[0.95rem] border border-brand-gold/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,244,233,0.68))] text-brand-gold dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] sm:h-[5.55rem] sm:w-[5.55rem]'>
-                <Scissors size={26} />
+              <div className='relative z-10 flex h-[4.35rem] w-[4.35rem] items-center justify-center rounded-[0.85rem] border border-brand-gold/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,244,233,0.68))] text-brand-gold dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] sm:h-[4.95rem] sm:w-[4.95rem]'>
+                <Scissors size={24} />
               </div>
             )}
           </div>
@@ -641,15 +642,15 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, height: 0 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-[0.95rem] border p-2.5 transition-all duration-200 sm:p-3 ${
+      className={`rounded-[0.9rem] border p-2.5 transition-all duration-200 ${
         isActionableActive
           ? 'border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,254,251,0.97),rgba(248,240,227,0.97))] shadow-[0_16px_32px_rgba(124,89,39,0.06)] dark:bg-[linear-gradient(180deg,rgba(21,18,16,0.98),rgba(12,10,9,0.98))] dark:shadow-none'
           : 'border-brand-gold/14 bg-[linear-gradient(180deg,rgba(252,248,241,0.95),rgba(242,235,223,0.95))] opacity-90 dark:bg-[linear-gradient(180deg,rgba(18,16,14,0.92),rgba(10,9,8,0.92))] dark:opacity-85'
       }`}
     >
-      <div className='flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between'>
+      <div className='flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between'>
         <div className='flex min-w-0 items-start gap-2.5'>
-          <div className='flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-[0.8rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none sm:h-15 sm:w-15'>
+          <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[0.75rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none'>
             <span className='text-[10px] font-black uppercase tracking-[0.16em] text-brand-gold'>
               {date
                 ? date.toLocaleDateString(lang === 'ar' ? 'ar-KW' : 'en-US', {
@@ -662,9 +663,9 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             </span>
           </div>
 
-            <div className='min-w-0 space-y-1.5'>
+            <div className='min-w-0 space-y-1'>
               <h3
-                className={`truncate text-[1rem] font-black leading-tight sm:text-[1.05rem] ${
+                className={`truncate text-[0.98rem] font-black leading-tight ${
                   isActionableActive
                     ? 'text-slate-900 dark:text-[#f6eddc]'
                     : 'line-through text-slate-400 dark:text-white/38'
@@ -672,7 +673,7 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             >
               {getLocalizedBookingService(booking, lang)}
             </h3>
-              <div className='flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px]'>
+              <div className='flex flex-wrap items-center gap-1.5 text-[10px]'>
                 <span className='rounded-full border border-brand-gold/16 bg-brand-gold/[0.08] px-2.5 py-1 font-medium text-slate-700 dark:bg-white/[0.03] dark:text-white/76'>
                   {booking.barber?.name || '—'}
                 </span>
@@ -1362,10 +1363,10 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
             <div className='space-y-4'>
                 <section
                   id={dashboardSectionIds.overview}
-                  className={`rounded-[1.35rem] p-5 sm:p-6 ${glassPanel}`}
+                  className={`rounded-[1.1rem] p-4 sm:p-4.5 ${glassPanel}`}
                 >
-                  <div className='flex flex-col gap-4'>
-                    <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
+                  <div className='flex flex-col gap-3.5'>
+                    <div className='flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'>
                       <div className='min-w-0'>
                         <div className='flex items-center gap-2 text-brand-gold'>
                           <DashboardGreetingIcon size={14} />
@@ -1373,24 +1374,53 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                             {dashboardGreeting.label}
                           </p>
                         </div>
-                        <h1 className='mt-2 text-[1.55rem] font-black leading-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.8rem]'>
+                        <h1 className='mt-1.5 text-[1.35rem] font-black leading-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.55rem]'>
                           {user?.name || ''}
                         </h1>
-                        <p className='mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-white/68 sm:text-base'>
+                        <p className='mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-white/68'>
                           {dashboardCopy.overviewSubtitle}
                         </p>
                       </div>
                     </div>
 
-                    <div className='flex flex-col gap-3 sm:flex-row'>
+                    <div className='grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center'>
+                      <div className='grid gap-2 sm:grid-cols-3'>
+                        <div className={`rounded-[0.95rem] px-3.5 py-3 ${insetPanelClass}`}>
+                          <p className='text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-white/40'>
+                            {dashboardCopy.active}
+                          </p>
+                          <p className='mt-1.5 text-lg font-black text-slate-900 dark:text-[#f6eddc]'>
+                            {localizeDigits(stats.totalActive, lang)}
+                          </p>
+                        </div>
+                        <div className={`rounded-[0.95rem] px-3.5 py-3 ${insetPanelClass}`}>
+                          <p className='text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-white/40'>
+                            {dashboardCopy.pastAppointments}
+                          </p>
+                          <p className='mt-1.5 text-lg font-black text-slate-900 dark:text-[#f6eddc]'>
+                            {localizeDigits(groupedBookings.pastBookings.length, lang)}
+                          </p>
+                        </div>
+                        <div className={`rounded-[0.95rem] px-3.5 py-3 ${insetPanelClass}`}>
+                          <p className='text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-white/40'>
+                            {dashboardCopy.nextAppointment}
+                          </p>
+                          <p className='mt-1.5 truncate text-sm font-black text-slate-900 dark:text-[#f6eddc]'>
+                            {stats.nextBooking}
+                          </p>
+                        </div>
+                      </div>
+
+                    <div className='flex flex-col gap-3 sm:flex-row lg:justify-end'>
                       <button
                         type='button'
                         onClick={handleStartBooking}
-                        className={`${actionButtonClass} ${primaryButtonClass} min-h-[3rem] rounded-[1rem] px-5`}
+                        className={`${actionButtonClass} ${primaryButtonClass} min-h-[2.9rem] rounded-[0.95rem] px-5`}
                       >
                         <CalendarDays size={16} />
                         {dashboardCopy.bookAppointment}
                       </button>
+                    </div>
                     </div>
                   </div>
                 </section>
@@ -1405,7 +1435,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                           ? nextActiveBooking.service || dashboardCopy.next
                           : dashboardCopy.noNextVisit
                     }
-                    titleClassName='text-[2rem] sm:text-[2.25rem]'
+                    titleClassName='text-[1.28rem] sm:text-[1.4rem]'
                   >
                     {!initialSyncComplete ? (
                       <div className='space-y-3'>
@@ -1452,7 +1482,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                         </button>
                       </div>
                     ) : (
-                      <div className='space-y-4'>
+                      <div className='space-y-3'>
                         {groupedBookings.activeBookings.map((booking) => (
                           <BookingCard
                             key={booking._id}
@@ -1505,7 +1535,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                       </div>
                     ) : (
                       <AnimatePresence mode='popLayout'>
-                        <div className='space-y-4'>
+                        <div className='space-y-3'>
                           {groupedBookings.pastBookings.map((booking) => (
                             <BookingCard
                               key={booking._id}

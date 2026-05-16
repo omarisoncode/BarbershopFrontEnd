@@ -76,27 +76,27 @@ export function HeroSection({
           <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.26),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(212,175,55,0.14),transparent_32%)]' />
           <div className='absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(90deg,rgba(7,7,7,0)_0%,rgba(7,7,7,0.22)_25%,rgba(7,7,7,0.66)_100%)] dark:block' />
 
-          <div className='relative grid min-h-[78svh] gap-10 lg:grid-cols-[1.05fr_0.95fr]'>
-            <div className='flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-12 lg:py-14'>
+          <div className='relative grid min-h-[66svh] gap-6 sm:min-h-[72svh] lg:min-h-[78svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10'>
+            <div className='flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-14'>
               <motion.p variants={revealUpVariants} className='lux-kicker'>
                 {t.homeHeroEyebrow}
               </motion.p>
 
               <motion.h1
                 variants={revealUpVariants}
-                className='mt-5 max-w-2xl font-display text-5xl font-semibold leading-[0.92] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl dark:text-white'
+                className='mt-4 max-w-2xl font-display text-[2.85rem] font-semibold leading-[0.94] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl dark:text-white'
               >
                 <span className='block'>{t.homeHeroTitleLine1}</span>
                 <span className='mt-2 block text-brand-gold'>{t.homeHeroTitleLine2}</span>
               </motion.h1>
 
-              <motion.p variants={revealUpVariants} className='lux-copy mt-6 max-w-xl text-base sm:text-lg'>
+              <motion.p variants={revealUpVariants} className='lux-copy mt-4 max-w-xl text-[15px] sm:mt-6 sm:text-lg'>
                 {t.homeHeroSubtitle}
               </motion.p>
 
               <motion.div
                 variants={revealUpVariants}
-                className='mt-8 flex flex-col gap-3 sm:flex-row'
+                className='mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row'
               >
                 <PrimaryButton type='button' onClick={onBookNow} className='min-w-[190px]'>
                   {t.homeHeroPrimaryCta}
@@ -110,7 +110,7 @@ export function HeroSection({
 
               <motion.div
                 variants={staggerContainer}
-                className='mt-10 grid gap-4 md:grid-cols-2 2xl:grid-cols-4'
+                className='mt-6 grid grid-cols-2 gap-3 sm:mt-8 lg:grid-cols-4 lg:gap-4'
               >
                 {HERO_TRUST_BADGES.map((badge, index) => {
                   const Icon = iconMap[badge.icon] || Sparkles;
@@ -120,17 +120,19 @@ export function HeroSection({
                       key={badge.titleKey}
                       variants={sequentialReveal}
                       custom={index}
-                      className='min-h-[132px] rounded-[1.5rem] border border-black/8 bg-white/58 p-5 backdrop-blur-xl dark:border-white/10 dark:bg-white/6'
+                      className={`rounded-[1.2rem] border border-black/8 bg-white/58 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/6 ${
+                        index > 1 ? 'hidden lg:block' : ''
+                      }`}
                     >
-                      <div className='flex items-start gap-4'>
-                        <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
-                          <Icon size={18} />
+                      <div className='flex items-start gap-3'>
+                        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
+                          <Icon size={16} />
                         </div>
                         <div className='min-w-0'>
-                          <p className='text-base font-semibold leading-6 text-slate-900 dark:text-white'>
+                          <p className='text-sm font-semibold leading-5 text-slate-900 dark:text-white sm:text-base sm:leading-6'>
                             {t[badge.titleKey]}
                           </p>
-                          <p className='mt-2 text-sm leading-6 text-slate-500 dark:text-white/65'>
+                          <p className='mt-1.5 text-xs leading-5 text-slate-500 dark:text-white/65 sm:text-sm sm:leading-6'>
                             {t[badge.textKey]}
                           </p>
                         </div>
@@ -141,7 +143,7 @@ export function HeroSection({
               </motion.div>
             </div>
 
-            <div className='relative flex min-h-[320px] items-end overflow-hidden lg:min-h-full'>
+            <div className='relative flex min-h-[240px] items-end overflow-hidden sm:min-h-[280px] lg:min-h-full'>
               <div className='absolute inset-0 bg-[radial-gradient(circle_at_70%_18%,rgba(212,175,55,0.36),transparent_28%),linear-gradient(180deg,rgba(7,7,7,0.12),rgba(7,7,7,0.72))]' />
               <video
                 className='absolute inset-0 h-full w-full object-cover'
@@ -156,14 +158,14 @@ export function HeroSection({
 
               <motion.div
                 variants={revealUpVariants}
-                className='relative z-10 m-5 w-full max-w-xs rounded-[1.7rem] border border-white/12 bg-black/42 p-5 text-white shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:m-8'
+                className='relative z-10 m-4 w-full max-w-[15rem] rounded-[1.35rem] border border-white/12 bg-black/42 p-4 text-white shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:m-8 sm:max-w-xs sm:p-5'
               >
                 <p className='text-[10px] font-semibold uppercase tracking-[0.26em] text-brand-gold'>
                   {t.homeHeroMediaBadge}
                 </p>
-                <h3 className='mt-3 text-2xl font-semibold'>{t.homeHeroMediaTitle}</h3>
-                <p className='mt-3 text-sm leading-7 text-white/70'>{t.homeHeroMediaText}</p>
-                <div className='mt-6 flex items-center gap-3 text-sm text-white/80'>
+                <h3 className='mt-2.5 text-xl font-semibold sm:text-2xl'>{t.homeHeroMediaTitle}</h3>
+                <p className='mt-2 hidden text-sm leading-7 text-white/70 sm:block'>{t.homeHeroMediaText}</p>
+                <div className='mt-4 flex items-center gap-3 text-sm text-white/80 sm:mt-6'>
                   <CheckCircle2 size={16} className='text-brand-gold' />
                   {t.homeHeroMediaPoint}
                 </div>
@@ -181,18 +183,11 @@ export function ServicesPreviewSection({
   isRTL,
   state,
   items,
-  showRefreshing,
   onRetry,
   onBook,
   onOpenService,
   onViewAll,
 }) {
-  const statusBadge = useMemo(() => {
-    if (state === 'fallback') return { tone: 'accent', label: t.homeFallbackPreviewBadge };
-    if (showRefreshing) return { tone: 'default', label: t.homeRefreshingBadge };
-    return null;
-  }, [showRefreshing, state, t]);
-
   return (
     <SectionShell
       id={HOME_SECTION_IDS.services}
@@ -201,7 +196,6 @@ export function ServicesPreviewSection({
       subtitle={t.homeServicesSubtitle}
       actions={
         <div className='flex items-center gap-3'>
-          {statusBadge ? <StatusBadge tone={statusBadge.tone}>{statusBadge.label}</StatusBadge> : null}
           <SecondaryButton type='button' onClick={onViewAll}>
             {t.homeViewCatalogCta}
             {renderArrow(isRTL)}
@@ -287,13 +281,13 @@ export function ServicesPreviewSection({
                   </div>
                 </button>
 
-                <div className='flex flex-1 flex-col p-5'>
+                <div className='flex flex-1 flex-col p-4.5 sm:p-5'>
                   <div className='flex items-start justify-between gap-3'>
                     <div>
                       <p className='text-xs uppercase tracking-[0.18em] text-brand-gold'>
                         {service.categoryLabel}
                       </p>
-                      <h3 className='mt-2 text-xl font-semibold text-slate-900 dark:text-white'>
+                      <h3 className='mt-2 text-lg font-semibold text-slate-900 dark:text-white sm:text-xl'>
                         {service.title}
                       </h3>
                     </div>
@@ -308,7 +302,7 @@ export function ServicesPreviewSection({
                     </p>
                   </div>
 
-                  <p className='mt-3 min-h-[72px] text-sm leading-7 text-slate-600 dark:text-white/70'>
+                  <p className='mt-3 min-h-[56px] text-sm leading-6 text-slate-600 dark:text-white/70'>
                     {service.description}
                   </p>
 
@@ -319,7 +313,7 @@ export function ServicesPreviewSection({
                   ) : null}
 
                   <div className='mt-4 flex flex-wrap gap-2'>
-                    {service.previewFeatures.slice(0, 3).map((feature) => (
+                    {service.previewFeatures.slice(0, 2).map((feature) => (
                       <span
                         key={feature}
                         className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
@@ -463,16 +457,12 @@ export function BarbersPreviewSection({
   isRTL,
   state,
   items,
-  showRefreshing,
   onRetry,
   onBook,
   onViewAll,
 }) {
-  const statusBadge = useMemo(() => {
-    if (state === 'fallback') return { tone: 'accent', label: t.homeFallbackPreviewBadge };
-    if (showRefreshing) return { tone: 'default', label: t.homeRefreshingBadge };
-    return null;
-  }, [showRefreshing, state, t]);
+  const featuredBarber = items[0] || null;
+  const supportingBarbers = items.slice(1, 4);
 
   return (
     <SectionShell
@@ -481,14 +471,12 @@ export function BarbersPreviewSection({
       title={t.homeBarbersTitle}
       subtitle={t.homeBarbersSubtitle}
       actions={
-        <div className='flex items-center gap-3'>
-          {statusBadge ? <StatusBadge tone={statusBadge.tone}>{statusBadge.label}</StatusBadge> : null}
-          <SecondaryButton type='button' onClick={onViewAll}>
-            {t.homeMeetTeamCta}
-            {renderArrow(isRTL)}
-          </SecondaryButton>
-        </div>
+        <SecondaryButton type='button' onClick={onViewAll}>
+          {t.homeMeetTeamCta}
+          {renderArrow(isRTL)}
+        </SecondaryButton>
       }
+      className='pt-8 sm:pt-10'
     >
       <AnimatePresence mode='wait'>
         {state === 'loading' ? (
@@ -534,61 +522,125 @@ export function BarbersPreviewSection({
             whileInView='visible'
             viewport={sectionViewport}
             variants={staggerContainer}
-            className='grid gap-5 md:grid-cols-2 xl:grid-cols-4'
+            className={`grid gap-5 ${supportingBarbers.length > 0 ? 'xl:grid-cols-[1.08fr_0.92fr]' : ''}`}
           >
-            {items.map((barber, index) => (
-              <motion.div
-                key={barber.key}
-                custom={index}
-                variants={sequentialReveal}
-              >
-                <PremiumCard className='group flex h-full flex-col overflow-hidden p-0'>
-                  <div className='relative aspect-[4/5] overflow-hidden rounded-[1.7rem]'>
-                    <img
-                      src={barber.image}
-                      alt={barber.title}
-                      loading='lazy'
-                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
-                    />
-                    <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.08)_0%,rgba(7,7,7,0.72)_100%)]' />
-                    <div className='absolute inset-x-4 bottom-4 flex items-center justify-between gap-3'>
-                      <p className='text-lg font-semibold text-white'>{barber.title}</p>
-                      <div className='rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-gold backdrop-blur-xl'>
-                        {barber.experienceYears > 0
-                          ? `${barber.experienceYears} ${t.homeYearsShort}`
-                          : t.homeFeaturedBadge}
+            {featuredBarber ? (
+              <motion.article custom={0} variants={sequentialReveal}>
+                <PremiumCard className='group h-full overflow-hidden p-0'>
+                  <div className='grid h-full lg:grid-cols-[0.88fr_1.12fr]'>
+                    <div className='relative min-h-[320px] overflow-hidden'>
+                      <img
+                        src={featuredBarber.image}
+                        alt={featuredBarber.title}
+                        loading='lazy'
+                        className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+                      />
+                      <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.1)_0%,rgba(7,7,7,0.72)_100%)]' />
+                      <div className='absolute inset-x-4 bottom-4 flex items-center justify-between gap-3'>
+                        <StatusBadge tone='accent'>{t.homeFeaturedBadge}</StatusBadge>
+                        <div className='rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-gold backdrop-blur-xl'>
+                          {featuredBarber.experienceYears > 0
+                            ? `${featuredBarber.experienceYears} ${t.homeYearsShort}`
+                            : t.homeFeaturedBadge}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='flex flex-col justify-between p-6 sm:p-8'>
+                      <div>
+                        <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
+                          {t.homeMeetTeamCta}
+                        </p>
+                        <h3 className='mt-3 text-3xl font-semibold text-slate-900 dark:text-white'>
+                          {featuredBarber.title}
+                        </h3>
+                        <p className='mt-4 text-sm leading-7 text-slate-600 dark:text-white/70'>
+                          {featuredBarber.bio}
+                        </p>
+                        <div className='mt-5 flex flex-wrap gap-2'>
+                          {featuredBarber.specialties.slice(0, 3).map((specialty) => (
+                            <span
+                              key={specialty}
+                              className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
+                            >
+                              {specialty}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className='mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+                        <div className='rounded-[1.2rem] border border-black/8 bg-black/[0.03] px-4 py-3 text-sm font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-white/75'>
+                          {featuredBarber.experienceYears > 0
+                            ? `${featuredBarber.experienceYears} ${t.homeYearsShort}`
+                            : t.homeFeaturedBadge}
+                        </div>
+                        <PrimaryButton
+                          type='button'
+                          onClick={() => onBook(featuredBarber.isFallback ? null : featuredBarber.bookingService)}
+                          className='sm:min-w-[220px]'
+                        >
+                          {`${t.homeBarberCardCta} ${featuredBarber.title}`}
+                          {renderArrow(isRTL)}
+                        </PrimaryButton>
                       </div>
                     </div>
                   </div>
-
-                  <div className='flex flex-1 flex-col p-5'>
-                    <p className='min-h-[84px] text-sm leading-7 text-slate-600 dark:text-white/70'>
-                      {barber.bio}
-                    </p>
-
-                    <div className='mt-4 flex flex-wrap gap-2'>
-                      {barber.specialties.slice(0, 3).map((specialty) => (
-                        <span
-                          key={specialty}
-                          className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-
-                    <PrimaryButton
-                      type='button'
-                      onClick={() => onBook(barber.isFallback ? null : barber.bookingService)}
-                      className='mt-6 w-full'
-                    >
-                      {`${t.homeBarberCardCta} ${barber.title}`}
-                      {renderArrow(isRTL)}
-                    </PrimaryButton>
-                  </div>
                 </PremiumCard>
-              </motion.div>
-            ))}
+              </motion.article>
+            ) : null}
+
+            {supportingBarbers.length > 0 ? (
+              <div className='grid gap-4'>
+                {supportingBarbers.map((barber, index) => (
+                  <motion.div key={barber.key} custom={index + 1} variants={sequentialReveal}>
+                    <GlassPanel className='h-full p-4 sm:p-5'>
+                      <div className='flex h-full flex-col gap-4 sm:flex-row sm:items-center'>
+                        <img
+                          src={barber.image}
+                          alt={barber.title}
+                          loading='lazy'
+                          className='h-24 w-24 rounded-[1.3rem] object-cover sm:h-28 sm:w-28'
+                        />
+                        <div className='min-w-0 flex-1'>
+                          <div className='flex flex-wrap items-center gap-2'>
+                            <p className='text-xl font-semibold text-slate-900 dark:text-white'>
+                              {barber.title}
+                            </p>
+                            <span className='rounded-full border border-brand-gold/25 bg-brand-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-gold'>
+                              {barber.experienceYears > 0
+                                ? `${barber.experienceYears} ${t.homeYearsShort}`
+                                : t.homeFeaturedBadge}
+                            </span>
+                          </div>
+                          <p className='mt-2 text-sm leading-6 text-slate-600 dark:text-white/70'>
+                            {barber.bio}
+                          </p>
+                          <div className='mt-3 flex flex-wrap gap-2'>
+                            {barber.specialties.slice(0, 2).map((specialty) => (
+                              <span
+                                key={specialty}
+                                className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
+                              >
+                                {specialty}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <PrimaryButton
+                          type='button'
+                          onClick={() => onBook(barber.isFallback ? null : barber.bookingService)}
+                          className='w-full sm:w-auto'
+                        >
+                          {t.homeBarberCardCta}
+                          {renderArrow(isRTL)}
+                        </PrimaryButton>
+                      </div>
+                    </GlassPanel>
+                  </motion.div>
+                ))}
+              </div>
+            ) : null}
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -597,6 +649,8 @@ export function BarbersPreviewSection({
 }
 
 export function GallerySection({ t }) {
+  const galleryItems = GALLERY_MEDIA.slice(0, 3);
+
   return (
     <SectionShell
       id={HOME_SECTION_IDS.gallery}
@@ -604,6 +658,7 @@ export function GallerySection({ t }) {
       title={t.homeGalleryTitle}
       subtitle={t.homeGallerySubtitle}
       align='center'
+      className='pt-10 pb-8 sm:pt-12'
     >
       <motion.div
         initial='hidden'
@@ -612,7 +667,7 @@ export function GallerySection({ t }) {
         variants={staggerContainer}
         className='grid gap-4 md:grid-cols-12'
       >
-        {GALLERY_MEDIA.map((item, index) => {
+        {galleryItems.map((item, index) => {
           const large = index === 0;
           const classes = large
             ? 'md:col-span-7 md:row-span-2'
@@ -643,13 +698,13 @@ export function GallerySection({ t }) {
                     />
                   )}
                   <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.04)_0%,rgba(7,7,7,0.18)_45%,rgba(7,7,7,0.82)_100%)]' />
-                  <div className='absolute inset-x-5 bottom-5'>
-                    <p className='text-sm uppercase tracking-[0.2em] text-brand-gold'>{t.homeGalleryBadge}</p>
-                    <h3 className='mt-2 text-2xl font-semibold text-white'>{t[item.titleKey]}</h3>
-                    <p className='mt-2 text-sm leading-7 text-white/70'>{t[item.captionKey]}</p>
+                    <div className='absolute inset-x-5 bottom-5'>
+                      <p className='text-[11px] uppercase tracking-[0.18em] text-brand-gold'>{t.homeGalleryBadge}</p>
+                      <h3 className='mt-2 text-xl font-semibold text-white sm:text-2xl'>{t[item.titleKey]}</h3>
+                      <p className='mt-2 text-sm leading-6 text-white/70'>{t[item.captionKey]}</p>
+                    </div>
                   </div>
-                </div>
-              </GlassPanel>
+                </GlassPanel>
             </motion.div>
           );
         })}
@@ -667,7 +722,7 @@ const ReviewCard = ({ t, index }) => (
         ))}
       </div>
       <p className='mt-5 text-base leading-8 text-slate-700 dark:text-white/75'>
-        “{t[`homeReview${index}Quote`]}”
+        "{t[`homeReview${index}Quote`]}"
       </p>
       <div className='mt-6 flex items-center gap-4'>
         <div className='flex h-12 w-12 items-center justify-center rounded-full border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
@@ -689,15 +744,16 @@ export function ReviewsSection({ t }) {
       kicker={t.homeReviewsKicker}
       title={t.homeReviewsTitle}
       subtitle={t.homeReviewsSubtitle}
+      className='pt-10 pb-8 sm:pt-12'
     >
       <motion.div
         initial='hidden'
         whileInView='visible'
         viewport={sectionViewport}
         variants={staggerContainer}
-        className='grid gap-5 md:grid-cols-2 xl:grid-cols-4'
+        className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'
       >
-        {REVIEW_KEYS.map((key, index) => (
+        {REVIEW_KEYS.slice(0, 3).map((key, index) => (
           <ReviewCard key={key} t={t} index={key} custom={index} />
         ))}
       </motion.div>
@@ -714,7 +770,7 @@ const FaqItem = ({ item, isOpen, onToggle }) => (
         className='flex w-full items-center justify-between gap-4 px-5 py-5 text-left'
       >
         <span className='text-base font-semibold text-slate-900 dark:text-white'>{item.question}</span>
-        <span className='text-brand-gold'>{isOpen ? '−' : '+'}</span>
+        <span className='text-brand-gold'>{isOpen ? '-' : '+'}</span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -737,11 +793,11 @@ const FaqItem = ({ item, isOpen, onToggle }) => (
 );
 
 export function FAQSection({ t }) {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1);
 
   const faqItems = useMemo(
     () =>
-      FAQ_KEYS.map((item) => ({
+      FAQ_KEYS.slice(0, 4).map((item) => ({
         question: t[`homeFaq${item}Question`],
         answer: t[`homeFaq${item}Answer`],
       })),
@@ -754,6 +810,7 @@ export function FAQSection({ t }) {
       kicker={t.homeFaqKicker}
       title={t.homeFaqTitle}
       subtitle={t.homeFaqSubtitle}
+      className='pt-10 pb-8 sm:pt-12'
     >
       <motion.div
         initial='hidden'
@@ -824,7 +881,7 @@ export function LocationSection({ t, isRTL, onBook }) {
       kicker={t.homeLocationKicker}
       title={t.homeLocationTitle}
       subtitle={t.homeLocationSubtitle}
-      className='pb-24'
+      className='pt-10 pb-20 sm:pt-12'
     >
       <motion.div
         initial='hidden'

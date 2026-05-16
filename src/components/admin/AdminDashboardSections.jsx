@@ -1609,6 +1609,27 @@ export const AdminBookingsPanel = ({
     Boolean(deskBookingForm.date) &&
     Boolean(deskBookingForm.time);
   const isDeskBookingComplete = canSubmitDeskBooking;
+  const bookingFlowSteps = [
+    {
+      id: 'customer',
+      label: lang === 'ar' ? 'اختيار العميل' : 'Select customer',
+      done: Boolean(selectedCustomer?._id),
+    },
+    {
+      id: 'details',
+      label: lang === 'ar' ? 'تفاصيل الموعد' : 'Appointment details',
+      done:
+        Boolean(deskBookingForm.serviceId) &&
+        Boolean(deskBookingForm.barberId) &&
+        Boolean(deskBookingForm.date) &&
+        Boolean(deskBookingForm.time),
+    },
+    {
+      id: 'review',
+      label: lang === 'ar' ? 'المراجعة والإنشاء' : 'Review and create',
+      done: isDeskBookingComplete,
+    },
+  ];
 
   const bookingViewTabs = [
     {
@@ -1653,7 +1674,13 @@ export const AdminBookingsPanel = ({
   return (
     <SectionShell
       title={t.bookingDesk}
-      subtitle={t.bookingDeskSub}
+      subtitle={
+        activeBookingView === 'create'
+          ? t.bookForCustomerSub
+          : lang === 'ar'
+            ? 'راقب الحجوزات الحالية وغيّر حالتها ثم افتح إنشاء حجز جديد عند الحاجة.'
+            : 'Review current bookings, adjust status, and open a focused create flow when you need a new booking.'
+      }
       compact={true}
       right={
         <AdminSubviewTabs
@@ -1663,10 +1690,35 @@ export const AdminBookingsPanel = ({
         />
       }
     >
-      <div className={activeBookingView === 'create' ? 'mb-5 grid gap-4 2xl:grid-cols-[1.12fr_0.88fr]' : 'space-y-4'}>
+      <div className={activeBookingView === 'create' ? 'mb-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_22rem]' : 'space-y-4'}>
         {activeBookingView === 'create' ? (
+        <div className='space-y-4'>
+          <div className={`rounded-[1.2rem] p-3.5 sm:p-4 ${mutedPanel}`}>
+            <div className='grid gap-2 sm:grid-cols-3'>
+              {bookingFlowSteps.map((step, index) => (
+                <div
+                  key={step.id}
+                  className={`rounded-[1rem] border px-3.5 py-3 ${
+                    step.done
+                      ? 'border-brand-gold/24 bg-brand-gold/12 text-slate-900 dark:border-brand-gold/20 dark:bg-brand-gold/10 dark:text-white'
+                      : 'border-slate-200/70 bg-white/72 text-slate-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300'
+                  }`}
+                >
+                  <p className='text-[10px] font-black uppercase tracking-[0.16em]'>
+                    {lang === 'ar' ? `الخطوة ${formatNumber(index + 1, lang)}` : `Step ${index + 1}`}
+                  </p>
+                  <p className='mt-1.5 text-sm font-black'>{step.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
         <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-          <form onSubmit={onDeskBookingSubmit} className={`space-y-5 ${mobileWorkspaceScrollClass}`}>
+          <form
+            id='admin-booking-desk-form'
+            onSubmit={onDeskBookingSubmit}
+            className={`space-y-5 ${mobileWorkspaceScrollClass}`}
+          >
             <div className='flex items-center justify-between gap-3'>
               <button
                 type='button'
@@ -1682,6 +1734,16 @@ export const AdminBookingsPanel = ({
                 </span>
               ) : null}
             </div>
+
+            <div className={`rounded-[1.15rem] p-4 ${mutedPanel}`}>
+              <div className='mb-4 border-b border-slate-200/70 pb-3 dark:border-white/10'>
+                <p className='text-[10px] font-black uppercase tracking-[0.18em] text-brand-gold'>
+                  {lang === 'ar' ? 'الخطوة 1' : 'Step 1'}
+                </p>
+                <p className='mt-2 text-sm font-black text-slate-900 dark:text-white'>
+                  {lang === 'ar' ? 'ابحث عن العميل ثم ثبّت اختياره.' : 'Find the customer, then lock in the selection.'}
+                </p>
+              </div>
 
             <div>
               <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
@@ -1733,9 +1795,10 @@ export const AdminBookingsPanel = ({
                 </p>
               ) : null}
             </div>
+            </div>
 
             {selectedCustomer ? (
-              <div className='rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900'>
+              <div className='rounded-[1.15rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900'>
                 <div className='flex flex-wrap items-start justify-between gap-3'>
                   <div>
                     <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
@@ -1801,7 +1864,19 @@ export const AdminBookingsPanel = ({
               </div>
             )}
 
-            <div ref={bookingBuilderRef} className='grid gap-4 xl:grid-cols-2'>
+            <div ref={bookingBuilderRef} className={`rounded-[1.15rem] p-4 ${mutedPanel}`}>
+              <div className='mb-4 border-b border-slate-200/70 pb-3 dark:border-white/10'>
+                <p className='text-[10px] font-black uppercase tracking-[0.18em] text-brand-gold'>
+                  {lang === 'ar' ? 'الخطوة 2' : 'Step 2'}
+                </p>
+                <p className='mt-2 text-sm font-black text-slate-900 dark:text-white'>
+                  {lang === 'ar'
+                    ? 'اختر الخدمة والحلاق ثم حدّد التاريخ والوقت.'
+                    : 'Choose the service, barber, date, and time.'}
+                </p>
+              </div>
+
+            <div className='grid gap-4 xl:grid-cols-2'>
               <div>
                 <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
                   {t.serviceField}
@@ -1951,6 +2026,19 @@ export const AdminBookingsPanel = ({
                 )}
               </div>
             </div>
+            </div>
+
+            <div className={`rounded-[1.15rem] p-4 ${mutedPanel}`}>
+              <div className='mb-4 border-b border-slate-200/70 pb-3 dark:border-white/10'>
+                <p className='text-[10px] font-black uppercase tracking-[0.18em] text-brand-gold'>
+                  {lang === 'ar' ? 'الخطوة 3' : 'Step 3'}
+                </p>
+                <p className='mt-2 text-sm font-black text-slate-900 dark:text-white'>
+                  {lang === 'ar'
+                    ? 'راجع فتحات الوقت ثم أنشئ الحجز.'
+                    : 'Review the available times, then create the booking.'}
+                </p>
+              </div>
 
             <div>
               <div className='mb-3 flex flex-wrap items-center justify-between gap-3'>
@@ -2015,12 +2103,13 @@ export const AdminBookingsPanel = ({
                 </div>
               )}
             </div>
+            </div>
 
             <div className='flex justify-end'>
               <button
                 type='submit'
                 disabled={!canSubmitDeskBooking || deskBookingSubmitting}
-                className='inline-flex min-h-[3.15rem] items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'
+                className='hidden min-h-[3.15rem] items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 lg:inline-flex'
               >
                 {deskBookingSubmitting ? <Loader2 size={16} className='animate-spin' /> : null}
                 {deskBookingSubmitting ? t.creatingBooking || 'Creating booking...' : t.bookForCustomer}
@@ -2028,13 +2117,14 @@ export const AdminBookingsPanel = ({
             </div>
           </form>
         </div>
+        </div>
         ) : null}
 
         <div className={`space-y-4 ${activeBookingView === 'create' && !isDeskBookingComplete ? 'hidden lg:block' : ''}`}>
           {activeBookingView === 'manage' ? (
-          <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-            <div className='flex flex-col gap-4'>
-              <div className='flex flex-wrap items-end justify-between gap-3'>
+          <div className={`rounded-[1.15rem] p-3.5 sm:p-4 ${mutedPanel}`}>
+            <div className='flex flex-col gap-3'>
+              <div className='flex flex-wrap items-center justify-between gap-3'>
                 <div>
                   <p className='text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300'>
                     {selectedStatus.label}
@@ -2048,12 +2138,21 @@ export const AdminBookingsPanel = ({
                     </p>
                   </div>
                 </div>
-                <span className={`rounded-full px-3 py-1.5 text-xs font-bold text-slate-500 dark:text-slate-300 ${mutedPanel}`}>
+                <div className='flex flex-wrap items-center gap-2'>
+                <span className='rounded-full border border-slate-200/70 bg-white/72 px-3 py-1.5 text-xs font-bold text-slate-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300'>
                   {`${t.allStatuses}: ${formatNumber(bookingSummary?.all || 0, lang)}`}
                 </span>
+                <button
+                  type='button'
+                  onClick={() => handleBookingViewChange('create')}
+                  className='inline-flex min-h-[2.7rem] items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'
+                >
+                  {t.bookForCustomerTitle}
+                </button>
+                </div>
               </div>
 
-              <div className='pb-1'>
+              <div className='pb-0.5'>
                 <div className='flex flex-wrap gap-2'>
                   {statusOptions.map((status) => (
                     <button
@@ -2075,7 +2174,7 @@ export const AdminBookingsPanel = ({
                         {formatNumber(status.count, lang)}
                       </span>
                     </button>
-                  ))}
+                    ))}
                 </div>
               </div>
             </div>
@@ -2083,11 +2182,14 @@ export const AdminBookingsPanel = ({
           ) : null}
 
           {activeBookingView === 'create' ? (
-          <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel}`}>
-            <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
+          <div className={`rounded-[1.35rem] p-4 sm:p-5 ${glassPanel} xl:sticky xl:top-5`}>
+            <p className='text-[10px] font-black uppercase tracking-[0.18em] text-brand-gold'>
+              {lang === 'ar' ? 'المراجعة النهائية' : 'Final review'}
+            </p>
+            <p className='mt-2 text-lg font-black text-slate-900 dark:text-white'>
               {t.bookingSummary}
             </p>
-            <p className='mt-3 text-sm leading-6 text-slate-500 dark:text-slate-300'>
+            <p className='mt-2 text-sm leading-6 text-slate-500 dark:text-slate-300'>
               {t.bookingSummaryHint}
             </p>
 
@@ -2145,6 +2247,15 @@ export const AdminBookingsPanel = ({
                   </p>
                 </div>
               ) : null}
+              <button
+                type='submit'
+                form='admin-booking-desk-form'
+                disabled={!canSubmitDeskBooking || deskBookingSubmitting}
+                className='inline-flex min-h-[3.15rem] w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 lg:hidden'
+              >
+                {deskBookingSubmitting ? <Loader2 size={16} className='animate-spin' /> : null}
+                {deskBookingSubmitting ? t.creatingBooking || 'Creating booking...' : t.bookForCustomer}
+              </button>
             </div>
           </div>
           ) : null}
@@ -2298,6 +2409,7 @@ const CustomerWorkspacePanel = ({
   onCustomerHistoryPageChange,
   onOpenCustomerBookingDesk,
   onRebookCustomerService,
+  backAction = null,
 }) => {
   const [historyFilter, setHistoryFilter] = useState('all');
 
@@ -2366,6 +2478,17 @@ const CustomerWorkspacePanel = ({
 
   return (
     <div className='space-y-4'>
+      {backAction ? (
+        <button
+          type='button'
+          onClick={backAction}
+          className='inline-flex min-h-[2.8rem] items-center gap-2 rounded-2xl border border-slate-200 px-4 py-2 text-sm font-black text-slate-700 transition hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white xl:hidden'
+        >
+          <ArrowLeft size={16} className={lang === 'ar' ? 'rotate-180' : ''} />
+          {lang === 'ar' ? 'العودة إلى القائمة' : 'Back to list'}
+        </button>
+      ) : null}
+
       <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
         <div className='min-w-0'>
           <p className='text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
@@ -2659,85 +2782,123 @@ export const AdminCustomersPanel = ({
   onCustomerHistoryPageChange,
   onOpenCustomerBookingDesk,
   onRebookCustomerService,
-}) => (
-  <SectionShell
-    title={t.sectionCustomers}
-    compact={true}
-  >
+}) => {
+  const [mobileCustomerView, setMobileCustomerView] = useState('list');
+
+  const directoryPanel = (
     <div className='space-y-4'>
-      <div className={`rounded-[0.95rem] border p-4 ${mutedPanel}`}>
-        <div className='grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end'>
-          <div>
-            <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
-              {t.customerSearchLabel}
-            </label>
-            <input
-              type='text'
-              value={customerDirectorySearch}
-              onChange={(event) => setCustomerDirectorySearch(event.target.value)}
-              placeholder={t.customerSearchPlaceholder}
-              className={inputClass}
-            />
-            <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
-              {t.customerSearchHint}
-            </p>
-          </div>
-          <div className='rounded-[0.9rem] border border-slate-200/80 px-4 py-3 dark:border-slate-800'>
-            <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-              {lang === 'ar' ? 'إجمالي السجلات' : 'Total records'}
-            </p>
-            <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
-              {formatNumber(customerDirectorySummary?.totalCustomers || 0, lang)}
-            </p>
-          </div>
+      {customerDirectoryLoading ? (
+        <div className={`rounded-[0.95rem] border p-4 ${mutedPanel}`}>
+          <p className='text-sm text-slate-500 dark:text-slate-300'>{t.customerSearchLoading}</p>
         </div>
-      </div>
-
-      <div className='grid gap-4 2xl:grid-cols-[0.96fr_1.04fr]'>
-        <div className='space-y-4'>
-          {customerDirectoryLoading ? (
-            <div className={`rounded-[0.95rem] border p-4 ${mutedPanel}`}>
-              <p className='text-sm text-slate-500 dark:text-slate-300'>{t.customerSearchLoading}</p>
-            </div>
-          ) : customers.length === 0 ? (
-            <div className={`rounded-[1.1rem] border border-dashed p-6 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}>
-              {t.customerSearchEmpty}
-            </div>
-          ) : (
-            <CustomerDirectoryList
-              customers={customers}
-              lang={lang}
-              t={t}
-              selectedCustomerRecord={selectedCustomerRecord}
-              onSelectCustomer={onSelectCustomer}
-            />
-          )}
-
-          <AdminPagination
-            page={customerDirectoryPagination?.page || 1}
-            totalPages={customerDirectoryPagination?.totalPages || 1}
-            onChange={onCustomerDirectoryPageChange}
-          />
+      ) : customers.length === 0 ? (
+        <div className={`rounded-[1.1rem] border border-dashed p-6 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}>
+          {t.customerSearchEmpty}
         </div>
+      ) : (
+        <CustomerDirectoryList
+          customers={customers}
+          lang={lang}
+          t={t}
+          selectedCustomerRecord={selectedCustomerRecord}
+          onSelectCustomer={(customer) => {
+            onSelectCustomer(customer);
+            setMobileCustomerView('detail');
+          }}
+        />
+      )}
 
-        <div className={`rounded-[0.95rem] border p-4 sm:p-5 ${mutedPanel}`}>
-          <CustomerWorkspacePanel
-            t={t}
-            lang={lang}
-            selectedCustomerRecord={selectedCustomerRecord}
-            customerDetails={customerDetails}
-            customerDetailsLoading={customerDetailsLoading}
-            customerDetailsError={customerDetailsError}
-            onRetryCustomerDetails={onRetryCustomerDetails}
-            onCustomerHistoryPageChange={onCustomerHistoryPageChange}
-            onOpenCustomerBookingDesk={onOpenCustomerBookingDesk}
-            onRebookCustomerService={onRebookCustomerService}
-          />
-        </div>
-      </div>
+      <AdminPagination
+        page={customerDirectoryPagination?.page || 1}
+        totalPages={customerDirectoryPagination?.totalPages || 1}
+        onChange={onCustomerDirectoryPageChange}
+      />
     </div>
-  </SectionShell>
-);
+  );
+
+  const detailPanel = (
+    <div className={`rounded-[0.95rem] border p-4 sm:p-5 ${mutedPanel}`}>
+      <CustomerWorkspacePanel
+        t={t}
+        lang={lang}
+        selectedCustomerRecord={selectedCustomerRecord}
+        customerDetails={customerDetails}
+        customerDetailsLoading={customerDetailsLoading}
+        customerDetailsError={customerDetailsError}
+        onRetryCustomerDetails={onRetryCustomerDetails}
+        onCustomerHistoryPageChange={onCustomerHistoryPageChange}
+        onOpenCustomerBookingDesk={onOpenCustomerBookingDesk}
+        onRebookCustomerService={onRebookCustomerService}
+        backAction={() => setMobileCustomerView('list')}
+      />
+    </div>
+  );
+
+  return (
+    <SectionShell
+      title={t.sectionCustomers}
+      compact={true}
+    >
+      <div className='space-y-4'>
+        <div className={`rounded-[0.95rem] border p-4 ${mutedPanel}`}>
+          <div className='grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end'>
+            <div>
+              <label className='mb-2 block text-xs font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300'>
+                {t.customerSearchLabel}
+              </label>
+              <input
+                type='text'
+                value={customerDirectorySearch}
+                onChange={(event) => setCustomerDirectorySearch(event.target.value)}
+                placeholder={t.customerSearchPlaceholder}
+                className={inputClass}
+              />
+              <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
+                {t.customerSearchHint}
+              </p>
+            </div>
+            <div className='rounded-[0.9rem] border border-slate-200/80 px-4 py-3 dark:border-slate-800'>
+              <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                {lang === 'ar' ? 'إجمالي السجلات' : 'Total records'}
+              </p>
+              <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
+                {formatNumber(customerDirectorySummary?.totalCustomers || 0, lang)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className='xl:hidden'>
+          <AdminSubviewTabs
+            activeView={mobileCustomerView}
+            tabs={[
+              {
+                id: 'list',
+                label: lang === 'ar' ? 'السجل' : 'Customer list',
+                icon: Users,
+              },
+              {
+                id: 'detail',
+                label: selectedCustomerRecord?.name || (lang === 'ar' ? 'التفاصيل' : 'Customer detail'),
+                icon: UserRound,
+              },
+            ]}
+            onChange={setMobileCustomerView}
+          />
+        </div>
+
+        <div className='hidden gap-4 xl:grid xl:grid-cols-[0.92fr_1.08fr]'>
+          {directoryPanel}
+          {detailPanel}
+        </div>
+
+        <div className='xl:hidden'>
+          {mobileCustomerView === 'detail' ? detailPanel : directoryPanel}
+        </div>
+      </div>
+    </SectionShell>
+  );
+};
 export const AdminServicesPanel = ({
   t,
   lang,
