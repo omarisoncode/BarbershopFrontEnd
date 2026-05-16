@@ -14,17 +14,16 @@ import { translations } from '../utils/i18n';
 import { localizeDigits } from '../utils/localizeDigits';
 import { repairArabicObject } from '../utils/repairArabicText';
 import { ScissorsIcon } from './Icons';
-import { HOME_SECTION_IDS } from './home/homeContent';
 
 const footerSectionLinks = (t) => [
-  { href: `/#${HOME_SECTION_IDS.hero}`, label: t.navHome },
-  { href: `/#${HOME_SECTION_IDS.services}`, label: t.navServices },
-  { href: `/#${HOME_SECTION_IDS.barbers}`, label: t.navBarbers },
-  { href: `/#${HOME_SECTION_IDS.gallery}`, label: t.navGallery },
-  { href: `/#${HOME_SECTION_IDS.reviews}`, label: t.homeReviewsTitle },
-  { href: `/#${HOME_SECTION_IDS.about}`, label: t.navAbout },
-  { href: `/#${HOME_SECTION_IDS.location}`, label: t.navLocation },
-  { href: `/#${HOME_SECTION_IDS.faq}`, label: t.navFAQ },
+  { to: '/', label: t.navHome },
+  { to: '/services', label: t.navServices },
+  { to: '/barbers', label: t.navBarbers },
+  { to: '/gallery', label: t.navGallery },
+  { to: '/reviews', label: t.homeReviewsTitle },
+  { to: '/about', label: t.navAbout },
+  { to: '/location', label: t.navLocation },
+  { to: '/contact', label: t.navContact },
 ];
 
 export default function Footer({ lang }) {
@@ -110,13 +109,13 @@ export default function Footer({ lang }) {
             </p>
             <div className='mt-5 grid gap-3'>
               {quickLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
+                <Link
+                  key={link.to}
+                  to={link.to}
                   className='text-sm text-slate-600 transition hover:text-brand-gold dark:text-white/70 dark:hover:text-brand-gold'
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>

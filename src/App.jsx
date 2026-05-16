@@ -23,6 +23,7 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const StudioShowcasePage = lazy(() => import('./pages/StudioShowcasePage'));
 
 const APP_LANG_KEY = 'app-lang';
 
@@ -133,6 +134,38 @@ function AppLayout() {
             >
               <Routes>
                 <Route path='/' element={<Home {...sharedRouteProps} />} />
+                <Route
+                  path='/services'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='services' />}
+                />
+                <Route
+                  path='/barbers'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='barbers' />}
+                />
+                <Route
+                  path='/gallery'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='gallery' />}
+                />
+                <Route
+                  path='/reviews'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='reviews' />}
+                />
+                <Route
+                  path='/about'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='about' />}
+                />
+                <Route
+                  path='/faq'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='faq' />}
+                />
+                <Route
+                  path='/location'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='location' />}
+                />
+                <Route
+                  path='/contact'
+                  element={<StudioShowcasePage {...sharedRouteProps} page='contact' />}
+                />
                 <Route
                   path='/login'
                   element={

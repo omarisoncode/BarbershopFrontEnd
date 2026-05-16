@@ -154,17 +154,17 @@ const Avatar = ({ user }) => {
 };
 
 const sectionNavItems = (t) => [
-  { id: HOME_SECTION_IDS.hero, label: t.navHome },
-  { id: HOME_SECTION_IDS.services, label: t.navServices },
-  { id: HOME_SECTION_IDS.barbers, label: t.navBarbers },
-  { id: HOME_SECTION_IDS.gallery, label: t.navGallery },
-  { id: HOME_SECTION_IDS.faq, label: t.navFAQ },
+  { to: '/', label: t.navHome, homeSectionId: HOME_SECTION_IDS.hero },
+  { to: '/services', label: t.navServices },
+  { to: '/barbers', label: t.navBarbers },
+  { to: '/gallery', label: t.navGallery },
+  { to: '/faq', label: t.navFAQ },
 ];
 
 const secondarySectionNavItems = (t) => [
-  { id: HOME_SECTION_IDS.about, label: t.navAbout },
-  { id: HOME_SECTION_IDS.location, label: t.navLocation },
-  { id: HOME_SECTION_IDS.contact, label: t.navContact },
+  { to: '/about', label: t.navAbout },
+  { to: '/location', label: t.navLocation },
+  { to: '/contact', label: t.navContact },
 ];
 
 const toggleLanguageValue = (lang) => (lang === 'en' ? 'ar' : 'en');
@@ -275,8 +275,6 @@ export default function Navbar({ lang, setLang }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
-  const [activeSection, setActiveSection] = useState(HOME_SECTION_IDS.hero);
-
   const isRTL = lang === 'ar';
   const t = useMemo(() => repairArabicObject(translations[lang] || translations.en), [lang]);
   const c = useMemo(() => repairArabicObject(copy[lang] || copy.en), [lang]);
@@ -347,40 +345,6 @@ export default function Navbar({ lang, setLang }) {
     };
   }, [isMenuOpen, isProfileOpen, showLogoutConfirm]);
 
-  useEffect(() => {
-    if (location.pathname !== '/') {
-      return undefined;
-    }
-
-    const observedSections = navItems
-      .map((item) => document.getElementById(item.id))
-      .filter(Boolean);
-
-    if (!observedSections.length) {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
-
-        if (visibleEntry?.target?.id) {
-          setActiveSection(visibleEntry.target.id);
-        }
-      },
-      {
-        rootMargin: '-34% 0px -46% 0px',
-        threshold: [0.1, 0.28, 0.5, 0.8],
-      },
-    );
-
-    observedSections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, [location.pathname, navItems]);
-
   const closeMenus = () => {
     setIsMenuOpen(false);
     setIsProfileOpen(false);
@@ -418,19 +382,18 @@ export default function Navbar({ lang, setLang }) {
     }
   };
 
-  const handleSectionNavigation = (sectionId) => {
+  const handleSectionNavigation = (to, homeSectionId = HOME_SECTION_IDS.hero) => {
     closeMenus();
 
-    if (location.pathname === '/') {
-      scrollToHomepageSection(sectionId);
+    if (to === '/' && location.pathname === '/') {
+      scrollToHomepageSection(homeSectionId);
       return;
     }
 
-    navigate(sectionId === HOME_SECTION_IDS.hero ? '/' : `/#${sectionId}`);
+    navigate(to);
   };
 
-  const isSectionActive = (sectionId) =>
-    location.pathname === '/' && activeSection === sectionId;
+  const isSectionActive = (to) => location.pathname === to;
 
   const toggleLanguage = () => setLang(toggleLanguageValue(lang));
   const toggleTheme = () => setDarkMode(!darkMode);
@@ -451,9 +414,9 @@ export default function Navbar({ lang, setLang }) {
           <div className='hidden items-center gap-5 lg:flex'>
             {navItems.map((item) => (
               <NavLinkButton
-                key={item.id}
-                active={isSectionActive(item.id)}
-                onClick={() => handleSectionNavigation(item.id)}
+                key={item.to}
+                active={isSectionActive(item.to)}
+                onClick={() => handleSectionNavigation(item.to, item.homeSectionId)}
               >
                 {item.label}
               </NavLinkButton>
@@ -600,18 +563,18 @@ export default function Navbar({ lang, setLang }) {
                   <div className='mt-6 grid gap-2'>
                     {navItems.map((item) => (
                       <SectionMenuLink
-                        key={item.id}
-                        active={isSectionActive(item.id)}
+                        key={item.to}
+                        active={isSectionActive(item.to)}
                         label={item.label}
-                        onClick={() => handleSectionNavigation(item.id)}
+                        onClick={() => handleSectionNavigation(item.to, item.homeSectionId)}
                       />
                     ))}
                     {secondaryNavItems.map((item) => (
                       <SectionMenuLink
-                        key={item.id}
-                        active={isSectionActive(item.id)}
+                        key={item.to}
+                        active={isSectionActive(item.to)}
                         label={item.label}
-                        onClick={() => handleSectionNavigation(item.id)}
+                        onClick={() => handleSectionNavigation(item.to)}
                       />
                     ))}
                   </div>

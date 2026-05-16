@@ -796,7 +796,14 @@ const LocationInfoCard = ({ icon, label, value, note, href }) => {
   );
 };
 
-export function LocationSection({ t, isRTL, onBook }) {
+export function LocationSection({
+  t,
+  isRTL,
+  onBook,
+  titleOverride = '',
+  subtitleOverride = '',
+  kickerOverride = '',
+}) {
   const lang = isRTL ? 'ar' : 'en';
   const locationAddress = getBusinessValue(businessInfo.address, lang) || t.locationAddress;
   const locationPhone = localizeDigits(
@@ -814,9 +821,9 @@ export function LocationSection({ t, isRTL, onBook }) {
   return (
     <SectionShell
       id={HOME_SECTION_IDS.location}
-      kicker={t.homeLocationKicker}
-      title={t.homeLocationTitle}
-      subtitle={t.homeLocationSubtitle}
+      kicker={kickerOverride || t.homeLocationKicker}
+      title={titleOverride || t.homeLocationTitle}
+      subtitle={subtitleOverride || t.homeLocationSubtitle}
       className='pt-10 pb-20 sm:pt-12'
     >
       <motion.div
