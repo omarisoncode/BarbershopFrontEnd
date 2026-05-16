@@ -371,7 +371,7 @@ export const translations = {
     footerSupportLink1: 'FAQ',
     footerSupportLink2: 'Booking Policy',
     footerSupportLink3: 'Cancellation Terms',
-    footerCopyright: '© 2026 The Cut. All rights reserved.',
+    footerCopyright: 'Copyright 2026 The Cut. All rights reserved.',
     footerMadeWith: 'Crafted with precision for a premium studio experience.',
 
     loginTitle: 'Welcome Back',
@@ -845,7 +845,8 @@ export const translations = {
     footerSupportLink1: 'الأسئلة الشائعة',
     footerSupportLink2: 'سياسة الحجز',
     footerSupportLink3: 'شروط الإلغاء',
-    footerCopyright: '© 2026 ذا كت. جميع الحقوق محفوظة.',
+    footerCopyright:
+      '\u062d\u0642\u0648\u0642 \u0627\u0644\u0646\u0634\u0631 2026 \u0630\u0627 \u0643\u062a. \u062c\u0645\u064a\u0639 \u0627\u0644\u062d\u0642\u0648\u0642 \u0645\u062d\u0641\u0648\u0638\u0629.',
     footerMadeWith: 'صُممت التجربة بعناية لتشعر بالفخامة في كل زيارة.',
 
     loginTitle: 'مرحباً بعودتك',

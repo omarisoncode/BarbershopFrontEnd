@@ -124,7 +124,7 @@ export function HeroSection({
                         index > 1 ? 'hidden lg:block' : ''
                       }`}
                     >
-                      <div className='flex items-start gap-3'>
+                      <div className='flex flex-col items-start gap-3 sm:flex-row'>
                         <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
                           <Icon size={16} />
                         </div>
