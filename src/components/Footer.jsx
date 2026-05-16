@@ -20,7 +20,7 @@ const footerSectionLinks = (t) => [
   { to: '/services', label: t.navServices },
   { to: '/barbers', label: t.navBarbers },
   { to: '/gallery', label: t.navGallery },
-  { to: '/reviews', label: t.homeReviewsTitle },
+  { to: '/reviews', label: t.navReviews || 'Reviews' },
   { to: '/about', label: t.navAbout },
   { to: '/location', label: t.navLocation },
   { to: '/contact', label: t.navContact },
