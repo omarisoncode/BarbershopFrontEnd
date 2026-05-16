@@ -81,7 +81,7 @@ export default function Footer({ lang }) {
               </Link>
               <Link
                 to={dashboardLink.to}
-                className='lux-button-secondary inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold'
+                className='lux-button-secondary hidden items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold sm:inline-flex'
               >
                 {dashboardLink.label}
               </Link>
@@ -107,8 +107,8 @@ export default function Footer({ lang }) {
             <p className='text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold'>
               {t.footerQuickLinksTitle}
             </p>
-            <div className='mt-5 grid gap-3'>
-              {quickLinks.map((link) => (
+            <div className='mt-5 grid gap-3 sm:grid-cols-2 md:grid-cols-1'>
+              {quickLinks.slice(0, 6).map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}

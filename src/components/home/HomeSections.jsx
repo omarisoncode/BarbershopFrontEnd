@@ -65,7 +65,7 @@ export function HeroSection({
   onExploreServices,
 }) {
   return (
-    <section id={HOME_SECTION_IDS.hero} className='relative overflow-hidden pb-12 pt-6 sm:pb-16 sm:pt-8'>
+    <section id={HOME_SECTION_IDS.hero} className='relative overflow-hidden pb-10 pt-4 sm:pb-16 sm:pt-8'>
       <div className='lux-section-shell'>
         <motion.div
           initial='hidden'
@@ -76,33 +76,33 @@ export function HeroSection({
           <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.26),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(212,175,55,0.14),transparent_32%)]' />
           <div className='absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(90deg,rgba(7,7,7,0)_0%,rgba(7,7,7,0.22)_25%,rgba(7,7,7,0.66)_100%)] dark:block' />
 
-          <div className='relative grid min-h-[66svh] gap-6 sm:min-h-[72svh] lg:min-h-[78svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10'>
-            <div className='flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-14'>
+          <div className='relative grid min-h-[auto] gap-5 sm:min-h-[72svh] lg:min-h-[78svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10'>
+            <div className='flex flex-col justify-center px-4 py-6 sm:px-8 sm:py-10 lg:px-12 lg:py-14'>
               <motion.p variants={revealUpVariants} className='lux-kicker'>
                 {t.homeHeroEyebrow}
               </motion.p>
 
               <motion.h1
                 variants={revealUpVariants}
-                className='mt-4 max-w-2xl font-display text-[2.85rem] font-semibold leading-[0.94] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl dark:text-white'
+                className='mt-3 max-w-2xl font-display text-[2.2rem] font-semibold leading-[0.96] tracking-tight text-slate-950 sm:mt-4 sm:text-6xl lg:text-7xl dark:text-white'
               >
                 <span className='block'>{t.homeHeroTitleLine1}</span>
                 <span className='mt-2 block text-brand-gold'>{t.homeHeroTitleLine2}</span>
               </motion.h1>
 
-              <motion.p variants={revealUpVariants} className='lux-copy mt-4 max-w-xl text-[15px] sm:mt-6 sm:text-lg'>
+              <motion.p variants={revealUpVariants} className='lux-copy mt-3 max-w-xl text-[14px] leading-7 sm:mt-6 sm:text-lg'>
                 {t.homeHeroSubtitle}
               </motion.p>
 
               <motion.div
                 variants={revealUpVariants}
-                className='mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row'
+                className='mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row'
               >
-                <PrimaryButton type='button' onClick={onBookNow} className='min-w-[190px]'>
+                <PrimaryButton type='button' onClick={onBookNow} className='w-full sm:min-w-[190px] sm:w-auto'>
                   {t.homeHeroPrimaryCta}
                   {renderArrow(isRTL)}
                 </PrimaryButton>
-                <SecondaryButton type='button' onClick={onExploreServices} className='min-w-[190px]'>
+                <SecondaryButton type='button' onClick={onExploreServices} className='w-full sm:min-w-[190px] sm:w-auto'>
                   <Play size={16} className='fill-current' />
                   {t.homeHeroSecondaryCta}
                 </SecondaryButton>
@@ -110,7 +110,7 @@ export function HeroSection({
 
               <motion.div
                 variants={staggerContainer}
-                className='mt-6 grid grid-cols-2 gap-3 sm:mt-8 lg:grid-cols-4 lg:gap-4'
+                className='mt-5 grid grid-cols-2 gap-3 sm:mt-8 xl:grid-cols-4 xl:gap-4'
               >
                 {HERO_TRUST_BADGES.map((badge, index) => {
                   const Icon = iconMap[badge.icon] || Sparkles;
@@ -121,10 +121,10 @@ export function HeroSection({
                       variants={sequentialReveal}
                       custom={index}
                       className={`rounded-[1.2rem] border border-black/8 bg-white/58 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/6 ${
-                        index > 1 ? 'hidden lg:block' : ''
+                        index > 1 ? 'hidden md:block' : ''
                       }`}
                     >
-                      <div className='flex flex-col items-start gap-3 sm:flex-row'>
+                        <div className='flex flex-col items-start gap-3'>
                         <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
                           <Icon size={16} />
                         </div>
@@ -143,33 +143,35 @@ export function HeroSection({
               </motion.div>
             </div>
 
-            <div className='relative flex min-h-[240px] items-end overflow-hidden sm:min-h-[280px] lg:min-h-full'>
-              <div className='absolute inset-0 bg-[radial-gradient(circle_at_70%_18%,rgba(212,175,55,0.36),transparent_28%),linear-gradient(180deg,rgba(7,7,7,0.12),rgba(7,7,7,0.72))]' />
-              <video
-                className='absolute inset-0 h-full w-full object-cover'
-                src='/barber.mp4'
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload='metadata'
-              />
-              <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.08)_0%,rgba(5,5,5,0.4)_38%,rgba(5,5,5,0.88)_100%)]' />
+            <div className='relative min-h-[240px] p-3 sm:min-h-[280px] sm:p-4 lg:min-h-full lg:p-5'>
+              <div className='relative flex h-full items-end overflow-hidden rounded-[1.6rem] sm:rounded-[1.9rem]'>
+                <div className='absolute inset-0 bg-[radial-gradient(circle_at_70%_18%,rgba(212,175,55,0.36),transparent_28%),linear-gradient(180deg,rgba(7,7,7,0.12),rgba(7,7,7,0.72))]' />
+                <video
+                  className='absolute inset-0 h-full w-full object-cover'
+                  src='/barber.mp4'
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload='metadata'
+                />
+                <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.08)_0%,rgba(5,5,5,0.4)_38%,rgba(5,5,5,0.88)_100%)]' />
 
-              <motion.div
-                variants={revealUpVariants}
-                className='relative z-10 m-4 w-full max-w-[15rem] rounded-[1.35rem] border border-white/12 bg-black/42 p-4 text-white shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:m-8 sm:max-w-xs sm:p-5'
-              >
-                <p className='text-[10px] font-semibold uppercase tracking-[0.26em] text-brand-gold'>
-                  {t.homeHeroMediaBadge}
-                </p>
-                <h3 className='mt-2.5 text-xl font-semibold sm:text-2xl'>{t.homeHeroMediaTitle}</h3>
-                <p className='mt-2 hidden text-sm leading-7 text-white/70 sm:block'>{t.homeHeroMediaText}</p>
-                <div className='mt-4 flex items-center gap-3 text-sm text-white/80 sm:mt-6'>
-                  <CheckCircle2 size={16} className='text-brand-gold' />
-                  {t.homeHeroMediaPoint}
-                </div>
-              </motion.div>
+                <motion.div
+                  variants={revealUpVariants}
+                  className='relative z-10 m-3 w-full max-w-[13rem] rounded-[1.2rem] border border-white/12 bg-black/42 p-3.5 text-white shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:m-8 sm:max-w-xs sm:p-5'
+                >
+                  <p className='text-[10px] font-semibold uppercase tracking-[0.26em] text-brand-gold'>
+                    {t.homeHeroMediaBadge}
+                  </p>
+                  <h3 className='mt-2 text-lg font-semibold sm:text-2xl'>{t.homeHeroMediaTitle}</h3>
+                  <p className='mt-2 hidden text-sm leading-7 text-white/70 sm:block'>{t.homeHeroMediaText}</p>
+                  <div className='mt-3 flex items-center gap-3 text-xs text-white/80 sm:mt-6 sm:text-sm'>
+                    <CheckCircle2 size={16} className='text-brand-gold' />
+                    {t.homeHeroMediaPoint}
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -248,21 +250,21 @@ export function ServicesPreviewSection({
             whileInView='visible'
             viewport={sectionViewport}
             variants={staggerContainer}
-            className='grid gap-5 md:grid-cols-2 xl:grid-cols-4'
+            className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'
           >
             {items.map((service, index) => (
               <motion.article
                 key={service.key}
                 custom={index}
                 variants={sequentialReveal}
-                className='group flex h-full flex-col overflow-hidden rounded-[1.8rem] border border-black/8 bg-white/70 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_30px_90px_rgba(15,23,42,0.14)] dark:border-white/10 dark:bg-white/6'
+                className='group flex h-full flex-col overflow-hidden rounded-[1.45rem] border border-black/8 bg-white/70 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_30px_90px_rgba(15,23,42,0.14)] sm:rounded-[1.8rem] dark:border-white/10 dark:bg-white/6'
               >
                 <button
                   type='button'
                   onClick={() => onOpenService(service)}
                   className='relative block overflow-hidden text-left'
                 >
-                  <div className='aspect-[5/4] overflow-hidden'>
+                  <div className='aspect-[5/3] overflow-hidden sm:aspect-[5/4]'>
                     <img
                       src={service.image}
                       alt={service.title}
@@ -271,28 +273,28 @@ export function ServicesPreviewSection({
                     />
                   </div>
                   <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.02)_0%,rgba(7,7,7,0.14)_45%,rgba(7,7,7,0.72)_100%)]' />
-                  <div className='absolute inset-x-4 bottom-4 flex items-end justify-between gap-3'>
+                  <div className='absolute inset-x-3 bottom-3 flex items-end justify-between gap-2 sm:inset-x-4 sm:bottom-4 sm:gap-3'>
                     <StatusBadge tone='accent' className='backdrop-blur-xl'>
                       {service.tag}
                     </StatusBadge>
-                    <div className='rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs font-semibold text-white backdrop-blur-xl'>
+                    <div className='rounded-full border border-white/15 bg-black/35 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xl sm:px-3 sm:text-xs'>
                       {service.durationLabel}
                     </div>
                   </div>
                 </button>
 
-                <div className='flex flex-1 flex-col p-4.5 sm:p-5'>
+                <div className='flex flex-1 flex-col p-4 sm:p-5'>
                   <div className='flex items-start justify-between gap-3'>
                     <div>
                       <p className='text-xs uppercase tracking-[0.18em] text-brand-gold'>
                         {service.categoryLabel}
                       </p>
-                      <h3 className='mt-2 text-lg font-semibold text-slate-900 dark:text-white sm:text-xl'>
+                      <h3 className='mt-1.5 text-[1.05rem] font-semibold text-slate-900 dark:text-white sm:mt-2 sm:text-xl'>
                         {service.title}
                       </h3>
                     </div>
                     <p
-                      className={`text-sm font-semibold ${
+                      className={`text-[13px] font-semibold sm:text-sm ${
                         service.isFallback
                           ? 'text-slate-500 dark:text-white/65'
                           : 'text-brand-gold'
@@ -302,7 +304,7 @@ export function ServicesPreviewSection({
                     </p>
                   </div>
 
-                  <p className='mt-3 min-h-[56px] text-sm leading-6 text-slate-600 dark:text-white/70'>
+                  <p className='mt-2.5 min-h-[48px] text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:mt-3 sm:min-h-[56px] sm:text-sm'>
                     {service.description}
                   </p>
 
@@ -312,29 +314,29 @@ export function ServicesPreviewSection({
                     </p>
                   ) : null}
 
-                  <div className='mt-4 flex flex-wrap gap-2'>
+                  <div className='mt-3 flex flex-wrap gap-2 sm:mt-4'>
                     {service.previewFeatures.slice(0, 2).map((feature) => (
                       <span
                         key={feature}
-                        className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
+                        className='rounded-full border border-black/8 bg-black/[0.03] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65 sm:px-3 sm:text-[11px]'
                       >
                         {feature}
                       </span>
                     ))}
                   </div>
 
-                  <div className='mt-6 flex items-center justify-between gap-3'>
+                  <div className='mt-4 flex items-center justify-between gap-3 sm:mt-6'>
                     <button
                       type='button'
                       onClick={() => onOpenService(service)}
-                      className='text-sm font-semibold text-slate-500 transition hover:text-brand-gold dark:text-white/60 dark:hover:text-brand-gold'
+                      className='text-[13px] font-semibold text-slate-500 transition hover:text-brand-gold dark:text-white/60 dark:hover:text-brand-gold sm:text-sm'
                     >
                       {t.homeLearnMoreCta}
                     </button>
                     <PrimaryButton
                       type='button'
                       onClick={() => onBook(service.isFallback ? null : service)}
-                      className='px-4 py-2.5 text-xs uppercase tracking-[0.16em]'
+                      className='px-3 py-2 text-[11px] uppercase tracking-[0.14em] sm:px-4 sm:py-2.5 sm:text-xs sm:tracking-[0.16em]'
                     >
                       {t.homeServiceCardCta}
                       {renderArrow(isRTL)}
@@ -363,11 +365,11 @@ export function PromiseSection({ t, isRTL, onBook }) {
         whileInView='visible'
         viewport={sectionViewport}
         variants={staggerContainer}
-        className='grid gap-6 xl:grid-cols-[1.05fr_0.95fr]'
+        className='grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr_0.95fr]'
       >
         <motion.div variants={revealUpVariants}>
-          <GlassPanel className='grid h-full gap-6 overflow-hidden p-0 lg:grid-cols-[0.95fr_1.05fr]'>
-            <div className='relative min-h-[320px] overflow-hidden'>
+          <GlassPanel className='overflow-hidden p-0'>
+            <div className='relative min-h-[220px] overflow-hidden sm:min-h-[320px]'>
               <img
                 src='https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1400&q=80'
                 alt={t.homePromiseImageAlt}
@@ -377,31 +379,31 @@ export function PromiseSection({ t, isRTL, onBook }) {
               <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.08)_0%,rgba(7,7,7,0.68)_100%)]' />
             </div>
 
-            <div className='flex flex-col justify-between p-6 sm:p-8'>
+            <div className='flex flex-col justify-between p-5 sm:p-8'>
               <div>
                 <StatusBadge tone='accent'>{t.homePromiseBadge}</StatusBadge>
-                <h3 className='mt-4 text-3xl font-semibold text-slate-900 dark:text-white'>
+                <h3 className='mt-3 text-[1.9rem] font-semibold text-slate-900 dark:text-white sm:mt-4 sm:text-3xl'>
                   {t.homePromiseCardTitle}
                 </h3>
-                <p className='lux-copy mt-4'>{t.homePromiseCardText}</p>
+                <p className='lux-copy mt-3 text-sm sm:mt-4 sm:text-base'>{t.homePromiseCardText}</p>
               </div>
 
-              <div className='mt-8 grid gap-4 2xl:grid-cols-2'>
-                {PROMISE_POINTS.map((point) => {
+              <div className='mt-5 grid gap-3 sm:mt-8 sm:gap-4 sm:grid-cols-2'>
+                {PROMISE_POINTS.slice(0, 2).map((point) => {
                   const Icon = iconMap[point.icon] || Sparkles;
 
                   return (
                     <div
                       key={point.titleKey}
-                      className='flex h-full flex-col rounded-[1.5rem] border border-black/8 bg-black/[0.03] p-5 dark:border-white/10 dark:bg-white/5'
+                      className='flex h-full flex-col rounded-[1.2rem] border border-black/8 bg-black/[0.03] p-4 dark:border-white/10 dark:bg-white/5 sm:rounded-[1.5rem] sm:p-5'
                     >
-                      <div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
-                        <Icon size={18} />
+                      <div className='flex h-10 w-10 items-center justify-center rounded-xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold sm:h-12 sm:w-12 sm:rounded-2xl'>
+                        <Icon size={16} />
                       </div>
-                      <p className='mt-4 text-lg font-semibold leading-7 text-slate-900 dark:text-white sm:text-xl'>
+                      <p className='mt-3 text-base font-semibold leading-6 text-slate-900 dark:text-white sm:mt-4 sm:text-xl sm:leading-7'>
                         {t[point.titleKey]}
                       </p>
-                      <p className='mt-3 text-sm leading-7 text-slate-600 dark:text-white/70'>
+                      <p className='mt-2 text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:mt-3 sm:text-sm sm:leading-7'>
                         {t[point.textKey]}
                       </p>
                     </div>
@@ -413,27 +415,27 @@ export function PromiseSection({ t, isRTL, onBook }) {
         </motion.div>
 
         <motion.div variants={revealUpVariants}>
-          <GlassPanel className='h-full p-6 sm:p-8'>
-            <div className='rounded-[1.7rem] border border-brand-gold/25 bg-brand-gold/10 p-5 text-brand-gold'>
+          <GlassPanel className='h-full p-5 sm:p-8'>
+            <div className='rounded-[1.35rem] border border-brand-gold/25 bg-brand-gold/10 p-4 text-brand-gold sm:rounded-[1.7rem] sm:p-5'>
               <CalendarDays size={22} />
             </div>
-            <h3 className='mt-6 text-3xl font-semibold text-slate-900 dark:text-white'>
+            <h3 className='mt-4 text-[1.9rem] font-semibold text-slate-900 dark:text-white sm:mt-6 sm:text-3xl'>
               {t.homePromiseCtaTitle}
             </h3>
-            <p className='lux-copy mt-4'>{t.homePromiseCtaText}</p>
+            <p className='lux-copy mt-3 text-sm sm:mt-4 sm:text-base'>{t.homePromiseCtaText}</p>
 
-            <div className='mt-8 space-y-4'>
+            <div className='mt-5 space-y-3 sm:mt-8 sm:space-y-4'>
               {[1, 2, 3].map((item) => (
                 <div
                   key={item}
-                  className='flex items-start gap-3 rounded-[1.4rem] border border-black/8 bg-black/[0.03] p-4 dark:border-white/10 dark:bg-white/5'
+                  className='flex items-start gap-3 rounded-[1.2rem] border border-black/8 bg-black/[0.03] p-3.5 dark:border-white/10 dark:bg-white/5 sm:rounded-[1.4rem] sm:p-4'
                 >
                   <CheckCircle2 size={18} className='mt-1 shrink-0 text-brand-gold' />
                   <div>
-                    <p className='text-sm font-semibold text-slate-900 dark:text-white'>
+                    <p className='text-[13px] font-semibold text-slate-900 dark:text-white sm:text-sm'>
                       {t[`homePromiseChecklist${item}Title`]}
                     </p>
-                    <p className='mt-1 text-sm leading-7 text-slate-600 dark:text-white/70'>
+                    <p className='mt-1 text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:text-sm sm:leading-7'>
                       {t[`homePromiseChecklist${item}Text`]}
                     </p>
                   </div>
@@ -441,7 +443,7 @@ export function PromiseSection({ t, isRTL, onBook }) {
               ))}
             </div>
 
-            <PrimaryButton type='button' onClick={onBook} className='mt-8 w-full'>
+            <PrimaryButton type='button' onClick={onBook} className='mt-5 w-full sm:mt-8'>
               {t.homePromisePrimaryCta}
               {renderArrow(isRTL)}
             </PrimaryButton>
@@ -523,34 +525,38 @@ export function BarbersPreviewSection({
           >
             {items.map((barber, index) => (
               <motion.article key={barber.key} custom={index} variants={sequentialReveal}>
-                <PremiumCard className='group h-full overflow-hidden p-0'>
-                  <div className='relative min-h-[320px] overflow-hidden'>
+                <PremiumCard className='group flex h-full flex-col overflow-hidden p-4 sm:p-5'>
+                  <div className='overflow-hidden rounded-[1.65rem]'>
                     <img
                       src={barber.image}
                       alt={barber.title}
                       loading='lazy'
-                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+                      className='h-72 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
                     />
-                    <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.1)_0%,rgba(7,7,7,0.22)_36%,rgba(7,7,7,0.82)_100%)]' />
-                    <div className='absolute inset-x-4 bottom-4 flex items-center justify-between gap-3'>
-                      <StatusBadge tone='accent'>{t.homeFeaturedBadge}</StatusBadge>
-                      <div className='rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-gold backdrop-blur-xl'>
-                        {barber.experienceYears > 0
-                          ? `${barber.experienceYears} ${t.homeYearsShort}`
-                          : t.homeFeaturedBadge}
-                      </div>
-                    </div>
                   </div>
 
-                  <div className='flex h-full flex-col justify-between p-5 sm:p-6'>
+                  <div className='flex flex-1 flex-col justify-between'>
                     <div>
-                      <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
-                        {t.homeMeetTeamCta}
-                      </p>
-                      <h3 className='mt-3 text-2xl font-semibold text-slate-900 dark:text-white'>
-                        {barber.title}
-                      </h3>
-                      <p className='mt-3 text-sm leading-7 text-slate-600 dark:text-white/70'>
+                      <div className='mt-5 flex items-start justify-between gap-4'>
+                        <div className='min-w-0'>
+                          <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
+                            {t.homeMeetTeamCta}
+                          </p>
+                          <h3 className='mt-2 text-2xl font-semibold text-slate-900 dark:text-white'>
+                            {barber.title}
+                          </h3>
+                          <p className='mt-2 text-sm text-brand-gold'>
+                            {barber.experienceYears > 0
+                              ? `${barber.experienceYears} ${t.homeYearsShort}`
+                              : t.homeFeaturedBadge}
+                          </p>
+                        </div>
+                        <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/22 bg-brand-gold/10 text-brand-gold'>
+                          <UserRound size={18} />
+                        </div>
+                      </div>
+
+                      <p className='mt-4 text-sm leading-7 text-slate-600 dark:text-white/70'>
                         {barber.bio}
                       </p>
                       <div className='mt-4 flex flex-wrap gap-2'>
@@ -870,19 +876,25 @@ export function LocationSection({
               />
             </div>
 
-            <div className='mt-8 flex flex-col gap-3 sm:flex-row'>
-              <PrimaryButton as='a' href={locationPhoneHref} className='sm:min-w-[160px]'>
+            <div className='mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap'>
+              <PrimaryButton as='a' href={locationPhoneHref} className='w-full sm:min-w-[160px] sm:w-auto'>
                 <Phone size={16} />
                 {t.homeLocationCallCta}
               </PrimaryButton>
-              <SecondaryButton as='a' href={locationWhatsappHref} className='sm:min-w-[160px]'>
+              <SecondaryButton as='a' href={locationWhatsappHref} className='w-full sm:min-w-[160px] sm:w-auto'>
                 <MessageCircle size={16} />
                 {t.homeLocationWhatsappCta}
               </SecondaryButton>
-              <SecondaryButton type='button' onClick={onBook} className='sm:min-w-[160px]'>
-                {t.homeBookGeneralCta}
-                {renderArrow(isRTL)}
-              </SecondaryButton>
+              <div className='pt-1 text-sm font-semibold text-slate-500 dark:text-white/60 sm:flex-basis-full sm:pt-0'>
+                <button
+                  type='button'
+                  onClick={onBook}
+                  className='inline-flex items-center gap-2 transition hover:text-brand-gold'
+                >
+                  {t.homeBookGeneralCta}
+                  {renderArrow(isRTL)}
+                </button>
+              </div>
             </div>
           </GlassPanel>
         </motion.div>
