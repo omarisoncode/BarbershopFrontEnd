@@ -1485,7 +1485,7 @@ export default function BookingPage({ lang, isRTL }) {
             </main>
 
             {step > 0 ? (
-              <footer className='shrink-0 px-3 py-2 supports-[padding:max(0px)]:pb-[max(0.65rem,env(safe-area-inset-bottom))] sm:px-4 lg:mx-auto lg:w-full lg:max-w-4xl'>
+              <footer className='shrink-0 px-3 pt-2 pb-3 supports-[padding:max(0px)]:pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4 lg:mx-auto lg:w-full lg:max-w-4xl lg:py-2'>
                 <div className='mx-auto flex max-w-4xl items-center justify-between gap-3'>
                   <button
                     type='button'
