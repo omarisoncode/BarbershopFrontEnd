@@ -991,11 +991,43 @@ export default function BookingPage({ lang, isRTL }) {
                   </div>
                 </div>
 
-                <div className='mb-3 h-1.5 rounded-full bg-brand-gold/10 dark:bg-white/10'>
-                  <motion.div
-                    animate={{ width: `${((step + 1) / steps.length) * 100}%` }}
-                    className='h-full rounded-full bg-brand-gold'
-                  />
+                <div className='mb-3 flex items-center justify-between gap-2' aria-label={t.appointmentBooking}>
+                  {stepStates.map((stepItem, index) => {
+                    const isPast = step > index;
+                    const isActive = step === index;
+                    const Icon = stepItem.Icon;
+
+                    return (
+                      <React.Fragment key={stepItem.id}>
+                        <div
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition ${
+                            isActive
+                              ? 'border-brand-gold bg-brand-gold text-black shadow-[0_10px_22px_rgba(212,175,55,0.18)]'
+                              : isPast
+                                ? 'border-brand-gold/18 bg-brand-gold/10 text-brand-gold'
+                                : 'border-brand-gold/10 bg-white/60 text-slate-400 dark:border-brand-gold/10 dark:bg-white/5 dark:text-slate-500'
+                          }`}
+                          aria-current={isActive ? 'step' : undefined}
+                        >
+                          {isPast ? (
+                            <CheckCircle2 size={15} strokeWidth={2.6} />
+                          ) : (
+                            <Icon size={15} />
+                          )}
+                        </div>
+                        {index < stepStates.length - 1 ? (
+                          <span
+                            className={`h-px flex-1 ${
+                              step > index
+                                ? 'bg-brand-gold/55'
+                                : 'bg-brand-gold/12 dark:bg-white/10'
+                            }`}
+                            aria-hidden='true'
+                          />
+                        ) : null}
+                      </React.Fragment>
+                    );
+                  })}
                 </div>
 
                 {selectionSummary.length > 0 ? (
