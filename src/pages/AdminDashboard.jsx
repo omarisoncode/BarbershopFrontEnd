@@ -84,6 +84,18 @@ const readJsonStorage = (key, fallback) => {
   }
 };
 
+const writeJsonStorage = (key, value) => {
+  if (typeof window === 'undefined' || !key) {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Ignore storage issues and keep in-memory state.
+  }
+};
+
 const copy = {
   en: {
     title: 'Studio Command',
@@ -733,8 +745,23 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
   const adminUserId = user?._id || user?.id || '';
+  const adminCoreCacheBaseKey = adminUserId
+    ? `admin-dashboard-core:${adminUserId}`
+    : '';
   const adminBookingsCacheKey = adminUserId
     ? `admin-dashboard-bookings:${adminUserId}:${statusFilter}`
+    : '';
+  const adminServicesCacheKey = adminCoreCacheBaseKey
+    ? `${adminCoreCacheBaseKey}:services`
+    : '';
+  const adminBarbersCacheKey = adminCoreCacheBaseKey
+    ? `${adminCoreCacheBaseKey}:barbers`
+    : '';
+  const adminAnalyticsCacheKey = adminCoreCacheBaseKey
+    ? `${adminCoreCacheBaseKey}:analytics`
+    : '';
+  const adminCustomerDirectoryCacheKey = adminCoreCacheBaseKey
+    ? `${adminCoreCacheBaseKey}:customer-directory`
     : '';
   const [bookings, setBookings] = useState(() => {
     const cached = readJsonStorage(adminBookingsCacheKey, []);
@@ -748,9 +775,15 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     const cached = readJsonStorage(adminBookingsCacheKey ? `${adminBookingsCacheKey}:summary` : '', null);
     return cached || { all: 0, active: 0, completed: 0, cancelled: 0, no_show: 0 };
   });
-  const [services, setServices] = useState([]);
-  const [barbers, setBarbers] = useState([]);
-  const [analytics, setAnalytics] = useState(null);
+  const [services, setServices] = useState(() => {
+    const cached = readJsonStorage(adminServicesCacheKey, []);
+    return Array.isArray(cached) ? cached : [];
+  });
+  const [barbers, setBarbers] = useState(() => {
+    const cached = readJsonStorage(adminBarbersCacheKey, []);
+    return Array.isArray(cached) ? cached : [];
+  });
+  const [analytics, setAnalytics] = useState(() => readJsonStorage(adminAnalyticsCacheKey, null));
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -768,9 +801,18 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   const [customerResults, setCustomerResults] = useState([]);
   const [customerSearchLoading, setCustomerSearchLoading] = useState(false);
   const [customerDirectorySearch, setCustomerDirectorySearch] = useState('');
-  const [customerDirectory, setCustomerDirectory] = useState([]);
-  const [customerDirectoryPagination, setCustomerDirectoryPagination] = useState({ page: 1, limit: 12, total: 0, totalPages: 1 });
-  const [customerDirectorySummary, setCustomerDirectorySummary] = useState({ totalCustomers: 0 });
+  const [customerDirectory, setCustomerDirectory] = useState(() => {
+    const cached = readJsonStorage(adminCustomerDirectoryCacheKey, null);
+    return Array.isArray(cached?.items) ? cached.items : [];
+  });
+  const [customerDirectoryPagination, setCustomerDirectoryPagination] = useState(() => {
+    const cached = readJsonStorage(adminCustomerDirectoryCacheKey, null);
+    return cached?.pagination || { page: 1, limit: 12, total: 0, totalPages: 1 };
+  });
+  const [customerDirectorySummary, setCustomerDirectorySummary] = useState(() => {
+    const cached = readJsonStorage(adminCustomerDirectoryCacheKey, null);
+    return cached?.summary || { totalCustomers: 0 };
+  });
   const [customerDirectoryLoading, setCustomerDirectoryLoading] = useState(false);
   const [selectedCustomerRecord, setSelectedCustomerRecord] = useState(null);
   const [customerDetails, setCustomerDetails] = useState(null);
@@ -782,6 +824,10 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     total: 0,
     totalPages: 1,
   });
+  const adminCustomerDetailsCacheKey =
+    adminCoreCacheBaseKey && selectedCustomerRecord?._id
+      ? `${adminCoreCacheBaseKey}:customer-details:${selectedCustomerRecord._id}`
+      : '';
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [bookingPanelView, setBookingPanelView] = useState('manage');
   const [deskBookingForm, setDeskBookingForm] = useState(createDeskBookingState());
@@ -848,7 +894,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
   }, [adminBookingsCacheKey]);
 
   useEffect(() => {
-    if (!adminBookingsCacheKey || typeof window === 'undefined') {
+    if (!adminBookingsCacheKey) {
       return;
     }
 
@@ -856,22 +902,9 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       return;
     }
 
-    try {
-      window.localStorage.setItem(
-        adminBookingsCacheKey,
-        JSON.stringify(bookings),
-      );
-      window.localStorage.setItem(
-        `${adminBookingsCacheKey}:pagination`,
-        JSON.stringify(bookingPagination),
-      );
-      window.localStorage.setItem(
-        `${adminBookingsCacheKey}:summary`,
-        JSON.stringify(bookingSummary),
-      );
-    } catch {
-      // Ignore storage issues and keep in-memory state.
-    }
+    writeJsonStorage(adminBookingsCacheKey, bookings);
+    writeJsonStorage(`${adminBookingsCacheKey}:pagination`, bookingPagination);
+    writeJsonStorage(`${adminBookingsCacheKey}:summary`, bookingSummary);
   }, [
     adminBookingsCacheKey,
     bookingPagination,
@@ -879,19 +912,156 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     bookings,
   ]);
 
+  useEffect(() => {
+    if (!adminServicesCacheKey) {
+      return;
+    }
+
+    const cachedServices = readJsonStorage(adminServicesCacheKey, []);
+    if (Array.isArray(cachedServices) && cachedServices.length > 0) {
+      setServices((current) => (current.length > 0 ? current : cachedServices));
+    }
+  }, [adminServicesCacheKey]);
+
+  useEffect(() => {
+    if (!adminBarbersCacheKey) {
+      return;
+    }
+
+    const cachedBarbers = readJsonStorage(adminBarbersCacheKey, []);
+    if (Array.isArray(cachedBarbers) && cachedBarbers.length > 0) {
+      setBarbers((current) => (current.length > 0 ? current : cachedBarbers));
+    }
+  }, [adminBarbersCacheKey]);
+
+  useEffect(() => {
+    if (!adminAnalyticsCacheKey) {
+      return;
+    }
+
+    const cachedAnalytics = readJsonStorage(adminAnalyticsCacheKey, null);
+    if (cachedAnalytics) {
+      setAnalytics((current) => current || cachedAnalytics);
+    }
+  }, [adminAnalyticsCacheKey]);
+
+  useEffect(() => {
+    if (!adminCustomerDirectoryCacheKey) {
+      return;
+    }
+
+    const cachedDirectory = readJsonStorage(adminCustomerDirectoryCacheKey, null);
+    if (!cachedDirectory) {
+      return;
+    }
+
+    if (Array.isArray(cachedDirectory.items) && cachedDirectory.items.length > 0) {
+      setCustomerDirectory((current) => (current.length > 0 ? current : cachedDirectory.items));
+    }
+
+    if (cachedDirectory.pagination) {
+      setCustomerDirectoryPagination((current) =>
+        current.total > 0 ? current : cachedDirectory.pagination,
+      );
+    }
+
+    if (cachedDirectory.summary) {
+      setCustomerDirectorySummary((current) =>
+        current.totalCustomers > 0 ? current : cachedDirectory.summary,
+      );
+    }
+  }, [adminCustomerDirectoryCacheKey]);
+
+  useEffect(() => {
+    if (!adminCustomerDetailsCacheKey) {
+      return;
+    }
+
+    const cachedDetails = readJsonStorage(adminCustomerDetailsCacheKey, null);
+    if (!cachedDetails) {
+      return;
+    }
+
+    setCustomerDetails((current) => current || cachedDetails);
+    if (cachedDetails.pagination) {
+      setCustomerHistoryPagination((current) =>
+        current.total > 0 ? current : cachedDetails.pagination,
+      );
+    }
+  }, [adminCustomerDetailsCacheKey]);
+
+  useEffect(() => {
+    if (!adminServicesCacheKey || services.length === 0) {
+      return;
+    }
+
+    writeJsonStorage(adminServicesCacheKey, services);
+  }, [adminServicesCacheKey, services]);
+
+  useEffect(() => {
+    if (!adminBarbersCacheKey || barbers.length === 0) {
+      return;
+    }
+
+    writeJsonStorage(adminBarbersCacheKey, barbers);
+  }, [adminBarbersCacheKey, barbers]);
+
+  useEffect(() => {
+    if (!adminAnalyticsCacheKey || !analytics) {
+      return;
+    }
+
+    writeJsonStorage(adminAnalyticsCacheKey, analytics);
+  }, [adminAnalyticsCacheKey, analytics]);
+
+  useEffect(() => {
+    if (
+      !adminCustomerDirectoryCacheKey ||
+      customerDirectory.length === 0 ||
+      customerDirectorySearch.trim() ||
+      (customerDirectoryPagination.page || 1) !== 1
+    ) {
+      return;
+    }
+
+    writeJsonStorage(adminCustomerDirectoryCacheKey, {
+      items: customerDirectory,
+      pagination: customerDirectoryPagination,
+      summary: customerDirectorySummary,
+    });
+  }, [
+    adminCustomerDirectoryCacheKey,
+    customerDirectory,
+    customerDirectorySearch,
+    customerDirectoryPagination,
+    customerDirectorySummary,
+  ]);
+
+  useEffect(() => {
+    if (!adminCustomerDetailsCacheKey || !customerDetails) {
+      return;
+    }
+
+    writeJsonStorage(adminCustomerDetailsCacheKey, customerDetails);
+  }, [adminCustomerDetailsCacheKey, customerDetails]);
+
   const fetchCoreData = useCallback(async () => {
     const [servicesResponse, barbersResponse] = await Promise.all([
       api.get('/services/admin'),
       api.get('/barbers/admin/all'),
     ]);
 
-    setServices(Array.isArray(servicesResponse.data) ? servicesResponse.data : []);
-    setBarbers(Array.isArray(barbersResponse.data) ? barbersResponse.data : []);
+    setServices((current) =>
+      Array.isArray(servicesResponse.data) ? servicesResponse.data : current,
+    );
+    setBarbers((current) =>
+      Array.isArray(barbersResponse.data) ? barbersResponse.data : current,
+    );
   }, []);
 
   const fetchAnalytics = useCallback(async () => {
     const analyticsResponse = await api.get('/bookings/analytics/overview');
-    setAnalytics(analyticsResponse.data || null);
+    setAnalytics((current) => analyticsResponse.data || current);
   }, []);
 
   const fetchBookingsPage = useCallback(async ({ page = 1, status = statusFilter } = {}) => {
@@ -937,6 +1107,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     });
     setBookingPagination((current) => nextPagination || current);
     setBookingSummary((current) => nextSummary || current);
+    setSyncIssue(false);
   }, [bookingPagination.limit, statusFilter]);
 
   const fetchCustomerDirectory = useCallback(async ({ page = 1, search = '' } = {}) => {
@@ -957,6 +1128,7 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
     setCustomerDirectorySummary((current) =>
       response.data?.summary || current,
     );
+    setSyncIssue(false);
   }, [customerDirectoryPagination.limit]);
 
   const fetchCustomerDetails = useCallback(async ({ customerId, page = 1 } = {}) => {
@@ -988,51 +1160,68 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
       pagination: nextPagination,
     });
     setCustomerHistoryPagination(nextPagination);
+    setSyncIssue(false);
   }, [customerHistoryPagination.limit]);
+
+  const hasRecoverableAdminData =
+    bookings.length > 0 ||
+    services.length > 0 ||
+    barbers.length > 0 ||
+    Boolean(analytics) ||
+    customerDirectory.length > 0;
 
   const loadDashboard = useCallback(async ({ background = false } = {}) => {
     if (background) setRefreshing(true);
 
     try {
-      await Promise.all([
+      const results = await Promise.allSettled([
         fetchCoreData(),
         fetchAnalytics(),
         fetchBookingsPage({ page: 1, status: statusFilter }),
+        fetchCustomerDirectory({ page: 1, search: '' }),
       ]);
-      setLoadError(false);
-      setSyncIssue(false);
+      const hasFailure = results.some((result) => result.status === 'rejected');
+      setLoadError(hasFailure && !hasRecoverableAdminData);
+      setSyncIssue(hasFailure && hasRecoverableAdminData);
     } catch {
-      setLoadError(true);
+      setLoadError(!hasRecoverableAdminData);
+      setSyncIssue(hasRecoverableAdminData);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [fetchAnalytics, fetchBookingsPage, fetchCoreData, statusFilter]);
+  }, [
+    fetchCustomerDirectory,
+    fetchAnalytics,
+    fetchBookingsPage,
+    fetchCoreData,
+    hasRecoverableAdminData,
+    statusFilter,
+  ]);
 
   const fetchAll = useCallback(async () => {
-    await Promise.all([
+    const results = await Promise.allSettled([
       fetchCoreData(),
       fetchAnalytics(),
       fetchBookingsPage({ page: bookingPagination.page, status: statusFilter }),
-      activeSection === 'customers'
-        ? Promise.all([
-            fetchCustomerDirectory({
-              page: customerDirectoryPagination.page,
-              search: customerDirectorySearch,
-            }),
-            selectedCustomerRecord?._id
-              ? fetchCustomerDetails({
-                  customerId: selectedCustomerRecord._id,
-                  page: customerHistoryPagination.page,
-                })
-              : Promise.resolve(),
-          ])
+      fetchCustomerDirectory({
+        page: activeSection === 'customers' ? customerDirectoryPagination.page : 1,
+        search: activeSection === 'customers' ? customerDirectorySearch : '',
+      }),
+      activeSection === 'customers' && selectedCustomerRecord?._id
+        ? fetchCustomerDetails({
+            customerId: selectedCustomerRecord._id,
+            page: customerHistoryPagination.page,
+          })
         : Promise.resolve(),
     ]);
-    setLoadError(false);
-    setSyncIssue(false);
+
+    const hasFailure = results.some((result) => result.status === 'rejected');
+    setLoadError(hasFailure && !hasRecoverableAdminData);
+    setSyncIssue(hasFailure);
   }, [
     activeSection,
+    hasRecoverableAdminData,
     bookingPagination.page,
     customerDirectoryPagination.page,
     customerHistoryPagination.page,

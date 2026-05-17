@@ -9,6 +9,42 @@ export const escapeCSVValue = (value) => {
   return normalized;
 };
 
+const getServiceLabel = (booking) => {
+  if (typeof booking?.service === 'string') {
+    return booking.service;
+  }
+
+  if (booking?.service?.name) {
+    return booking.service.name;
+  }
+
+  if (booking?.service?.nameAr) {
+    return booking.service.nameAr;
+  }
+
+  return booking?.serviceName || '';
+};
+
+const getBarberLabel = (booking) => {
+  if (booking?.barber?.name) {
+    return booking.barber.name;
+  }
+
+  if (booking?.barber?.nameAr) {
+    return booking.barber.nameAr;
+  }
+
+  return booking?.barberName || '';
+};
+
+const getPhoneLabel = (booking) => {
+  const countryCode = booking?.user?.countryCode || '';
+  const phone = booking?.user?.phone || '';
+
+  if (!phone) return '';
+  return `${countryCode}${phone}`.trim();
+};
+
 export const buildBookingsCSV = (bookings = []) => {
   if (!bookings.length) return '';
 
@@ -17,6 +53,7 @@ export const buildBookingsCSV = (bookings = []) => {
     'Email',
     'Phone',
     'Service',
+    'Barber',
     'Date',
     'Time',
     'Status',
@@ -25,9 +62,10 @@ export const buildBookingsCSV = (bookings = []) => {
   const rows = bookings.map((b) => [
     b.user?.name || '',
     b.user?.email || '',
-    b.user?.phone || '',
-    b.service || '',
-    b.date || '',
+    getPhoneLabel(b),
+    getServiceLabel(b),
+    getBarberLabel(b),
+    b.businessDate || b.date || '',
     b.time || '',
     b.status || '',
   ]);
@@ -37,7 +75,7 @@ export const buildBookingsCSV = (bookings = []) => {
     .join('\n');
 };
 
-export const exportBookingsToCSV = (bookings) => {
+export const exportBookingsToCSV = (bookings, filename = 'bookings.csv') => {
   const csvContent = buildBookingsCSV(bookings);
   if (!csvContent) return;
 
@@ -48,7 +86,7 @@ export const exportBookingsToCSV = (bookings) => {
   const link = document.createElement('a');
 
   link.setAttribute('href', url);
-  link.setAttribute('download', 'bookings.csv');
+  link.setAttribute('download', filename);
 
   document.body.appendChild(link);
 

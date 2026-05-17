@@ -27,6 +27,7 @@ import {
   dashboardInsetPanelClass,
 } from '../dashboard/dashboardTheme';
 import { getBusinessDateKey } from '../../utils/businessDate';
+import { exportBookingsToCSV } from '../../utils/exportCSV';
 import { getLocalizedCategoryLabel } from '../../utils/serviceCategories';
 import { localizeDigits } from '../../utils/localizeDigits';
 
@@ -445,8 +446,12 @@ export const AdminSubviewTabs = ({ activeView, tabs, onChange, columns = 2 }) =>
         <button
           key={tab.id}
           type='button'
-          onClick={() => onChange(tab.id)}
-          className={`flex min-h-[3.2rem] items-center gap-2.5 rounded-[1rem] border px-4 py-3 text-left text-sm font-black transition ${
+          onClick={() => {
+            if (tab.disabled) return;
+            onChange(tab.id);
+          }}
+          disabled={tab.disabled}
+          className={`flex min-h-[3.2rem] items-center gap-2.5 rounded-[1rem] border px-4 py-3 text-left text-sm font-black transition disabled:cursor-not-allowed disabled:opacity-55 ${
             activeView === tab.id
               ? 'border-slate-900 bg-slate-900 text-white shadow-sm dark:border-white dark:bg-white dark:text-slate-900'
               : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-900'
@@ -1664,6 +1669,7 @@ export const AdminBookingsPanel = ({
   onBookingViewChange,
 }) => {
   const [internalBookingView, setInternalBookingView] = useState('manage');
+  const [exportState, setExportState] = useState('idle');
   const bookingBuilderRef = useRef(null);
   const activeBookingView = bookingView || internalBookingView;
 
@@ -1741,6 +1747,25 @@ export const AdminBookingsPanel = ({
     },
   ];
   const visibleBookingsCount = bookingPagination?.total || bookings.length;
+  const exportFilename = `bookings-${statusFilter || 'all'}.csv`;
+
+  const handleExportBookings = () => {
+    if (!bookings.length) return;
+    exportBookingsToCSV(bookings, exportFilename);
+    setExportState('done');
+  };
+
+  useEffect(() => {
+    if (exportState !== 'done') {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setExportState('idle');
+    }, 2200);
+
+    return () => window.clearTimeout(timer);
+  }, [exportState]);
 
   const handleBookingViewChange = (nextView) => {
     if (onBookingViewChange) {
@@ -2240,10 +2265,13 @@ export const AdminBookingsPanel = ({
                 </span>
                 <button
                   type='button'
-                  onClick={() => handleBookingViewChange('create')}
-                  className='inline-flex min-h-[2.7rem] items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'
+                  onClick={handleExportBookings}
+                  disabled={bookings.length === 0}
+                  className='inline-flex min-h-[2.7rem] items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-700 transition hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white'
                 >
-                  {t.bookForCustomerTitle}
+                  {exportState === 'done'
+                    ? t.exportedBookings || (lang === 'ar' ? 'تم التصدير' : 'Exported')
+                    : t.exportBookings || (lang === 'ar' ? 'تصدير CSV' : 'Export CSV')}
                 </button>
                 </div>
               </div>
@@ -2880,6 +2908,9 @@ export const AdminCustomersPanel = ({
   onRebookCustomerService,
 }) => {
   const [mobileCustomerView, setMobileCustomerView] = useState('list');
+  const hasSelectedCustomer = Boolean(selectedCustomerRecord?._id);
+  const effectiveMobileCustomerView =
+    mobileCustomerView === 'detail' && !hasSelectedCustomer ? 'list' : mobileCustomerView;
 
   const directoryPanel = (
     <div className='space-y-4'>
@@ -2967,7 +2998,7 @@ export const AdminCustomersPanel = ({
 
         <div className='xl:hidden'>
           <AdminSubviewTabs
-            activeView={mobileCustomerView}
+            activeView={effectiveMobileCustomerView}
             tabs={[
               {
                 id: 'list',
@@ -2976,11 +3007,17 @@ export const AdminCustomersPanel = ({
               },
               {
                 id: 'detail',
-                label: selectedCustomerRecord?.name || (lang === 'ar' ? 'التفاصيل' : 'Customer detail'),
+                label: lang === 'ar' ? 'تفاصيل العميل' : 'Customer detail',
                 icon: UserRound,
+                disabled: !hasSelectedCustomer,
               },
             ]}
-            onChange={setMobileCustomerView}
+            onChange={(nextView) => {
+              if (nextView === 'detail' && !hasSelectedCustomer) {
+                return;
+              }
+              setMobileCustomerView(nextView);
+            }}
           />
         </div>
 
@@ -2990,7 +3027,7 @@ export const AdminCustomersPanel = ({
         </div>
 
         <div className='xl:hidden'>
-          {mobileCustomerView === 'detail' ? detailPanel : directoryPanel}
+          {effectiveMobileCustomerView === 'detail' ? detailPanel : directoryPanel}
         </div>
       </div>
     </SectionShell>
