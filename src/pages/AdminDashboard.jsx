@@ -96,6 +96,24 @@ const writeJsonStorage = (key, value) => {
   }
 };
 
+const getOperationalTimingLabel = (booking, lang = 'en') => {
+  if (!booking?.date || !booking?.time) return '';
+
+  const start = new Date(`${booking.date}T${booking.time}:00`).getTime();
+  const diffMinutes = Math.max(0, Math.round((start - Date.now()) / 60000));
+
+  if (diffMinutes < 60) {
+    return lang === 'ar'
+      ? `خلال ${formatNumber(diffMinutes, lang)} دقيقة`
+      : `In ${formatNumber(diffMinutes, lang)} mins`;
+  }
+
+  const diffHours = Math.round(diffMinutes / 60);
+  return lang === 'ar'
+    ? `خلال ${formatNumber(diffHours, lang)} ساعة`
+    : `In ${formatNumber(diffHours, lang)} hrs`;
+};
+
 const copy = {
   en: {
     title: 'Studio Command',
@@ -2308,6 +2326,23 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
           </div>
         ) : null}
 
+        <div className='flex flex-wrap gap-2'>
+          <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+            <span className={`lux-presence-dot ${syncIssue ? 'lux-presence-dot--amber' : 'lux-presence-dot--emerald'}`} />
+            {syncIssue ? t.livePaused : t.liveHealthy}
+          </span>
+          <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+            <span className='lux-presence-dot' />
+            {`${formatNumber(analytics?.totals?.active || 0, lang)} ${t.activeBookings}`}
+          </span>
+          {nextUpcomingBooking ? (
+            <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+              <span className='lux-presence-dot lux-presence-dot--emerald' />
+              {getOperationalTimingLabel(nextUpcomingBooking, lang)}
+            </span>
+          ) : null}
+        </div>
+
         <div className='grid gap-3 grid-cols-2 xl:grid-cols-4'>
           <MetricCard
             icon={Sparkles}
@@ -2375,6 +2410,10 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
                   </span>
                   <span className='rounded-full border border-brand-gold/14 bg-white/72 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-slate-600 backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/6 dark:text-slate-300'>
                     {nextUpcomingBooking.barber?.name || nextUpcomingBooking.barberName}
+                  </span>
+                  <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+                    <span className='lux-presence-dot lux-presence-dot--emerald' />
+                    {getOperationalTimingLabel(nextUpcomingBooking, lang)}
                   </span>
                 </div>
                 <p className='mt-4 text-sm font-semibold text-slate-600 dark:text-slate-300'>

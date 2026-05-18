@@ -97,6 +97,30 @@ const getDashboardGreeting = (lang) => {
   };
 };
 
+const getUpcomingWindowLabel = (booking, lang) => {
+  if (!booking) return '';
+
+  const diffMinutes = Math.max(0, Math.round((getBookingDateTimeValue(booking) - Date.now()) / 60000));
+
+  if (diffMinutes < 60) {
+    return lang === 'ar'
+      ? `بعد ${localizeDigits(diffMinutes, lang)} دقيقة`
+      : `In ${localizeDigits(diffMinutes, lang)} mins`;
+  }
+
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) {
+    return lang === 'ar'
+      ? `بعد ${localizeDigits(diffHours, lang)} ساعة`
+      : `In ${localizeDigits(diffHours, lang)} hrs`;
+  }
+
+  const diffDays = Math.round(diffHours / 24);
+  return lang === 'ar'
+    ? `بعد ${localizeDigits(diffDays, lang)} يوم`
+    : `In ${localizeDigits(diffDays, lang)} days`;
+};
+
 const copy = {
   en: {
     overview: 'Dashboard',
@@ -272,21 +296,21 @@ const copy = {
   },
 };
 const glassPanel =
-  'border border-brand-gold/22 bg-[linear-gradient(180deg,rgba(255,252,247,0.98),rgba(247,239,226,0.98))] shadow-[0_18px_48px_rgba(124,89,39,0.08),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl dark:border-brand-gold/18 dark:bg-[linear-gradient(180deg,rgba(15,12,10,0.98),rgba(8,7,6,0.98))] dark:shadow-[0_24px_80px_rgba(0,0,0,0.34)] dark:backdrop-blur-none';
+  'border border-brand-gold/14 bg-[#f7f1e8] shadow-[0_10px_24px_rgba(15,23,42,0.05)] dark:border-brand-gold/12 dark:bg-[#15110f] dark:shadow-[0_14px_28px_rgba(0,0,0,0.2)]';
 const actionButtonClass =
   'inline-flex items-center justify-center gap-2 rounded-[1rem] px-4 py-3 text-sm font-bold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-gold/30 disabled:cursor-not-allowed disabled:opacity-60';
 const subtleButtonClass =
-  'border border-brand-gold/24 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,236,221,0.94))] text-slate-800 shadow-[0_8px_24px_rgba(124,89,39,0.06)] hover:-translate-y-[1px] hover:border-brand-gold/52 hover:text-[#8b6238] hover:shadow-[0_14px_28px_rgba(124,89,39,0.1)] dark:border-brand-gold/20 dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(15,13,11,0.98))] dark:text-[#f4ead6] dark:shadow-none dark:hover:border-brand-gold/40 dark:hover:text-brand-gold-soft dark:hover:shadow-none';
+  'border border-brand-gold/16 bg-[#fbf7f1] text-slate-800 shadow-[0_4px_14px_rgba(15,23,42,0.04)] hover:-translate-y-[1px] hover:border-brand-gold/28 hover:text-[#8b6238] hover:shadow-[0_8px_18px_rgba(15,23,42,0.06)] dark:border-brand-gold/14 dark:bg-[#1a1512] dark:text-[#f4ead6] dark:hover:border-brand-gold/24 dark:hover:text-brand-gold-soft';
 const primaryButtonClass =
-  'bg-[linear-gradient(135deg,#f1ddb2_0%,#c9a45c_52%,#9d7242_100%)] text-brand-ink shadow-[0_16px_38px_rgba(201,164,92,0.28)] hover:-translate-y-[1px] hover:shadow-[0_22px_46px_rgba(201,164,92,0.34)]';
+  'bg-[linear-gradient(135deg,#2d211c_0%,#5c2d2b_58%,#7a3f39_100%)] text-[#f7efe5] shadow-[0_14px_32px_rgba(86,34,35,0.18)] hover:-translate-y-[1px] hover:shadow-[0_18px_38px_rgba(86,34,35,0.24)]';
 const dangerButtonClass =
-  'border border-rose-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,241,242,0.96))] text-rose-700 shadow-[0_10px_24px_rgba(244,63,94,0.08)] hover:-translate-y-[1px] hover:border-rose-300 hover:bg-[linear-gradient(180deg,rgba(255,247,248,0.98),rgba(255,228,232,0.98))] hover:text-rose-800 hover:shadow-[0_16px_30px_rgba(244,63,94,0.12)] dark:border-rose-500/20 dark:bg-[linear-gradient(180deg,rgba(47,18,25,0.72),rgba(33,14,20,0.8))] dark:text-rose-200 dark:shadow-none dark:hover:border-rose-400/28 dark:hover:text-rose-100';
+  'border border-[#a85054]/22 bg-[#fbf4f3] text-[#8d3942] shadow-[0_6px_16px_rgba(86,34,35,0.06)] hover:-translate-y-[1px] hover:border-[#a85054]/32 hover:bg-[#f8eceb] hover:text-[#7a3139] hover:shadow-[0_10px_22px_rgba(86,34,35,0.09)] dark:border-[#a85054]/24 dark:bg-[#2c181a] dark:text-[#efb7bd] dark:hover:border-[#a85054]/32 dark:hover:text-[#f5c9ce]';
 const accentSecondaryButtonClass =
-  'border border-brand-gold/28 bg-[linear-gradient(180deg,rgba(255,252,245,0.98),rgba(245,233,210,0.96))] text-[#8b6238] shadow-[0_12px_26px_rgba(201,164,92,0.12)] hover:-translate-y-[1px] hover:border-brand-gold/56 hover:text-[#6f4d2a] hover:shadow-[0_18px_34px_rgba(201,164,92,0.18)] dark:border-brand-gold/24 dark:bg-[linear-gradient(180deg,rgba(42,32,20,0.8),rgba(28,21,14,0.88))] dark:text-[#f3dfb6] dark:shadow-none dark:hover:border-brand-gold/40 dark:hover:text-[#fff0cb]';
+  'border border-brand-gold/20 bg-[#f8f1e5] text-[#8b6238] shadow-[0_6px_16px_rgba(138,100,48,0.06)] hover:-translate-y-[1px] hover:border-brand-gold/32 hover:text-[#6f4d2a] hover:shadow-[0_10px_20px_rgba(138,100,48,0.1)] dark:border-brand-gold/18 dark:bg-[#2a2219] dark:text-[#f3dfb6] dark:hover:border-brand-gold/28 dark:hover:text-[#fff0cb]';
 const insetPanelClass =
-  'border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(249,242,231,0.6))] shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:border-brand-gold/14 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.028),rgba(255,255,255,0.015))] dark:shadow-none';
+  'border border-brand-gold/12 bg-[#fcf8f2] dark:border-brand-gold/10 dark:bg-[#191411]';
 const workspaceFrame =
-  'overflow-hidden rounded-[2rem] border border-brand-gold/24 bg-[linear-gradient(180deg,#fffaf3_0%,#f6ead7_100%)] shadow-[0_28px_80px_rgba(124,89,39,0.12),inset_0_1px_0_rgba(255,255,255,0.72)] dark:border-brand-gold/18 dark:bg-[linear-gradient(180deg,#080706_0%,#040403_100%)] dark:shadow-[0_30px_120px_rgba(0,0,0,0.46)]';
+  'overflow-hidden rounded-[2rem] border border-brand-gold/14 bg-[#efe5d8] shadow-[0_14px_34px_rgba(15,23,42,0.06)] dark:border-brand-gold/12 dark:bg-[#0c0a09] dark:shadow-[0_18px_36px_rgba(0,0,0,0.24)]';
 const sidebarButtonClass =
   'flex min-h-[3rem] w-full items-center gap-2.5 rounded-[0.95rem] px-3.5 text-left text-[13px] font-semibold transition';
 
@@ -306,7 +330,7 @@ const Avatar = ({ user, imageOverride = '', large = false }) => {
 
   return (
     <div
-      className={`${sizeClass} flex items-center justify-center rounded-[1rem] border border-brand-gold/12 bg-white/64 font-bold text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/5 dark:text-slate-200`}
+      className={`${sizeClass} flex items-center justify-center rounded-[1rem] border border-brand-gold/12 bg-white/84 font-bold text-slate-700 shadow-[0_8px_18px_rgba(15,23,42,0.05)] dark:border-brand-gold/14 dark:bg-white/5 dark:text-slate-200`}
     >
       {user?.name?.charAt(0)?.toUpperCase() || 'U'}
     </div>
@@ -364,7 +388,7 @@ const SidebarNavButton = ({ icon: Icon, label, active, onClick, badge = null }) 
     onClick={onClick}
     className={`${sidebarButtonClass} ${
       active
-        ? 'border border-brand-gold/26 bg-[linear-gradient(90deg,rgba(201,164,92,0.22),rgba(255,255,255,0.42))] shadow-[0_10px_24px_rgba(124,89,39,0.08)] text-slate-900 dark:bg-[linear-gradient(90deg,rgba(201,164,92,0.18),rgba(201,164,92,0.06))] dark:text-[#f8f0df] dark:shadow-none'
+        ? 'border border-brand-gold/24 bg-[#f1e5d3] shadow-[0_8px_18px_rgba(15,23,42,0.05)] text-slate-900 dark:bg-[#2a2119] dark:text-[#f8f0df] dark:shadow-none'
         : 'border border-transparent text-slate-700 hover:border-brand-gold/18 hover:bg-brand-gold/[0.07] hover:text-slate-900 dark:text-white/76 dark:hover:bg-white/[0.03] dark:hover:text-white'
     }`}
   >
@@ -440,7 +464,7 @@ const MobileDrawerNav = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className='fixed inset-0 z-[70] bg-slate-950/45 backdrop-blur-sm xl:hidden'
+          className='fixed inset-0 z-[70] bg-slate-950/45 xl:hidden'
           onClick={onClose}
         >
           <motion.div
@@ -576,6 +600,12 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
           <h3 className='mt-1.5 text-[1.15rem] font-black tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.3rem]'>
             {getLocalizedBookingService(booking, lang)}
           </h3>
+          <div className='mt-2 flex flex-wrap gap-2'>
+            <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+              <span className='lux-presence-dot lux-presence-dot--emerald' />
+              {getUpcomingWindowLabel(booking, lang)}
+            </span>
+          </div>
           <div className='mt-2.5 grid gap-2 text-slate-700 dark:text-white/78 sm:grid-cols-3'>
             <div className='flex items-center gap-3 text-sm'>
               <CalendarDays size={17} className='text-brand-gold' />
@@ -593,8 +623,8 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
 
         </div>
 
-        <div className='flex flex-col items-center gap-2.5 lg:w-[8.25rem]'>
-          <div className='relative flex h-[5.9rem] w-[5.9rem] items-center justify-center rounded-[1.15rem] border border-brand-gold/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,239,226,0.84))] shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:bg-[linear-gradient(180deg,rgba(24,21,18,0.98),rgba(14,12,10,0.98))] dark:shadow-[0_12px_28px_rgba(0,0,0,0.22)] sm:h-[6.5rem] sm:w-[6.5rem]'>
+        <div className='flex flex-col items-center gap-2.5 lg:min-w-[6.25rem] lg:items-end'>
+          <div className='relative flex h-[5.9rem] w-[5.9rem] items-center justify-center rounded-[1.15rem] border border-brand-gold/14 bg-[#f7efe4] shadow-[0_8px_18px_rgba(15,23,42,0.06)] dark:bg-[#1a1512] dark:shadow-[0_10px_20px_rgba(0,0,0,0.18)] sm:h-[6.5rem] sm:w-[6.5rem]'>
             <div className='absolute inset-2 rounded-[1rem] border border-brand-gold/10' />
             {booking.barber?.image || booking.barber?.profileImage ? (
               <img
@@ -603,7 +633,7 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
                 className='relative z-10 h-[4.35rem] w-[4.35rem] rounded-[0.85rem] object-cover shadow-[0_10px_22px_rgba(0,0,0,0.22)] sm:h-[4.95rem] sm:w-[4.95rem]'
               />
             ) : (
-              <div className='relative z-10 flex h-[4.35rem] w-[4.35rem] items-center justify-center rounded-[0.85rem] border border-brand-gold/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,244,233,0.68))] text-brand-gold dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] sm:h-[4.95rem] sm:w-[4.95rem]'>
+              <div className='relative z-10 flex h-[4.35rem] w-[4.35rem] items-center justify-center rounded-[0.85rem] border border-brand-gold/12 bg-[#fbf5ea] text-brand-gold dark:bg-[#231c17] sm:h-[4.95rem] sm:w-[4.95rem]'>
                 <Scissors size={24} />
               </div>
             )}
@@ -611,7 +641,7 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
           <button
             type='button'
             onClick={() => onCancel(booking)}
-            className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.75rem] w-full rounded-[1rem] px-4`}
+            className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.05rem] min-w-[5.25rem] rounded-[0.85rem] px-2.5 py-1.5 text-[11px]`}
           >
             {dashboardCopy.cancelBookingShort}
           </button>
@@ -644,13 +674,13 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
       transition={{ duration: 0.2 }}
       className={`rounded-[0.9rem] border p-2.5 transition-all duration-200 ${
         isActionableActive
-          ? 'border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,254,251,0.97),rgba(248,240,227,0.97))] shadow-[0_16px_32px_rgba(124,89,39,0.06)] dark:bg-[linear-gradient(180deg,rgba(21,18,16,0.98),rgba(12,10,9,0.98))] dark:shadow-none'
-          : 'border-brand-gold/14 bg-[linear-gradient(180deg,rgba(252,248,241,0.95),rgba(242,235,223,0.95))] opacity-90 dark:bg-[linear-gradient(180deg,rgba(18,16,14,0.92),rgba(10,9,8,0.92))] dark:opacity-85'
+          ? 'border-brand-gold/16 bg-[#fbf5ec] shadow-[0_10px_22px_rgba(15,23,42,0.05)] dark:bg-[#181311] dark:shadow-none'
+          : 'border-brand-gold/12 bg-[#f4ecdf] opacity-90 dark:bg-[#15110f] dark:opacity-85'
       }`}
     >
       <div className='flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between'>
         <div className='flex min-w-0 items-start gap-2.5'>
-          <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[0.75rem] border border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,243,232,0.68))] text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] dark:shadow-none'>
+          <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[0.75rem] border border-brand-gold/16 bg-[#fbf4e9] text-center dark:bg-[#221c17]'>
             <span className='text-[10px] font-black uppercase tracking-[0.16em] text-brand-gold'>
               {date
                 ? date.toLocaleDateString(lang === 'ar' ? 'ar-KW' : 'en-US', {
@@ -691,7 +721,7 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
           <span
             className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
               isActionableActive
-                ? 'bg-brand-gold text-brand-ink'
+                ? 'border border-brand-gold/16 bg-[#f3e8db] text-[#7a3f39] dark:border-brand-gold/18 dark:bg-[#261b17] dark:text-[#d7a789]'
                 : 'border border-brand-gold/12 bg-brand-gold/[0.08] text-slate-600 dark:bg-white/[0.03] dark:text-white/60'
             }`}
           >
@@ -702,7 +732,7 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             <button
               type='button'
               onClick={() => onCancel(booking)}
-              className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.35rem] rounded-[0.9rem] px-3 py-2 text-[12px]`}
+              className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.1rem] rounded-[0.85rem] px-2.5 py-1.5 text-[11px]`}
             >
               {dashboardCopy.cancelBookingShort}
             </button>
@@ -728,7 +758,7 @@ const ActionModal = ({ open, children }) => (
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed inset-0 z-50 flex overflow-y-auto overscroll-contain bg-black/55 p-4 backdrop-blur-md sm:items-center sm:justify-center'
+        className='fixed inset-0 z-50 flex overflow-y-auto overscroll-contain bg-black/55 p-4 sm:items-center sm:justify-center'
       >
         {children}
       </motion.div>
@@ -750,7 +780,7 @@ const CancelModal = ({ target, onClose, onConfirm, loading, dashboardCopy }) => 
         className={`relative my-auto w-full max-w-sm rounded-[1rem] p-6 ${glassPanel}`}
       >
         <div className='mb-4 flex justify-center'>
-          <div className='rounded-full bg-red-500/10 p-3 text-red-500'>
+          <div className='rounded-full border border-[#a85054]/24 bg-[#a85054]/10 p-3 text-[#8d3942] dark:text-[#efb7bd]'>
             <WarningIcon />
           </div>
         </div>
@@ -880,7 +910,7 @@ const ProfileModal = ({
       >
         <div className='overflow-y-auto pr-1'>
           <div className='mb-4 flex items-center gap-3'>
-            <div className='rounded-lg border border-brand-gold/12 bg-white/62 p-3 text-brand-gold backdrop-blur-xl dark:border-brand-gold/14 dark:bg-white/5 dark:text-brand-gold-soft'>
+            <div className='rounded-lg border border-brand-gold/12 bg-white/82 p-3 text-brand-gold dark:border-brand-gold/14 dark:bg-white/5 dark:text-brand-gold-soft'>
               <Camera size={20} />
             </div>
             <div>
@@ -949,7 +979,7 @@ const ProfileModal = ({
                 onChange={(event) => onNameChange(event.target.value)}
                 autoComplete='name'
                 disabled={loading}
-                className='min-h-[3rem] w-full rounded-xl border border-brand-gold/14 bg-white/72 px-3.5 text-sm font-semibold text-slate-900 outline-none backdrop-blur-xl transition focus:border-brand-gold/40 dark:border-brand-gold/14 dark:bg-white/5 dark:text-white dark:focus:border-brand-gold/34'
+                className='min-h-[3rem] w-full rounded-xl border border-brand-gold/14 bg-white/88 px-3.5 text-sm font-semibold text-slate-900 outline-none transition focus:border-brand-gold/40 dark:border-brand-gold/14 dark:bg-white/5 dark:text-white dark:focus:border-brand-gold/34'
               />
             </div>
             <div>
@@ -990,7 +1020,7 @@ const ProfileModal = ({
                   inputMode='numeric'
                   autoComplete='tel-national'
                   disabled={loading}
-                  className={`min-h-[3rem] rounded-xl border bg-white/72 px-3.5 text-sm font-semibold text-slate-900 outline-none backdrop-blur-xl transition dark:bg-white/5 dark:text-white ${
+                  className={`min-h-[3rem] rounded-xl border bg-white/88 px-3.5 text-sm font-semibold text-slate-900 outline-none transition dark:bg-white/5 dark:text-white ${
                     phoneValid
                       ? 'border-brand-gold/14 focus:border-brand-gold/40 dark:border-brand-gold/14 dark:focus:border-brand-gold/34'
                       : 'border-red-300 focus:border-red-400 dark:border-red-500/70 dark:focus:border-red-400'
@@ -1284,14 +1314,14 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
 
   return (
     <div
-      className='min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.12),transparent_22%),radial-gradient(circle_at_bottom_left,rgba(124,89,39,0.06),transparent_28%),linear-gradient(180deg,#fcf7ef_0%,#f1e4cf_100%)] p-3 text-slate-900 dark:bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.14),transparent_24%),linear-gradient(180deg,#050403_0%,#020202_100%)] dark:text-[#f6eddc] sm:p-4 md:p-5 lg:p-6'
+      className='min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#f8f2ea_0%,#eee4d8_100%)] p-3 text-slate-900 dark:bg-[linear-gradient(180deg,#050403_0%,#020202_100%)] dark:text-[#f6eddc] sm:p-4 md:p-5 lg:p-6'
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className={`mx-auto max-w-[1440px] ${workspaceFrame}`}>
         <div className='flex flex-col xl:flex-row'>
-          <aside className='hidden border-b border-brand-gold/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(247,236,216,0.3))] px-4 py-5 dark:border-brand-gold/16 dark:bg-transparent xl:block xl:min-h-[calc(100vh-3rem)] xl:w-[16.75rem] xl:shrink-0 xl:border-b-0 xl:border-r'>
+          <aside className='hidden border-b border-brand-gold/14 bg-[#f4ebdf] px-4 py-5 dark:border-brand-gold/12 dark:bg-transparent xl:block xl:min-h-[calc(100vh-3rem)] xl:w-[16.75rem] xl:shrink-0 xl:border-b-0 xl:border-r'>
             <div className='flex flex-col gap-5 xl:h-full'>
-              <div className='rounded-[1.4rem] border border-brand-gold/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(247,239,226,0.68))] p-5 shadow-[0_16px_34px_rgba(124,89,39,0.07)] dark:border-brand-gold/16 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] dark:shadow-none'>
+              <div className='rounded-[1.4rem] border border-brand-gold/14 bg-[#faf5ee] p-5 shadow-[0_8px_20px_rgba(15,23,42,0.05)] dark:border-brand-gold/12 dark:bg-[#181311] dark:shadow-none'>
                 <UserIdentityBlock
                   user={user}
                   subtitle={dashboardCopy.overview}
@@ -1380,6 +1410,16 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                         <p className='mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-white/68'>
                           {dashboardCopy.overviewSubtitle}
                         </p>
+                        <div className='mt-3 flex flex-wrap gap-2'>
+                          <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+                            <span className='lux-presence-dot lux-presence-dot--emerald' />
+                            {nextActiveBooking ? getUpcomingWindowLabel(nextActiveBooking, lang) : dashboardCopy.nextAppointment}
+                          </span>
+                          <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+                            <span className='lux-presence-dot' />
+                            {`${localizeDigits(groupedBookings.activeBookings.length, lang)} ${dashboardCopy.active}`}
+                          </span>
+                        </div>
                       </div>
                     </div>
 

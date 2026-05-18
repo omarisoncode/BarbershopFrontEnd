@@ -954,3 +954,194 @@ export const translations = {
       'من الأدوات الموثوقة إلى العملاء الدائمين، كل تفصيل مصمم ليمنحك شعوراً بالاتساق والراحة والجودة.',
   },
 };
+
+translations.en = {
+  ...translations.en,
+  homeHeroEyebrow: 'The Studio Ritual',
+  homeHeroSubtitle:
+    'Come in for a sharper cut, stay for the calmer rhythm, and leave looking more composed than when you arrived.',
+  homeHeroMediaTitle: 'A chair that feels considered from the first minute.',
+  homeHeroMediaText:
+    'From the greeting to the final mirror check, the studio is shaped to feel attentive, unhurried, and confidently personal.',
+  homeHeroMediaPoint: 'Quiet confidence, careful finishing, and a pace that respects your time.',
+  homeTrust1Text: 'Skilled hands with a sharper eye for detail.',
+  homeTrust2Text: 'Chosen for finish, comfort, and hair health.',
+  homeTrust3Text: 'A polished appointment rhythm that stays dependable.',
+  homeTrust4Text: 'Careful hygiene in every chair, every visit.',
+  homeServicesKicker: 'Signature Services',
+  homeServicesSubtitle:
+    'From quick refinements to full resets, each service is built to leave you cleaner, sharper, and more put together.',
+  homeFallbackService1Description:
+    'A clean, confidence-building cut shaped around your features and finished with quiet precision.',
+  homeFallbackService2Description:
+    'Sharper lines, better balance, and a beard shape that feels deliberate instead of overworked.',
+  homeFallbackService3Description:
+    'A slower shave ritual built for comfort, closeness, and a smoother finish.',
+  homeFallbackService4Description:
+    'The full grooming reset when you want the cut, the beard, and the final impression to work together.',
+  homePromiseKicker: 'The Difference',
+  homePromiseSubtitle:
+    'The luxury is not in noise or excess. It is in the steady hand, the calmer pace, and the feeling that every detail has been considered for you.',
+  homePromiseCardText:
+    'We pair classic barber discipline with modern restraint, so the result feels precise, calm, and easy to carry into the rest of your day.',
+  homePromiseCtaText:
+    'Whether it is your regular reset or a sharper look for an important evening, the experience stays smooth and the result never feels rushed.',
+  homeBarbersKicker: 'Meet The Barbers',
+  homeBarberCardEyebrow: 'Your Barber',
+  homeBarbersSubtitle:
+    'Every barber brings a slightly different signature, so picking a chair feels like choosing the kind of finish and energy you want to leave with.',
+  homeFallbackBarberBio:
+    'A polished barbering experience built around steadier hands and a cleaner finish.',
+  homeFallbackBarber1Bio:
+    'Known for precise fades, soft detailing, and a chair-side rhythm that stays calm from start to finish.',
+  homeFallbackBarber2Bio:
+    'Trusted for beard balance, classic structure, and grooming that feels quietly confident.',
+  homeFallbackBarber3Bio:
+    'Reliable on shape, finishing, and everyday wearability when you want a look that settles naturally.',
+  homeFallbackBarber4Bio:
+    'Detail-focused and composed, especially for guests who want the cut and beard to feel fully in sync.',
+  homeGallerySubtitle:
+    'A closer look at the texture, ritual, and studio mood that turn a simple appointment into something worth returning to.',
+  homeReviewsSubtitle:
+    'Guests notice the finish first, then remember the calm, the consistency, and how looked-after the whole visit felt.',
+  homeReview1Quote:
+    "The result is always sharp, but what keeps me coming back is how calm and consistent the whole visit feels.",
+  homeReview2Quote:
+    'You can feel the attention in the little details. Nothing feels rushed, and the beard work always lands clean.',
+  homeReview3Quote:
+    'It felt less like squeezing in a haircut and more like stepping out looking ready for the night.',
+  homeFaqSubtitle:
+    'A few quick answers, so booking feels easy, clear, and reassuring before you even pick your chair.',
+  homeLocationSubtitle:
+    'Straightforward to reach, comfortable to step into, and polished enough to feel like part of the experience itself.',
+  footerDesc:
+    'Luxury barbering with a calmer rhythm, cleaner details, and a more considered finish.',
+  footerBrandStatement:
+    'A premium grooming studio for men who want sharp work, calm energy, and an experience that feels considered from booking to final mirror check.',
+};
+
+translations.ar = {
+  ...translations.ar,
+  homeHeroEyebrow: 'طقس الاستوديو',
+  homeHeroSubtitle:
+    'قصات أدق، وعناية لحية أهدأ، وإيقاع مدروس يجعلك تغادر أكثر أناقة وراحة وثقة.',
+  homeHeroMediaTitle: 'كرسي يشعرُك بالعناية من الدقيقة الأولى.',
+  homeHeroMediaText:
+    'من لحظة الاستقبال إلى النظرة الأخيرة في المرآة، صُممت التجربة لتكون هادئة وشخصية وتستحق أن تمنحها وقتك.',
+  homeHeroMediaPoint: 'ثقة هادئة، ولمسات دقيقة، وإيقاع يحترم وقتك.',
+  homeTrust1Text: 'مهارة ثابتة وعين أدق في التفاصيل.',
+  homeTrust2Text: 'مختارة للنتيجة والراحة وصحة الشعر.',
+  homeTrust3Text: 'إيقاع مواعيد أنيق ويمكن الاعتماد عليه.',
+  homeTrust4Text: 'عناية صحية دقيقة في كل كرسي وكل زيارة.',
+  homeServicesKicker: 'الخدمات المميزة',
+  homeServicesSubtitle:
+    'من اللمسات السريعة إلى التغيير الكامل، كل خدمة مصممة لتتركك أكثر أناقة وترتيباً وحضوراً.',
+  homeFallbackService1Description:
+    'قصة نظيفة تبني الثقة، تُشكّل حسب ملامحك وتُنهي بلمسة دقيقة وهادئة.',
+  homeFallbackService2Description:
+    'خطوط أوضح، توازن أفضل، وشكل لحية يبدو مقصوداً لا مبالغاً فيه.',
+  homeFallbackService3Description:
+    'طقس حلاقة أهدأ، مصمم للراحة والقرب ولمسة نهائية أنعم.',
+  homeFallbackService4Description:
+    'إعادة ضبط كاملة عندما تريد أن تعمل القصة واللحية والانطباع النهائي معاً.',
+  homePromiseKicker: 'سر التجربة',
+  homePromiseSubtitle:
+    'الفخامة هنا ليست في الضجيج أو المبالغة، بل في اليد الثابتة، والإيقاع الهادئ، والشعور بأن كل تفصيل صُمم من أجلك.',
+  homePromiseCardText:
+    'نمزج انضباط الحلاقة الكلاسيكية مع هدوء معاصر، لتبقى النتيجة دقيقة ومريحة وأنيقة بوضوح.',
+  homePromiseCtaText:
+    'سواء كان موعدك الأسبوعي المعتاد أو إطلالة أكثر أناقة ليوم مهم، تبقى الرحلة سلسة والنتيجة مقصودة في كل تفصيل.',
+  homeBarbersKicker: 'تعرّف على الحلاقين',
+  homeBarberCardEyebrow: 'حلاقك',
+  homeBarbersSubtitle:
+    'لكل حلاق بصمته في الشكل والتوازن واللمسة النهائية، لتشعر أن اختيار الكرسي قرار شخصي لا خطوة عابرة.',
+  homeFallbackBarberBio:
+    'تجربة حلاقة أنيقة مبنية على يد أهدأ ولمسة أنظف.',
+  homeFallbackBarber1Bio:
+    'معروف بالفيد الدقيق والاهتمام الهادئ بالتفاصيل وإيقاع كرسي مريح من البداية للنهاية.',
+  homeFallbackBarber2Bio:
+    'موثوق في توازن اللحية والبنية الكلاسيكية وعناية تبدو واثقة بلا مبالغة.',
+  homeFallbackBarber3Bio:
+    'يعتمد عليه في الشكل النهائي واللمسة المتقنة عندما تريد نتيجة تستقر طبيعياً في يومك.',
+  homeFallbackBarber4Bio:
+    'يركز على التفاصيل، خاصة لمن يريد انسجاماً كاملاً بين القصة واللحية.',
+  homeGallerySubtitle:
+    'نظرة أقرب إلى الملمس والطقس والأجواء التي تجعل موعدك أبعد من خدمة عادية وأسهل في العودة إليه.',
+  homeReviewsSubtitle:
+    'قد يلاحظ الضيف النتيجة أولاً، لكنه يتذكر الهدوء والثبات والإحساس بالعناية في كامل الزيارة.',
+  homeReview1Quote:
+    'النتيجة دائماً حادة وأنيقة، لكن ما يجعلني أعود هو الهدوء والثبات في كامل التجربة.',
+  homeReview2Quote:
+    'يمكنك أن تشعر بالاهتمام في التفاصيل الصغيرة. لا شيء يبدو مستعجلاً، وعمل اللحية دائماً نظيف جداً.',
+  homeReview3Quote:
+    'لم أشعر أنني فقط أنهيت قصة شعر، بل خرجت وكأنني جاهز فعلاً للمناسبة.',
+  homeFaqSubtitle:
+    'إجابات سريعة تجعل الحجز واضحاً ومريحاً ومطمئناً قبل أن تختار كرسيك.',
+  homeLocationSubtitle:
+    'سهل الوصول، مريح في الدخول إليه، ومصمم ليمنحك إحساساً أنيقاً منذ اللحظة الأولى.',
+  footerDesc:
+    'حلاقة فاخرة بإيقاع أهدأ وتفاصيل أنظف ولمسة نهائية أكثر حضوراً.',
+  footerBrandStatement:
+    'استوديو عناية فاخر للرجال الذين يريدون عملاً متقناً وطاقة هادئة وتجربة مدروسة من الحجز حتى النظرة الأخيرة في المرآة.',
+};
+
+translations.en = {
+  ...translations.en,
+  homeHeroTitleLine2: "It's An Experience.",
+  homeHeroSubtitle:
+    'Precision cuts, refined beard work, and a slower studio rhythm that leaves you looking sharper and feeling more composed.',
+  homeHeroMediaText:
+    'From the welcome to the final mirror check, the experience is designed to feel calm, personal, and worth making time for.',
+  homeServicesSubtitle:
+    'Explore the services guests return for when they want a cleaner silhouette, a calmer chair, and a finish that holds its presence.',
+  homePromiseSubtitle:
+    'Every appointment is shaped around quiet confidence: steady hands, thoughtful pacing, and details that feel considered from start to finish.',
+  homePromiseCardText:
+    'We pair classic barber discipline with a softer luxury atmosphere, so the result feels precise, relaxed, and unmistakably polished.',
+  homePromiseCtaText:
+    'Whether it is your weekly reset or a sharper look for an important day, the journey stays smooth and the finish feels intentional.',
+  homeBarbersSubtitle:
+    'Each barber brings a distinct eye for shape, balance, and finishing, so choosing a chair feels personal instead of transactional.',
+  homeGallerySubtitle:
+    'A closer look at the textures, ritual, and atmosphere that make the studio feel quieter, sharper, and easier to return to.',
+  homeReviewsSubtitle:
+    'Guests come for the finish, but they return for the calm, the consistency, and the way the whole experience feels considered.',
+  homeReview1Quote:
+    "The studio feels calm, premium, and precise. I know exactly what I'm getting every visit.",
+  homeFaqSubtitle:
+    'A few quick answers, so the path from interest to appointment feels smooth, clear, and reassuring.',
+  homeLocationSubtitle:
+    'Easy to reach, easy to settle into, and designed to feel polished the moment you arrive.',
+  homeLocationMapTitle: 'Studio Location',
+  homeLocationMapText:
+    'Downtown setting, straightforward access, and a calm premium rhythm once you step inside.',
+};
+
+translations.ar = {
+  ...translations.ar,
+  homeHeroSubtitle:
+    'قصات دقيقة، وعناية لحية متقنة، وإيقاع أهدأ يجعلك تبدو أكثر أناقة وتشعر بمزيد من الراحة والثقة.',
+  homeHeroMediaText:
+    'من لحظة الاستقبال حتى النظرة الأخيرة في المرآة، صُممت التجربة لتكون هادئة وشخصية وتستحق أن تخصّص لها وقتك.',
+  homeServicesSubtitle:
+    'استكشف الخدمات التي يعود إليها الضيوف حين يريدون مظهراً أنظف، وكرسياً أهدأ، ولمسة نهائية تحتفظ بهيبتها.',
+  homePromiseSubtitle:
+    'كل موعد مبني على ثقة هادئة: يد ثابتة، وإيقاع مدروس، وتفاصيل تشعر بأنها مقصودة من البداية إلى النهاية.',
+  homePromiseCardText:
+    'نمزج انضباط الحلاقة الكلاسيكية بأجواء فاخرة أكثر هدوءاً، لتبقى النتيجة دقيقة ومريحة وراقية بوضوح.',
+  homePromiseCtaText:
+    'سواء كان موعدك الأسبوعي المعتاد أو إطلالة أكثر أناقة ليوم مهم، تبقى الرحلة سلسة والنتيجة مقصودة في كل تفصيل.',
+  homeBarbersSubtitle:
+    'لكل حلاق نظرته الخاصة للشكل والتوازن واللمسة النهائية، لتشعر أن اختيار الكرسي قرار شخصي لا خطوة عابرة.',
+  homeGallerySubtitle:
+    'نظرة أقرب إلى الملمس والطقس والأجواء التي تجعل الاستوديو أهدأ وأكثر أناقة وأسهل في العودة إليه.',
+  homeReviewsSubtitle:
+    'يأتي الضيوف من أجل النتيجة، لكنهم يعودون من أجل الهدوء والثبات والإحساس المدروس الذي يرافق التجربة كلها.',
+  homeFaqSubtitle:
+    'إجابات سريعة تجعل الانتقال من الاهتمام إلى الحجز واضحاً ومريحاً ومطمئناً.',
+  homeLocationSubtitle:
+    'سهل الوصول، سهل الاستقرار فيه، ومصمم ليمنحك إحساساً أنيقاً منذ لحظة الوصول.',
+  homeLocationMapTitle: 'موقع الاستوديو',
+  homeLocationMapText:
+    'موقع في وسط المدينة، وصول مباشر، وإيقاع فاخر هادئ يبدأ بمجرد دخولك.',
+};

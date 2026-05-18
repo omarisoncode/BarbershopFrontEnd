@@ -75,7 +75,7 @@ const LogoutConfirmModal = ({ lang, open, onClose, onConfirm, loading }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md'
+        className='fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-4'
         onClick={onClose}
       >
         <MotionDiv
@@ -186,9 +186,9 @@ const NavLinkButton = ({ active, onClick, children }) => (
   <button
     type='button'
     onClick={onClick}
-    className={`relative pb-1 text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors ${
+    className={`relative rounded-full px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors ${
       active
-        ? 'text-brand-gold'
+        ? 'bg-brand-gold/10 text-brand-gold'
         : 'text-slate-500 hover:text-brand-gold dark:text-white/70 dark:hover:text-brand-gold'
     }`}
   >
@@ -508,7 +508,7 @@ export default function Navbar({ lang, setLang }) {
                         <button
                           type='button'
                           onClick={requestLogout}
-                          className='flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-sm font-semibold text-rose-500 transition hover:bg-rose-500/8'
+                          className='flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-sm font-semibold text-[#8d3942] transition hover:bg-[#a85054]/8 dark:text-[#efb7bd] dark:hover:bg-[#a85054]/10'
                         >
                           <LogOut size={16} />
                           {t.navLogout}
@@ -547,11 +547,11 @@ export default function Navbar({ lang, setLang }) {
         <AnimatePresence>
           {isMenuOpen ? (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.18, ease: 'easeOut' }}
-              className='absolute inset-x-0 top-full border-b border-black/8 bg-brand-light/96 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-[#090807]/96 lg:hidden'
+              initial={{ opacity: 0, y: -14, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
+              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              className='absolute inset-x-0 top-full border-b border-black/8 bg-brand-light shadow-[0_18px_48px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-[#090807] lg:hidden'
             >
               <div className='lux-section-shell max-h-[calc(100vh-5.5rem)] overflow-y-auto pb-6 pt-5'>
                 <GlassPanel className='p-5'>
@@ -626,7 +626,7 @@ export default function Navbar({ lang, setLang }) {
                           <button
                             type='button'
                             onClick={requestLogout}
-                            className='flex items-center gap-3 rounded-[1.2rem] px-4 py-3 text-left text-sm font-semibold text-rose-500 transition hover:bg-rose-500/8'
+                            className='flex items-center gap-3 rounded-[1.2rem] px-4 py-3 text-left text-sm font-semibold text-[#8d3942] transition hover:bg-[#a85054]/8 dark:text-[#efb7bd] dark:hover:bg-[#a85054]/10'
                           >
                             <LogOut size={16} />
                             {t.navLogout}

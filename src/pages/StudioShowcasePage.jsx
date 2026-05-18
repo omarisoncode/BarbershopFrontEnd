@@ -144,7 +144,7 @@ function PageHero({
 
   return (
     <section className='relative overflow-hidden pb-10 pt-10 sm:pb-14 sm:pt-14'>
-      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.16),transparent_34%)] dark:bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.12),transparent_30%)]' />
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(122,58,51,0.14),transparent_34%)] dark:bg-[radial-gradient(circle_at_top,rgba(122,58,51,0.12),transparent_30%)]' />
       <div className='lux-section-shell relative z-10'>
         <GlassPanel className='overflow-hidden px-5 py-6 sm:px-8 sm:py-8'>
           <div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-end'>
@@ -166,9 +166,9 @@ function PageHero({
             </div>
 
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-1'>
-              <div className='rounded-[1.75rem] border border-brand-gold/18 bg-brand-gold/10 p-5 text-slate-900 shadow-[0_18px_46px_rgba(201,164,92,0.14)] dark:text-white'>
+              <div className='rounded-[1.75rem] border border-brand-gold/16 bg-brand-gold/8 p-5 text-slate-900 shadow-[0_18px_46px_rgba(86,34,35,0.14)] dark:text-white'>
                 <div className='flex items-center gap-3'>
-                  <div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/14 text-brand-gold'>
+                  <div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
                     <AccentIcon size={20} />
                   </div>
                   <div>

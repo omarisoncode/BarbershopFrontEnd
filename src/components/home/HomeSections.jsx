@@ -71,10 +71,11 @@ export function HeroSection({
           initial='hidden'
           animate='visible'
           variants={staggerContainer}
-          className='relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#f3ede2] shadow-[0_28px_90px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-[#090807]'
+          className='relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#efe9e2] shadow-[0_24px_72px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-[#090807]'
         >
-          <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.26),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(212,175,55,0.14),transparent_32%)]' />
-          <div className='absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(90deg,rgba(7,7,7,0)_0%,rgba(7,7,7,0.22)_25%,rgba(7,7,7,0.66)_100%)] dark:block' />
+          <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(255,255,255,0)_32%,rgba(91,58,45,0.04)_100%)]' />
+          <div className='absolute inset-y-0 left-0 w-[42%] bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0))] opacity-70 dark:hidden' />
+          <div className='absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(90deg,rgba(7,7,7,0)_0%,rgba(7,7,7,0.18)_24%,rgba(7,7,7,0.62)_100%)] dark:block' />
 
           <div className='relative grid min-h-[auto] gap-5 sm:min-h-[72svh] lg:min-h-[78svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10'>
             <div className='flex flex-col justify-center px-4 py-6 sm:px-8 sm:py-10 lg:px-12 lg:py-14'>
@@ -87,7 +88,7 @@ export function HeroSection({
                 className='mt-3 max-w-2xl font-display text-[2.2rem] font-semibold leading-[0.96] tracking-tight text-slate-950 sm:mt-4 sm:text-6xl lg:text-7xl dark:text-white'
               >
                 <span className='block'>{t.homeHeroTitleLine1}</span>
-                <span className='mt-2 block text-brand-gold'>{t.homeHeroTitleLine2}</span>
+                <span className='mt-2 block text-brand-gold/85'>{t.homeHeroTitleLine2}</span>
               </motion.h1>
 
               <motion.p variants={revealUpVariants} className='lux-copy mt-3 max-w-xl text-[14px] leading-7 sm:mt-6 sm:text-lg'>
@@ -110,7 +111,7 @@ export function HeroSection({
 
               <motion.div
                 variants={staggerContainer}
-                className='mt-5 grid grid-cols-2 gap-3 sm:mt-8 xl:grid-cols-4 xl:gap-4'
+                className='mt-5 grid grid-cols-2 gap-3 sm:mt-8 lg:gap-4 2xl:grid-cols-4'
               >
                 {HERO_TRUST_BADGES.map((badge, index) => {
                   const Icon = iconMap[badge.icon] || Sparkles;
@@ -120,12 +121,12 @@ export function HeroSection({
                       key={badge.titleKey}
                       variants={sequentialReveal}
                       custom={index}
-                      className={`rounded-[1.2rem] border border-black/8 bg-white/58 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/6 ${
+                      className={`flex h-full rounded-[1.2rem] border border-black/8 bg-white/74 p-4 transition-transform duration-300 hover:-translate-y-0.5 sm:p-4.5 lg:p-5 dark:border-white/10 dark:bg-white/7 ${
                         index > 1 ? 'hidden md:block' : ''
                       }`}
                     >
-                        <div className='flex flex-col items-start gap-3'>
-                        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
+                      <div className='flex flex-col items-start gap-3'>
+                        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
                           <Icon size={16} />
                         </div>
                         <div className='min-w-0'>
@@ -144,10 +145,10 @@ export function HeroSection({
             </div>
 
             <div className='relative min-h-[240px] p-3 sm:min-h-[280px] sm:p-4 lg:min-h-full lg:p-5'>
-              <div className='relative flex h-full items-end overflow-hidden rounded-[1.6rem] sm:rounded-[1.9rem]'>
-                <div className='absolute inset-0 bg-[radial-gradient(circle_at_70%_18%,rgba(212,175,55,0.36),transparent_28%),linear-gradient(180deg,rgba(7,7,7,0.12),rgba(7,7,7,0.72))]' />
+              <div className='relative flex h-full items-end overflow-hidden rounded-[1.6rem] border border-white/10 bg-[#15120d] p-1.5 shadow-[0_20px_60px_rgba(0,0,0,0.2)] sm:rounded-[1.9rem] sm:p-2'>
+                <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.08),rgba(7,7,7,0.68))]' />
                 <video
-                  className='absolute inset-0 h-full w-full object-cover'
+                  className='absolute inset-1.5 h-[calc(100%-0.75rem)] w-[calc(100%-0.75rem)] rounded-[1.25rem] object-cover sm:inset-2 sm:h-[calc(100%-1rem)] sm:w-[calc(100%-1rem)] sm:rounded-[1.55rem]'
                   src='/barber.mp4'
                   autoPlay
                   muted
@@ -159,7 +160,7 @@ export function HeroSection({
 
                 <motion.div
                   variants={revealUpVariants}
-                  className='relative z-10 m-3 w-full max-w-[13rem] rounded-[1.2rem] border border-white/12 bg-black/42 p-3.5 text-white shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:m-8 sm:max-w-xs sm:p-5'
+                  className='relative z-10 m-3 w-full max-w-[13rem] rounded-[1.2rem] border border-white/12 bg-[#15110f]/82 p-3.5 text-white shadow-[0_20px_48px_rgba(0,0,0,0.26)] sm:m-8 sm:max-w-xs sm:p-5'
                 >
                   <p className='text-[10px] font-semibold uppercase tracking-[0.26em] text-brand-gold'>
                     {t.homeHeroMediaBadge}
@@ -204,7 +205,7 @@ export function ServicesPreviewSection({
           </SecondaryButton>
         </div>
       }
-      className='pt-10'
+      className='lux-section-band-soft pt-10'
     >
       <AnimatePresence mode='wait'>
         {state === 'loading' ? (
@@ -250,61 +251,64 @@ export function ServicesPreviewSection({
             whileInView='visible'
             viewport={sectionViewport}
             variants={staggerContainer}
-            className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'
+            className='grid gap-5 md:grid-cols-2 xl:grid-cols-4'
           >
             {items.map((service, index) => (
               <motion.article
                 key={service.key}
                 custom={index}
                 variants={sequentialReveal}
-                className='group flex h-full flex-col overflow-hidden rounded-[1.45rem] border border-black/8 bg-white/70 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_30px_90px_rgba(15,23,42,0.14)] sm:rounded-[1.8rem] dark:border-white/10 dark:bg-white/6'
+                className='lux-elevate-hover group flex h-full min-h-[388px] flex-col overflow-hidden rounded-[1.45rem] border border-black/8 bg-white/92 shadow-[0_18px_44px_rgba(15,23,42,0.06)] transition-all duration-300 hover:border-brand-gold/20 sm:rounded-[1.8rem] dark:border-white/10 dark:bg-[#15120f]'
               >
                 <button
                   type='button'
                   onClick={() => onOpenService(service)}
-                  className='relative block overflow-hidden text-left'
+                  className='relative block overflow-hidden p-2 pb-0 text-left sm:p-2.5 sm:pb-0'
                 >
-                  <div className='aspect-[5/3] overflow-hidden sm:aspect-[5/4]'>
+                  <div className='h-48 overflow-hidden rounded-[1.15rem] border border-black/6 bg-[#15120f] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] sm:h-52 sm:rounded-[1.4rem] sm:p-2 dark:border-white/10'>
                     <img
                       src={service.image}
                       alt={service.title}
-                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]'
+                      className='h-full w-full rounded-[0.95rem] object-cover object-center transition-transform duration-500 group-hover:scale-[1.035] sm:rounded-[1.15rem]'
                       loading='lazy'
                     />
                   </div>
-                  <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.02)_0%,rgba(7,7,7,0.14)_45%,rgba(7,7,7,0.72)_100%)]' />
-                  <div className='absolute inset-x-3 bottom-3 flex items-end justify-between gap-2 sm:inset-x-4 sm:bottom-4 sm:gap-3'>
-                    <StatusBadge tone='accent' className='backdrop-blur-xl'>
+                  <div className='absolute inset-x-2 bottom-0 top-2 rounded-[1.15rem] bg-[linear-gradient(180deg,rgba(7,7,7,0.02)_0%,rgba(7,7,7,0.14)_42%,rgba(7,7,7,0.8)_100%)] sm:inset-x-2.5 sm:top-2.5 sm:rounded-[1.4rem]' />
+                  <div className='absolute inset-x-5 bottom-3 flex items-end justify-between gap-2 sm:inset-x-6 sm:bottom-4 sm:gap-3'>
+                    <StatusBadge tone='accent'>
                       {service.tag}
                     </StatusBadge>
-                    <div className='rounded-full border border-white/15 bg-black/35 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xl sm:px-3 sm:text-xs'>
+                    <div className='rounded-full border border-white/15 bg-[#15110f]/78 px-2.5 py-1 text-[11px] font-semibold text-white sm:px-3 sm:text-xs'>
                       {service.durationLabel}
                     </div>
                   </div>
                 </button>
 
-                <div className='flex flex-1 flex-col p-4 sm:p-5'>
-                  <div className='flex items-start justify-between gap-3'>
-                    <div>
-                      <p className='text-xs uppercase tracking-[0.18em] text-brand-gold'>
+                <div className='flex flex-1 flex-col p-4 pt-3 sm:p-4.5 sm:pt-3.5'>
+                  <div className='flex items-start justify-between gap-4'>
+                    <div className='min-w-0 flex-1'>
+                      <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
                         {service.categoryLabel}
                       </p>
-                      <h3 className='mt-1.5 text-[1.05rem] font-semibold text-slate-900 dark:text-white sm:mt-2 sm:text-xl'>
+                      <h3 className='mt-2 min-h-[40px] font-display text-[1.08rem] font-semibold leading-7 text-slate-900 dark:text-white sm:min-h-[48px] sm:text-[1.35rem] sm:leading-7'>
                         {service.title}
                       </h3>
+                      <p
+                        className={`mt-2 text-[13px] font-semibold uppercase tracking-[0.12em] ${
+                          service.isFallback
+                            ? 'text-slate-500 dark:text-white/65'
+                            : 'text-brand-gold/85'
+                        }`}
+                      >
+                        {service.priceDisplay}
+                      </p>
                     </div>
-                    <p
-                      className={`text-[13px] font-semibold sm:text-sm ${
-                        service.isFallback
-                          ? 'text-slate-500 dark:text-white/65'
-                          : 'text-brand-gold'
-                      }`}
-                    >
-                      {service.priceDisplay}
-                    </p>
+                    <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
+                      <Scissors size={18} />
+                    </div>
                   </div>
 
-                  <p className='mt-2.5 min-h-[48px] text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:mt-3 sm:min-h-[56px] sm:text-sm'>
+                  <p className='mt-2.5 min-h-[44px] text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:min-h-[52px] sm:text-sm'>
                     {service.description}
                   </p>
 
@@ -314,18 +318,18 @@ export function ServicesPreviewSection({
                     </p>
                   ) : null}
 
-                  <div className='mt-3 flex flex-wrap gap-2 sm:mt-4'>
+                  <div className='mt-3 flex flex-wrap gap-2 sm:mt-3.5'>
                     {service.previewFeatures.slice(0, 2).map((feature) => (
                       <span
                         key={feature}
-                        className='rounded-full border border-black/8 bg-black/[0.03] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65 sm:px-3 sm:text-[11px]'
+                        className='rounded-full border border-black/8 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-white/65'
                       >
                         {feature}
                       </span>
                     ))}
                   </div>
 
-                  <div className='mt-4 flex items-center justify-between gap-3 sm:mt-6'>
+                  <div className='mt-auto flex items-center justify-between gap-3 pt-4 sm:pt-4.5'>
                     <button
                       type='button'
                       onClick={() => onOpenService(service)}
@@ -397,7 +401,7 @@ export function PromiseSection({ t, isRTL, onBook }) {
                       key={point.titleKey}
                       className='flex h-full flex-col rounded-[1.2rem] border border-black/8 bg-black/[0.03] p-4 dark:border-white/10 dark:bg-white/5 sm:rounded-[1.5rem] sm:p-5'
                     >
-                      <div className='flex h-10 w-10 items-center justify-center rounded-xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold sm:h-12 sm:w-12 sm:rounded-2xl'>
+                      <div className='flex h-10 w-10 items-center justify-center rounded-xl border border-brand-gold/18 bg-brand-gold/8 text-brand-gold sm:h-12 sm:w-12 sm:rounded-2xl'>
                         <Icon size={16} />
                       </div>
                       <p className='mt-3 text-base font-semibold leading-6 text-slate-900 dark:text-white sm:mt-4 sm:text-xl sm:leading-7'>
@@ -415,27 +419,27 @@ export function PromiseSection({ t, isRTL, onBook }) {
         </motion.div>
 
         <motion.div variants={revealUpVariants}>
-          <GlassPanel className='h-full p-5 sm:p-8'>
-            <div className='rounded-[1.35rem] border border-brand-gold/25 bg-brand-gold/10 p-4 text-brand-gold sm:rounded-[1.7rem] sm:p-5'>
+          <GlassPanel className='lux-anchor-surface h-full p-5 sm:p-8'>
+            <div className='rounded-[1.35rem] border border-brand-gold/18 bg-brand-gold/8 p-4 text-brand-gold sm:rounded-[1.7rem] sm:p-5'>
               <CalendarDays size={22} />
             </div>
-            <h3 className='mt-4 text-[1.9rem] font-semibold text-slate-900 dark:text-white sm:mt-6 sm:text-3xl'>
+            <h3 className='mt-4 text-[1.9rem] font-semibold text-white sm:mt-6 sm:text-3xl'>
               {t.homePromiseCtaTitle}
             </h3>
-            <p className='lux-copy mt-3 text-sm sm:mt-4 sm:text-base'>{t.homePromiseCtaText}</p>
+            <p className='mt-3 text-sm leading-7 text-white/74 sm:mt-4 sm:text-base'>{t.homePromiseCtaText}</p>
 
             <div className='mt-5 space-y-3 sm:mt-8 sm:space-y-4'>
               {[1, 2, 3].map((item) => (
                 <div
                   key={item}
-                  className='flex items-start gap-3 rounded-[1.2rem] border border-black/8 bg-black/[0.03] p-3.5 dark:border-white/10 dark:bg-white/5 sm:rounded-[1.4rem] sm:p-4'
+                  className='flex items-start gap-3 rounded-[1.2rem] border border-white/10 bg-white/[0.04] p-3.5 sm:rounded-[1.4rem] sm:p-4'
                 >
                   <CheckCircle2 size={18} className='mt-1 shrink-0 text-brand-gold' />
                   <div>
-                    <p className='text-[13px] font-semibold text-slate-900 dark:text-white sm:text-sm'>
+                    <p className='text-[13px] font-semibold text-white sm:text-sm'>
                       {t[`homePromiseChecklist${item}Title`]}
                     </p>
-                    <p className='mt-1 text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:text-sm sm:leading-7'>
+                    <p className='mt-1 text-[13px] leading-6 text-white/68 sm:text-sm sm:leading-7'>
                       {t[`homePromiseChecklist${item}Text`]}
                     </p>
                   </div>
@@ -475,7 +479,7 @@ export function BarbersPreviewSection({
           {renderArrow(isRTL)}
         </SecondaryButton>
       }
-      className='pt-8 sm:pt-10'
+      className='lux-section-band-light pt-8 sm:pt-10'
     >
       <AnimatePresence mode='wait'>
         {state === 'loading' ? (
@@ -525,13 +529,13 @@ export function BarbersPreviewSection({
           >
             {items.map((barber, index) => (
               <motion.article key={barber.key} custom={index} variants={sequentialReveal}>
-                <PremiumCard className='group flex h-full flex-col overflow-hidden p-4 sm:p-5'>
-                  <div className='overflow-hidden rounded-[1.65rem]'>
+                <PremiumCard className='lux-elevate-hover group flex h-full flex-col overflow-hidden bg-white/84 p-4 sm:p-5 dark:bg-white/6'>
+                  <div className='overflow-hidden rounded-[1.65rem] border border-black/6 bg-[#15120f] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] dark:border-white/10'>
                     <img
                       src={barber.image}
                       alt={barber.title}
                       loading='lazy'
-                      className='h-72 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+                      className='aspect-[4/5] w-full rounded-[1.35rem] object-cover object-[center_18%] transition-transform duration-500 group-hover:scale-[1.025]'
                     />
                   </div>
 
@@ -540,23 +544,23 @@ export function BarbersPreviewSection({
                       <div className='mt-5 flex items-start justify-between gap-4'>
                         <div className='min-w-0'>
                           <p className='text-[11px] uppercase tracking-[0.2em] text-brand-gold'>
-                            {t.homeMeetTeamCta}
+                            {t.homeBarberCardEyebrow || t.homeMeetTeamCta}
                           </p>
-                          <h3 className='mt-2 text-2xl font-semibold text-slate-900 dark:text-white'>
+                          <h3 className='mt-2 font-display text-[1.8rem] font-semibold text-slate-900 dark:text-white'>
                             {barber.title}
                           </h3>
-                          <p className='mt-2 text-sm text-brand-gold'>
+                          <p className='mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-gold'>
                             {barber.experienceYears > 0
                               ? `${barber.experienceYears} ${t.homeYearsShort}`
                               : t.homeFeaturedBadge}
                           </p>
                         </div>
-                        <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/22 bg-brand-gold/10 text-brand-gold'>
+                        <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
                           <UserRound size={18} />
                         </div>
                       </div>
 
-                      <p className='mt-4 text-sm leading-7 text-slate-600 dark:text-white/70'>
+                      <p className='mt-4 text-[13px] leading-6 text-slate-600 dark:text-white/70 sm:text-sm sm:leading-7'>
                         {barber.bio}
                       </p>
                       <div className='mt-4 flex flex-wrap gap-2'>
@@ -600,7 +604,7 @@ export function GallerySection({ t }) {
       title={t.homeGalleryTitle}
       subtitle={t.homeGallerySubtitle}
       align='center'
-      className='pt-10 pb-8 sm:pt-12'
+      className='lux-section-band-soft pt-10 pb-8 sm:pt-12'
     >
       <motion.div
         initial='hidden'
@@ -619,12 +623,16 @@ export function GallerySection({ t }) {
 
           return (
             <motion.div key={item.key} custom={index} variants={sequentialReveal} className={classes}>
-              <GlassPanel className='group relative h-full overflow-hidden p-0'>
-                <div className={`relative overflow-hidden ${large ? 'aspect-[16/12]' : 'aspect-[16/10]'}`}>
+              <GlassPanel className='group relative h-full overflow-hidden p-2 sm:p-2.5'>
+                <div
+                  className={`relative overflow-hidden rounded-[1.35rem] border border-black/6 bg-[#13110e] shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] dark:border-white/10 ${
+                    large ? 'aspect-[16/11]' : 'aspect-[4/3]'
+                  }`}
+                >
                   {item.type === 'video' ? (
                     <video
                       src={item.src}
-                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]'
+                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015] group-hover:-translate-y-0.5'
                       autoPlay
                       muted
                       loop
@@ -636,14 +644,14 @@ export function GallerySection({ t }) {
                       src={item.src}
                       alt={t[item.titleKey]}
                       loading='lazy'
-                      className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]'
+                      className='h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] group-hover:-translate-y-0.5'
                     />
                   )}
                   <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.04)_0%,rgba(7,7,7,0.18)_45%,rgba(7,7,7,0.82)_100%)]' />
-                    <div className='absolute inset-x-5 bottom-5'>
-                      <p className='text-[11px] uppercase tracking-[0.18em] text-brand-gold'>{t.homeGalleryBadge}</p>
-                      <h3 className='mt-2 text-xl font-semibold text-white sm:text-2xl'>{t[item.titleKey]}</h3>
-                      <p className='mt-2 text-sm leading-6 text-white/70'>{t[item.captionKey]}</p>
+                    <div className='absolute inset-x-5 bottom-5 max-w-[26rem]'>
+                      <p className='text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-gold'>{t.homeGalleryBadge}</p>
+                      <h3 className={`mt-2 font-display font-semibold text-white ${large ? 'text-[1.7rem] sm:text-[2.2rem]' : 'text-xl sm:text-2xl'}`}>{t[item.titleKey]}</h3>
+                      <p className={`mt-2 leading-6 text-white/70 ${large ? 'max-w-xl text-sm sm:text-[15px]' : 'max-w-sm text-[13px] sm:text-sm'}`}>{t[item.captionKey]}</p>
                     </div>
                   </div>
                 </GlassPanel>
@@ -657,7 +665,7 @@ export function GallerySection({ t }) {
 
 const ReviewCard = ({ t, index }) => (
   <motion.div custom={index} variants={sequentialReveal}>
-    <PremiumCard className='h-full p-6'>
+    <PremiumCard className='lux-elevate-hover h-full p-6'>
       <div className='flex items-center gap-1 text-brand-gold'>
         {Array.from({ length: 5 }).map((_, starIndex) => (
           <Star key={starIndex} size={15} className='fill-current' />
@@ -667,7 +675,7 @@ const ReviewCard = ({ t, index }) => (
         "{t[`homeReview${index}Quote`]}"
       </p>
       <div className='mt-6 flex items-center gap-4'>
-        <div className='flex h-12 w-12 items-center justify-center rounded-full border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
+        <div className='flex h-12 w-12 items-center justify-center rounded-full border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
           <UserRound size={18} />
         </div>
         <div>
@@ -686,7 +694,7 @@ export function ReviewsSection({ t }) {
       kicker={t.homeReviewsKicker}
       title={t.homeReviewsTitle}
       subtitle={t.homeReviewsSubtitle}
-      className='pt-10 pb-8 sm:pt-12'
+      className='lux-section-band-light pt-10 pb-8 sm:pt-12'
     >
       <motion.div
         initial='hidden'
@@ -752,7 +760,7 @@ export function FAQSection({ t }) {
       kicker={t.homeFaqKicker}
       title={t.homeFaqTitle}
       subtitle={t.homeFaqSubtitle}
-      className='pt-10 pb-8 sm:pt-12'
+      className='lux-section-band-soft pt-10 pb-8 sm:pt-12'
     >
       <motion.div
         initial='hidden'
@@ -780,7 +788,7 @@ const LocationInfoCard = ({ icon, label, value, note, href }) => {
   return (
     <div className='rounded-[1.5rem] border border-black/8 bg-black/[0.03] p-5 dark:border-white/10 dark:bg-white/5'>
       <div className='flex items-start gap-3'>
-        <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
+        <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
           <Icon size={18} />
         </div>
         <div>
@@ -830,7 +838,7 @@ export function LocationSection({
       kicker={kickerOverride || t.homeLocationKicker}
       title={titleOverride || t.homeLocationTitle}
       subtitle={subtitleOverride || t.homeLocationSubtitle}
-      className='pt-10 pb-20 sm:pt-12'
+      className='lux-section-band-light pt-10 pb-20 sm:pt-12'
     >
       <motion.div
         initial='hidden'

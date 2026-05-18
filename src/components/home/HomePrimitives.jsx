@@ -8,12 +8,13 @@ const MotionDiv = motion.div;
 export const sectionViewport = { once: true, amount: 0.08, margin: '0px 0px -2% 0px' };
 
 export const revealUpVariants = {
-  hidden: { opacity: 0, y: 26 },
+  hidden: { opacity: 0, y: 22, filter: 'blur(4px)' },
   visible: {
     opacity: 1,
     y: 0,
+    filter: 'blur(0px)',
     transition: {
-      duration: 0.55,
+      duration: 0.58,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -23,20 +24,21 @@ export const staggerContainer = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.065,
       delayChildren: 0.04,
     },
   },
 };
 
 export const sequentialReveal = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: { opacity: 0, y: 14, filter: 'blur(3px)' },
   visible: (index = 0) => ({
     opacity: 1,
     y: 0,
+    filter: 'blur(0px)',
     transition: {
-      duration: 0.45,
-      delay: index * 0.07,
+      duration: 0.46,
+      delay: index * 0.065,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
@@ -119,8 +121,8 @@ export const StatusBadge = ({ children, tone = 'default', className = '' }) => {
   const toneClasses = {
     default:
       'border-white/10 bg-white/8 text-white/75 dark:border-white/10 dark:bg-white/8',
-    accent: 'border-brand-gold/30 bg-brand-gold/12 text-brand-gold',
-    danger: 'border-rose-500/20 bg-rose-500/12 text-rose-200 dark:text-rose-200',
+    accent: 'border-brand-gold/18 bg-brand-gold/8 text-brand-gold',
+    danger: 'border-[#a85054]/24 bg-[#a85054]/10 text-[#8d3942] dark:text-[#efb7bd]',
   };
 
   return (
@@ -158,7 +160,7 @@ export const EmptyState = ({
   <GlassPanel
     className={`flex min-h-[320px] flex-col items-center justify-center px-6 py-12 text-center ${className}`}
   >
-    <div className='flex h-14 w-14 items-center justify-center rounded-full border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
+    <div className='flex h-14 w-14 items-center justify-center rounded-full border border-brand-gold/18 bg-brand-gold/8 text-brand-gold'>
       <AlertTriangle size={22} />
     </div>
     <h3 className='mt-5 text-2xl font-semibold text-slate-900 dark:text-white'>{title}</h3>
@@ -182,7 +184,7 @@ export const ErrorState = ({
   <GlassPanel
     className={`flex min-h-[320px] flex-col items-center justify-center px-6 py-12 text-center ${className}`}
   >
-    <div className='flex h-14 w-14 items-center justify-center rounded-full border border-rose-500/20 bg-rose-500/12 text-rose-200'>
+    <div className='flex h-14 w-14 items-center justify-center rounded-full border border-[#a85054]/24 bg-[#a85054]/10 text-[#8d3942] dark:text-[#efb7bd]'>
       <AlertTriangle size={22} />
     </div>
     <h3 className='mt-5 text-2xl font-semibold text-slate-900 dark:text-white'>{title}</h3>

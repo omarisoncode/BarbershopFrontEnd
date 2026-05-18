@@ -89,6 +89,8 @@ const copy = {
     allCategories: 'All services',
     stepSchedule: 'Schedule',
     scheduleHint: 'Choose a day, then pick the time that fits best.',
+    slotsOpenNow: 'Slots open now',
+    limitedSlots: 'Limited slots left',
   },
   ar: {
     appointmentBooking: 'حجز موعد',
@@ -142,6 +144,8 @@ const copy = {
     allCategories: 'كل الخدمات',
     stepSchedule: 'الجدولة',
     scheduleHint: 'اختر اليوم ثم الوقت المناسب لك.',
+    slotsOpenNow: 'مواعيد متاحة الآن',
+    limitedSlots: 'مواعيد محدودة متبقية',
   },
 };
 
@@ -257,8 +261,8 @@ const MobileServiceOption = ({
     onClick={onSelect}
     className={`flex w-full items-center gap-3 rounded-[1.15rem] border px-3 py-3 text-left transition-all duration-200 ${
       isSelected
-        ? 'border-brand-gold bg-brand-gold/8 shadow-[0_10px_24px_rgba(212,175,55,0.12)]'
-        : 'border-brand-gold/10 bg-white/72 dark:bg-white/5'
+        ? 'border-[#7a3f39]/24 bg-[#f4e8de] shadow-[0_10px_24px_rgba(86,34,35,0.1)] dark:border-[#7a3f39]/26 dark:bg-[#261a17]'
+        : 'border-brand-gold/10 bg-[#fbf6ef] dark:bg-[#181310]'
     }`}
   >
     <div className='h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-950/95'>
@@ -269,8 +273,8 @@ const MobileServiceOption = ({
           className='h-full w-full object-cover'
         />
       ) : (
-        <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.14),_rgba(15,23,42,0.88)_40%,_rgba(2,6,23,1)_100%)]'>
-          <Scissors className='h-5 w-5 text-brand-gold' />
+        <div className='flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,rgba(38,26,23,0.92),rgba(18,14,12,1))]'>
+          <Scissors className='h-5 w-5 text-[#b88467]' />
         </div>
       )}
     </div>
@@ -281,21 +285,21 @@ const MobileServiceOption = ({
           <p className='truncate text-sm font-black text-slate-900 dark:text-white'>
             {getServiceName(service, lang)}
           </p>
-          <p className='mt-0.5 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-gold'>
+          <p className='mt-0.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#7a3f39] dark:text-[#d7a789]'>
             {formatDuration(service.durationMinutes, lang)}
           </p>
         </div>
-        <span className='shrink-0 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-black text-slate-900'>
+        <span className='shrink-0 rounded-full bg-[#fffaf4] px-2.5 py-1 text-[11px] font-black text-slate-900 dark:bg-[#231916] dark:text-[#f7efe5]'>
           {formatPrice(service.price, lang)}
         </span>
       </div>
 
       <div className='mt-2 flex flex-wrap items-center gap-2'>
-        <span className='rounded-full border border-brand-gold/10 bg-white/62 px-2 py-1 text-[10px] font-semibold text-slate-600 dark:border-brand-gold/12 dark:bg-white/5 dark:text-slate-300'>
+        <span className='rounded-full border border-brand-gold/10 bg-[#fffaf4] px-2 py-1 text-[10px] font-semibold text-slate-600 dark:border-brand-gold/12 dark:bg-[#231916] dark:text-slate-300'>
           {getServiceBadgeOrCategoryLabel(service, lang, t.allCategories)}
         </span>
         {isSelected ? (
-          <span className='inline-flex items-center gap-1 rounded-full bg-brand-gold px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-black'>
+          <span className='inline-flex items-center gap-1 rounded-full bg-[#7a3f39] px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#f7efe5]'>
             <CheckCircle2 size={12} />
             {t.selected}
           </span>
@@ -317,13 +321,13 @@ const MobileBarberOption = ({
     onClick={onSelect}
     className={`flex w-full items-start gap-3 rounded-[1.15rem] border px-3 py-3 text-left transition-all duration-200 ${
       isSelected
-        ? 'border-brand-gold bg-brand-gold/8 shadow-[0_10px_24px_rgba(212,175,55,0.12)]'
-        : 'border-brand-gold/10 bg-white/72 dark:bg-white/5'
+        ? 'border-[#7a3f39]/24 bg-[#f4e8de] shadow-[0_10px_24px_rgba(86,34,35,0.1)] dark:border-[#7a3f39]/26 dark:bg-[#261a17]'
+        : 'border-brand-gold/10 bg-[#fbf6ef] dark:bg-[#181310]'
     }`}
   >
     {barber._id === AUTO_BARBER_ID ? (
-      <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.16),_rgba(15,23,42,0.88)_42%,_rgba(2,6,23,1)_100%)]'>
-        <UserRound className='h-6 w-6 text-brand-gold' />
+      <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(180deg,rgba(38,26,23,0.92),rgba(18,14,12,1))]'>
+        <UserRound className='h-6 w-6 text-[#b88467]' />
       </div>
     ) : (
       <img
@@ -347,13 +351,13 @@ const MobileBarberOption = ({
           </p>
         </div>
         {isSelected ? (
-          <CheckCircle2 className='shrink-0 text-brand-gold' size={18} />
+          <CheckCircle2 className='shrink-0 text-[#7a3f39] dark:text-[#d7a789]' size={18} />
         ) : null}
       </div>
 
       <div className='mt-2 flex flex-wrap items-center gap-2'>
         {barber._id === AUTO_BARBER_ID ? null : (
-          <span className='rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold'>
+          <span className='rounded-full bg-[#f0e2d6] px-2.5 py-1 text-[11px] font-bold text-[#7a3f39] dark:bg-[#2b201c] dark:text-[#d7a789]'>
             {barber.experienceYears} {t.yearsExperience}
           </span>
         )}
@@ -881,7 +885,7 @@ export default function BookingPage({ lang, isRTL }) {
             >
               <div className='mb-6 flex items-center justify-between gap-3'>
                 <div className='min-w-0'>
-                  <div className='flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
+                  <div className='flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#7a3f39] dark:text-[#d7a789]'>
                     <Sparkles size={11} className='shrink-0' />
                     <span>{t.appointmentBooking}</span>
                   </div>
@@ -889,7 +893,7 @@ export default function BookingPage({ lang, isRTL }) {
                 <button
                   type='button'
                   onClick={handleExitBooking}
-                  className='inline-flex min-h-8 w-fit items-center gap-2 rounded-full border border-brand-gold/14 bg-white/80 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-600 shadow-[0_10px_24px_rgba(15,23,42,0.08)] transition hover:border-brand-gold/30 hover:text-slate-900 dark:border-brand-gold/14 dark:bg-white/6 dark:text-slate-200 dark:hover:text-white'
+                  className='inline-flex min-h-8 w-fit items-center gap-2 rounded-full border border-brand-gold/12 bg-[#fbf6ef] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-600 shadow-[0_8px_18px_rgba(15,23,42,0.06)] transition hover:border-[#7a3f39]/30 hover:text-slate-900 dark:border-brand-gold/14 dark:bg-[#1a1411] dark:text-slate-200 dark:hover:text-white'
                 >
                   {isRTL ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
                   <span>{lang === 'ar' ? 'خروج' : 'Exit'}</span>
@@ -912,20 +916,20 @@ export default function BookingPage({ lang, isRTL }) {
                       aria-current={isActive ? 'step' : undefined}
                       className={`relative flex w-full items-center gap-3 border px-3 py-2.5 text-left transition ${
                         isActive
-                          ? 'rounded-[0.35rem] border-brand-gold/20 bg-brand-gold/8 shadow-[0_16px_34px_rgba(212,175,55,0.12)]'
+                          ? 'rounded-[0.35rem] border-[#7a3f39]/20 bg-[#f1e4d8] shadow-[0_12px_28px_rgba(86,34,35,0.08)] dark:bg-[#261b17]'
                         : isPast
-                            ? 'rounded-[0.35rem] border-brand-gold/16 bg-white/72 dark:bg-white/5'
-                            : 'rounded-[0.35rem] border-brand-gold/10 bg-white/56 dark:bg-white/5'
-                      } ${!isEnabled ? 'cursor-not-allowed opacity-55' : 'hover:border-brand-gold/28 hover:bg-white/80 dark:hover:bg-white/7'}`}
+                            ? 'rounded-[0.35rem] border-brand-gold/14 bg-[#fbf6ef] dark:bg-[#1a1411]'
+                            : 'rounded-[0.35rem] border-brand-gold/10 bg-[#f4ecdf] dark:bg-[#171210]'
+                      } ${!isEnabled ? 'cursor-not-allowed opacity-55' : 'hover:border-[#7a3f39]/24 hover:bg-[#fffaf4] dark:hover:bg-[#211814]'}`}
                     >
                       {isActive ? (
-                        <span className='absolute bottom-1.5 left-1 top-1.5 w-[3px] rounded-full bg-brand-gold' aria-hidden='true' />
+                        <span className='absolute bottom-1.5 left-1 top-1.5 w-[3px] rounded-full bg-[#7a3f39]' aria-hidden='true' />
                       ) : null}
                       <div
                         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${
                           isActive || isPast
-                            ? 'border-brand-gold bg-brand-gold text-black'
-                            : 'border-brand-gold/12 bg-white/80 text-slate-500 dark:bg-white/5 dark:text-slate-300'
+                            ? 'border-[#7a3f39]/22 bg-[#7a3f39] text-[#f7efe5]'
+                            : 'border-brand-gold/12 bg-[#fffaf4] text-slate-500 dark:bg-[#231916] dark:text-slate-300'
                         }`}
                       >
                         {isPast ? <CheckCircle2 size={15} strokeWidth={3} /> : <Icon size={15} />}
@@ -963,17 +967,17 @@ export default function BookingPage({ lang, isRTL }) {
                   <button
                     type='button'
                     onClick={handleExitBooking}
-                    className='inline-flex min-h-10 items-center gap-2 rounded-full border border-brand-gold/12 bg-white/70 px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-slate-600 backdrop-blur-xl transition hover:border-brand-gold/30 hover:text-slate-900 dark:border-brand-gold/12 dark:bg-white/5 dark:text-slate-200 dark:hover:text-white'
+                    className='inline-flex min-h-10 items-center gap-2 rounded-full border border-brand-gold/12 bg-[#fbf6ef] px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-slate-600 transition hover:border-[#7a3f39]/30 hover:text-slate-900 dark:border-brand-gold/12 dark:bg-[#1a1411] dark:text-slate-200 dark:hover:text-white'
                   >
                     {isRTL ? <ArrowRight size={15} /> : <ArrowLeft size={15} />}
                     <span>{t.exitBooking}</span>
                   </button>
 
-                  <div className='inline-flex items-center gap-2 rounded-full border border-brand-gold/12 bg-white/70 px-3 py-2 text-xs font-bold text-slate-500 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-slate-300'>
+                  <div className='inline-flex items-center gap-2 rounded-full border border-brand-gold/12 bg-[#fbf6ef] px-3 py-2 text-xs font-bold text-slate-500 dark:border-brand-gold/12 dark:bg-[#1a1411] dark:text-slate-300'>
                     <span className='uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
                       {t.remaining}
                     </span>
-                    <span className='text-sm font-black text-brand-gold'>
+                    <span className='text-sm font-black text-[#7a3f39] dark:text-[#d7a789]'>
                       {Math.max(3 - userBookingsCount, 0)}
                     </span>
                   </div>
@@ -981,7 +985,7 @@ export default function BookingPage({ lang, isRTL }) {
 
                 <div className='mb-3 flex items-end justify-between gap-3'>
                   <div className='min-w-0'>
-                    <div className='mb-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold'>
+                    <div className='mb-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.24em] text-[#7a3f39] dark:text-[#d7a789]'>
                       <Sparkles size={11} className='shrink-0' />
                       <span>{t.appointmentBooking}</span>
                     </div>
@@ -1002,10 +1006,10 @@ export default function BookingPage({ lang, isRTL }) {
                         <div
                           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition ${
                             isActive
-                              ? 'border-brand-gold bg-brand-gold text-black shadow-[0_10px_22px_rgba(212,175,55,0.18)]'
+                              ? 'border-[#7a3f39]/22 bg-[#7a3f39] text-[#f7efe5] shadow-[0_10px_22px_rgba(86,34,35,0.16)]'
                               : isPast
-                                ? 'border-brand-gold/18 bg-brand-gold/10 text-brand-gold'
-                                : 'border-brand-gold/10 bg-white/60 text-slate-400 dark:border-brand-gold/10 dark:bg-white/5 dark:text-slate-500'
+                                ? 'border-[#7a3f39]/16 bg-[#f1e4d8] text-[#7a3f39] dark:bg-[#261b17] dark:text-[#d7a789]'
+                                : 'border-brand-gold/10 bg-[#fffaf4] text-slate-400 dark:border-brand-gold/10 dark:bg-[#231916] dark:text-slate-500'
                           }`}
                           aria-current={isActive ? 'step' : undefined}
                         >
@@ -1019,8 +1023,8 @@ export default function BookingPage({ lang, isRTL }) {
                           <span
                             className={`h-px flex-1 ${
                               step > index
-                                ? 'bg-brand-gold/55'
-                                : 'bg-brand-gold/12 dark:bg-white/10'
+                                ? 'bg-[#7a3f39]/55'
+                                : 'bg-[#7a3f39]/14 dark:bg-white/10'
                             }`}
                             aria-hidden='true'
                           />
@@ -1035,7 +1039,7 @@ export default function BookingPage({ lang, isRTL }) {
                     {selectionSummary.slice(-2).map((item) => (
                       <div
                         key={item.label}
-                        className='inline-flex min-h-9 items-center gap-2 rounded-full border border-brand-gold/10 bg-white/72 px-3 py-2 text-xs backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5'
+                        className='inline-flex min-h-9 items-center gap-2 rounded-full border border-brand-gold/10 bg-[#fffaf4] px-3 py-2 text-xs dark:border-brand-gold/12 dark:bg-[#231916]'
                       >
                         <span className='font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500'>
                           {item.label}
@@ -1098,8 +1102,8 @@ export default function BookingPage({ lang, isRTL }) {
                               onClick={() => setServiceCategory(category)}
                               className={`min-h-8 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] transition ${
                                 isActive
-                                  ? 'border border-brand-gold/14 bg-brand-gold/14 text-slate-800 dark:border-brand-gold/16 dark:bg-brand-gold/12 dark:text-white'
-                                  : 'border border-brand-gold/8 bg-white/38 text-slate-500 hover:border-brand-gold/16 hover:text-slate-700 dark:border-brand-gold/10 dark:bg-white/4 dark:text-white/72 dark:hover:text-white'
+                                  ? 'border border-[#7a3f39]/18 bg-[#f1e4d8] text-[#7a3f39] dark:border-[#7a3f39]/22 dark:bg-[#261b17] dark:text-[#f7efe5]'
+                                  : 'border border-brand-gold/8 bg-[#f8f1e6] text-slate-500 hover:border-[#7a3f39]/16 hover:text-[#7a3f39] dark:border-brand-gold/10 dark:bg-[#1a1411] dark:text-white/72 dark:hover:text-white'
                               }`}
                             >
                               {label}
@@ -1132,14 +1136,16 @@ export default function BookingPage({ lang, isRTL }) {
 
                       <div className='hidden gap-2.5 sm:grid sm:grid-cols-2'>
                         {filteredServices.map((service) => (
-                          <button
+                          <motion.button
                             key={service._id}
                             type='button'
                             onClick={() => resetAfterServiceChange(service)}
-                            className={`group overflow-hidden rounded-[1.25rem] border-2 bg-white/72 text-left shadow-[0_14px_34px_rgba(15,23,42,0.07)] backdrop-blur-xl transition-all duration-200 dark:bg-white/5 ${
+                            whileHover={{ y: -3, scale: 1.01 }}
+                            whileTap={{ scale: 0.992 }}
+                            className={`group overflow-hidden rounded-[1.25rem] border-2 bg-[#fbf6ef] text-left shadow-[0_14px_34px_rgba(15,23,42,0.07)] transition-all duration-200 dark:bg-[#181310] ${
                               selectedService?._id === service._id
-                                ? 'border-brand-gold shadow-lg shadow-brand-gold/10'
-                                : 'border-brand-gold/10 hover:-translate-y-0.5 hover:border-brand-gold/30'
+                                ? 'border-[#7a3f39]/24 bg-[#fffaf4] shadow-[0_18px_42px_rgba(86,34,35,0.12)] dark:bg-[#231916]'
+                                : 'border-brand-gold/10 hover:-translate-y-0.5 hover:border-[#7a3f39]/24'
                             }`}
                           >
                             <div className='p-2 pb-0'>
@@ -1151,10 +1157,10 @@ export default function BookingPage({ lang, isRTL }) {
                                     className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
                                   />
                                 ) : (
-                                  <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.14),_rgba(15,23,42,0.88)_40%,_rgba(2,6,23,1)_100%)]'>
+                                  <div className='flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,rgba(38,26,23,0.92),rgba(18,14,12,1))]'>
                                     <div className='flex flex-col items-center gap-2 text-white/75'>
-                                      <div className='rounded-full border border-white/12 bg-white/6 p-2.5 backdrop-blur-sm'>
-                                        <Scissors className='h-6 w-6 text-brand-gold' />
+                                      <div className='rounded-full border border-white/12 bg-white/8 p-2.5'>
+                                        <Scissors className='h-6 w-6 text-[#d7a789]' />
                                       </div>
                                       <span className='text-[10px] font-black uppercase tracking-[0.24em] text-white/55'>
                                         {getServiceCategoryLabel(service, lang, t)}
@@ -1165,17 +1171,17 @@ export default function BookingPage({ lang, isRTL }) {
                                 <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent' />
                                 <div className='absolute inset-x-3 bottom-3 flex items-end justify-between gap-3'>
                                   <div>
-                                    <p className='mb-1 inline-flex rounded-full bg-white/15 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-sm'>
+                                    <p className='mb-1 inline-flex rounded-full bg-[#15110f]/70 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-white'>
                                       {getServiceBadgeOrCategoryLabel(service, lang, t.allCategories)}
                                     </p>
-                                    <p className='text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
+                                    <p className='text-[10px] font-black uppercase tracking-[0.22em] text-[#d7a789]'>
                                       {formatDuration(service.durationMinutes, lang)}
                                     </p>
                                     <h3 className='mt-0.5 text-base font-black text-white sm:text-lg'>
                                       {getServiceName(service, lang)}
                                     </h3>
                                   </div>
-                                  <span className='rounded-full bg-white/90 px-2.5 py-1 text-xs font-black text-gray-900 sm:text-sm'>
+                                  <span className='rounded-full bg-[#fffaf4] px-2.5 py-1 text-xs font-black text-gray-900 dark:bg-[#231916] dark:text-[#f7efe5] sm:text-sm'>
                                     {formatPrice(service.price, lang)}
                                   </span>
                                 </div>
@@ -1194,7 +1200,7 @@ export default function BookingPage({ lang, isRTL }) {
                                     .map((feature) => (
                                       <span
                                         key={feature}
-                                        className='rounded-full border border-brand-gold/10 bg-white/62 px-2.5 py-1 text-[10px] font-semibold text-slate-600 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-300'
+                                        className='rounded-full border border-brand-gold/10 bg-[#fffaf4] px-2.5 py-1 text-[10px] font-semibold text-slate-600 dark:border-brand-gold/12 dark:bg-[#231916] dark:text-gray-300'
                                       >
                                         {feature}
                                       </span>
@@ -1202,7 +1208,7 @@ export default function BookingPage({ lang, isRTL }) {
                                 </div>
                               ) : null}
                             </div>
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     </div>
@@ -1256,27 +1262,29 @@ export default function BookingPage({ lang, isRTL }) {
 
                       <div className='hidden gap-4 sm:grid sm:grid-cols-2 xl:grid-cols-3'>
                         {visibleBarberOptions.map((barber) => (
-                          <button
+                          <motion.button
                             key={barber._id}
                             type='button'
                             onClick={() => handleBarberSelect(barber)}
-                            className={`overflow-hidden rounded-[1.55rem] border-2 bg-white/72 text-left shadow-[0_14px_34px_rgba(15,23,42,0.07)] backdrop-blur-xl transition-all duration-200 dark:bg-white/5 ${
+                            whileHover={{ y: -3, scale: 1.01 }}
+                            whileTap={{ scale: 0.992 }}
+                            className={`overflow-hidden rounded-[1.55rem] border-2 bg-[#fbf6ef] text-left shadow-[0_14px_34px_rgba(15,23,42,0.07)] transition-all duration-200 dark:bg-[#181310] ${
                               selectedBarber?._id === barber._id
-                                ? 'border-brand-gold shadow-lg shadow-brand-gold/10'
-                                : 'border-brand-gold/10 hover:-translate-y-0.5 hover:border-brand-gold/30'
+                                ? 'border-[#7a3f39]/24 bg-[#fffaf4] shadow-[0_18px_42px_rgba(86,34,35,0.12)] dark:bg-[#231916]'
+                                : 'border-brand-gold/10 hover:-translate-y-0.5 hover:border-[#7a3f39]/24'
                             }`}
                           >
                             {barber._id === AUTO_BARBER_ID ? (
                               <div className='flex min-h-[16rem] flex-col items-center justify-center p-6 text-center'>
-                                <div className='mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-white/8'>
-                                  <UserRound className='h-8 w-8 text-slate-500 dark:text-slate-300' />
+                                <div className='mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#eee3d8] dark:bg-[#2a201c]'>
+                                  <UserRound className='h-8 w-8 text-[#8b7d6b] dark:text-[#d7a789]' />
                                 </div>
                                 <div className='flex w-full items-start justify-between gap-2 text-left'>
                                   <h3 className='w-full text-center text-lg font-black text-gray-900 dark:text-white'>
                                     {getBarberName(barber, lang)}
                                   </h3>
                                   {selectedBarber?._id === barber._id && (
-                                    <CheckCircle2 className='shrink-0 text-brand-gold' size={20} />
+                                    <CheckCircle2 className='shrink-0 text-[#7a3f39] dark:text-[#d7a789]' size={20} />
                                   )}
                                 </div>
                                 <p className='mt-2 text-center text-sm leading-6 text-slate-500 dark:text-slate-300'>
@@ -1303,7 +1311,7 @@ export default function BookingPage({ lang, isRTL }) {
                                       </h3>
                                     </div>
                                     {selectedBarber?._id === barber._id ? (
-                                      <span className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-gold text-black shadow-lg shadow-brand-gold/25'>
+                                      <span className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#7a3f39] text-[#f7efe5] shadow-lg shadow-[#7a3f39]/20'>
                                         <CheckCircle2 size={18} />
                                       </span>
                                     ) : null}
@@ -1318,7 +1326,7 @@ export default function BookingPage({ lang, isRTL }) {
                                     {(barber.serviceIds || []).map((service) => (
                                       <span
                                         key={service._id}
-                                        className='rounded-full border border-brand-gold/10 bg-white/62 px-2.5 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-300'
+                                        className='rounded-full border border-brand-gold/10 bg-[#fffaf4] px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-brand-gold/12 dark:bg-[#231916] dark:text-gray-300'
                                       >
                                         {getServiceName(service, lang)}
                                       </span>
@@ -1327,7 +1335,7 @@ export default function BookingPage({ lang, isRTL }) {
                                 </div>
                               </>
                             )}
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     </>
@@ -1363,18 +1371,28 @@ export default function BookingPage({ lang, isRTL }) {
                             {t.scheduleHint}
                           </p>
                         </div>
-                        {selectedDate ? (
-                          <div className='flex flex-wrap gap-2'>
-                            <span className='rounded-full bg-brand-gold/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-brand-gold'>
+                        <div className='flex flex-wrap gap-2'>
+                          {selectedDate && slots.length > 0 ? (
+                            <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+                              <span
+                                className={`lux-presence-dot ${
+                                  slots.length <= 3 ? 'lux-presence-dot--amber' : 'lux-presence-dot--emerald'
+                                }`}
+                              />
+                              {slots.length <= 3 ? t.limitedSlots : t.slotsOpenNow}
+                            </span>
+                          ) : null}
+                          {selectedDate ? (
+                            <span className='rounded-full bg-[#f0e2d6] px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-[#7a3f39] dark:bg-[#2b201c] dark:text-[#d7a789]'>
                               {formatLocalizedDate(selectedDate, lang)}
                             </span>
-                            {selectedTime ? (
-                              <span className='rounded-full border border-brand-gold/18 bg-white/75 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-slate-700 dark:bg-white/5 dark:text-slate-200'>
-                                {formatDisplayTime(selectedTime)}
-                              </span>
-                            ) : null}
-                          </div>
-                        ) : null}
+                          ) : null}
+                          {selectedTime ? (
+                            <span className='rounded-full border border-brand-gold/16 bg-[#fffaf4] px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-slate-700 dark:bg-[#231916] dark:text-slate-200'>
+                              {formatDisplayTime(selectedTime)}
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
 
                       {!selectedDate ? (
@@ -1404,18 +1422,20 @@ export default function BookingPage({ lang, isRTL }) {
                       ) : (
                         <div className='grid grid-cols-2 gap-2.5 sm:grid-cols-3'>
                           {slots.map((slot) => (
-                            <button
+                            <motion.button
                               key={slot}
                               type='button'
                               onClick={() => handleTimeSelect(slot)}
+                              whileHover={{ y: -2 }}
+                              whileTap={{ scale: 0.985 }}
                               className={`min-h-11 rounded-xl border-2 px-3 py-2.5 text-sm font-bold transition-all duration-200 ${
                                 selectedTime === slot
-                                  ? 'border-brand-gold bg-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                                  : 'border-brand-gold/10 bg-white/72 text-gray-700 backdrop-blur-xl hover:border-brand-gold/30 dark:border-brand-gold/12 dark:bg-white/5 dark:text-gray-200'
+                                  ? 'border-[#7a3f39] bg-[#7a3f39] text-[#f7efe5] shadow-lg shadow-[#7a3f39]/18'
+                                  : 'border-brand-gold/10 bg-[#fffaf4] text-gray-700 hover:border-[#7a3f39]/24 dark:border-brand-gold/12 dark:bg-[#231916] dark:text-gray-200'
                               }`}
                             >
                               {formatDisplayTime(slot)}
-                            </button>
+                            </motion.button>
                           ))}
                         </div>
                       )}
@@ -1437,7 +1457,7 @@ export default function BookingPage({ lang, isRTL }) {
                 >
                   <div className='app-surface p-4 sm:p-5 lg:p-4.5'>
                     <div className='space-y-4 lg:space-y-3.5'>
-                      <div className='overflow-hidden rounded-[1.4rem] border border-brand-gold/10 bg-white/72 backdrop-blur-xl dark:border-brand-gold/12 dark:bg-white/5'>
+                      <div className='overflow-hidden rounded-[1.4rem] border border-brand-gold/10 bg-[#fffaf4] dark:border-brand-gold/12 dark:bg-[#181310]'>
                         <div className='relative h-[14rem] overflow-hidden lg:h-[17.75rem]'>
                           {selectedService?.image ? (
                             <img
@@ -1446,21 +1466,21 @@ export default function BookingPage({ lang, isRTL }) {
                               className='h-full w-full object-cover'
                             />
                           ) : (
-                            <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.14),_rgba(15,23,42,0.88)_40%,_rgba(2,6,23,1)_100%)]'>
-                              <Scissors className='h-8 w-8 text-brand-gold' />
+                            <div className='flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,rgba(38,26,23,0.92),rgba(18,14,12,1))]'>
+                              <Scissors className='h-8 w-8 text-[#d7a789]' />
                             </div>
                           )}
                           <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent' />
                           <div className='absolute inset-x-4 bottom-4 flex flex-wrap items-end justify-between gap-3 lg:inset-x-5 lg:bottom-4'>
                             <div className='min-w-0'>
-                              <p className='text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
+                              <p className='text-[10px] font-black uppercase tracking-[0.22em] text-[#d7a789]'>
                                 {t.yourSelection}
                               </p>
                               <h2 className='mt-2 text-xl font-black text-white lg:text-2xl'>
                                 {getServiceName(selectedService, lang)}
                               </h2>
                             </div>
-                            <div className='shrink-0 rounded-full bg-white/90 px-3.5 py-2 text-sm font-black text-gray-900'>
+                            <div className='shrink-0 rounded-full bg-[#fffaf4] px-3.5 py-2 text-sm font-black text-gray-900 dark:bg-[#231916] dark:text-[#f7efe5]'>
                               {formatPrice(selectedService?.price, lang)}
                             </div>
                           </div>
@@ -1522,7 +1542,7 @@ export default function BookingPage({ lang, isRTL }) {
                   <button
                     type='button'
                     onClick={goBack}
-                    className='inline-flex min-h-9 items-center gap-2 rounded-full border border-brand-gold/12 bg-white/70 px-3 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-600 backdrop-blur-xl transition hover:border-brand-gold/30 hover:text-slate-900 dark:border-brand-gold/12 dark:bg-white/5 dark:text-slate-200 dark:hover:text-white'
+                    className='inline-flex min-h-9 items-center gap-2 rounded-full border border-brand-gold/12 bg-[#fbf6ef] px-3 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-600 transition hover:border-[#7a3f39]/30 hover:text-slate-900 dark:border-brand-gold/12 dark:bg-[#1a1411] dark:text-slate-200 dark:hover:text-white'
                   >
                     {isRTL ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
                     <span>{t.back}</span>

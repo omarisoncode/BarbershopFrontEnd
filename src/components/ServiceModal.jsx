@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Clock3, DollarSign, Info, Scissors } from 'lucide-react';
+import { Clock3, Info, Scissors, WalletCards } from 'lucide-react';
 
 import { AuthContext } from '../context/AuthContext';
 import { getLocalizedCategoryLabel } from '../utils/serviceCategories';
@@ -77,7 +77,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className='fixed inset-0 z-[80] flex items-end justify-center bg-black/72 p-0 backdrop-blur-md sm:items-center sm:p-4'
+          className='fixed inset-0 z-[80] flex items-end justify-center bg-black/72 p-0 sm:items-center sm:p-4'
         >
           <button
             type='button'
@@ -91,11 +91,9 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 36, opacity: 0, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 240, damping: 26 }}
-            className='relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[2rem] bg-[#f5efe4] text-slate-900 shadow-[0_30px_120px_rgba(0,0,0,0.32)] dark:bg-[#0b0908] dark:text-white sm:max-w-3xl sm:rounded-[2rem]'
+            className='relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[2rem] bg-[#f1ebe4] text-slate-900 shadow-[0_24px_72px_rgba(0,0,0,0.24)] dark:bg-[#0b0908] dark:text-white sm:max-w-3xl sm:rounded-[2rem]'
             dir={isRTL ? 'rtl' : 'ltr'}
           >
-            <div className='absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.16),transparent_28%)]' />
-
             <div className='relative h-64 w-full shrink-0 overflow-hidden sm:h-80'>
               {service.img ? (
                 <img
@@ -104,9 +102,9 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
                   className='h-full w-full object-cover'
                 />
               ) : (
-                <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(201,164,92,0.22),_rgba(15,23,42,0.94)_48%,_rgba(2,6,23,1)_100%)]'>
+                <div className='flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,rgba(33,25,20,0.88),rgba(10,9,8,1))]'>
                   <div className='flex flex-col items-center gap-4 text-white/80'>
-                    <div className='rounded-full border border-white/12 bg-white/6 p-4 backdrop-blur-sm'>
+                    <div className='rounded-full border border-white/12 bg-white/8 p-4'>
                       <Scissors className='h-10 w-10 text-brand-gold' />
                     </div>
                     <span className='text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60'>
@@ -121,7 +119,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
               <button
                 type='button'
                 onClick={onClose}
-                className={`absolute top-4 rounded-full border border-white/12 bg-black/35 p-2 text-white backdrop-blur-sm transition hover:bg-white hover:text-black ${
+                className={`absolute top-4 rounded-full border border-white/12 bg-[#15110f]/80 p-2 text-white transition hover:bg-white hover:text-black ${
                   isRTL ? 'left-4' : 'right-4'
                 }`}
               >
@@ -142,7 +140,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
               </button>
 
               <div className='absolute inset-x-6 bottom-6'>
-                <div className='inline-flex rounded-full border border-brand-gold/30 bg-brand-gold/14 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-gold backdrop-blur-xl'>
+                <div className='inline-flex rounded-full border border-brand-gold/30 bg-[rgba(30,22,18,0.82)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-gold'>
                   {getLocalizedCategoryLabel(service, lang, copy.craftedFor)}
                 </div>
                 <h2 className='mt-4 font-display text-4xl font-semibold text-white sm:text-5xl'>
@@ -153,7 +151,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
 
             <div className='relative space-y-6 overflow-y-auto p-6 sm:p-8'>
               <div className='grid gap-4 sm:grid-cols-2'>
-                <div className='rounded-[1.4rem] border border-black/8 bg-white/65 p-5 dark:border-white/10 dark:bg-white/5'>
+                <div className='rounded-[1.4rem] border border-black/8 bg-white/86 p-5 dark:border-white/10 dark:bg-white/6'>
                   <div className='flex items-center gap-3'>
                     <div className='flex h-11 w-11 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
                       <Clock3 size={18} />
@@ -172,10 +170,10 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
                   </div>
                 </div>
 
-                <div className='rounded-[1.4rem] border border-black/8 bg-white/65 p-5 dark:border-white/10 dark:bg-white/5'>
+                <div className='rounded-[1.4rem] border border-black/8 bg-white/86 p-5 dark:border-white/10 dark:bg-white/6'>
                   <div className='flex items-center gap-3'>
                     <div className='flex h-11 w-11 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/12 text-brand-gold'>
-                      <DollarSign size={18} />
+                      <WalletCards size={18} />
                     </div>
                     <div>
                       <p className='text-[11px] uppercase tracking-[0.18em] text-brand-gold'>
@@ -195,7 +193,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
               </div>
 
               {service.longDesc ? (
-                <div className='rounded-[1.5rem] border border-black/8 bg-white/65 p-5 dark:border-white/10 dark:bg-white/5'>
+                <div className='rounded-[1.5rem] border border-black/8 bg-white/86 p-5 dark:border-white/10 dark:bg-white/6'>
                   <div className='mb-3 flex items-center gap-2'>
                     <Info size={16} className='text-brand-gold' />
                     <h3 className='text-sm font-semibold uppercase tracking-[0.18em] text-brand-gold'>
@@ -209,7 +207,7 @@ export default function ServiceModal({ isOpen, onClose, service, lang }) {
               ) : null}
 
               {serviceFeatures.length > 0 ? (
-                <div className='rounded-[1.5rem] border border-black/8 bg-white/65 p-5 dark:border-white/10 dark:bg-white/5'>
+                <div className='rounded-[1.5rem] border border-black/8 bg-white/86 p-5 dark:border-white/10 dark:bg-white/6'>
                   <h3 className='text-sm font-semibold uppercase tracking-[0.18em] text-brand-gold'>
                     {copy.included}
                   </h3>

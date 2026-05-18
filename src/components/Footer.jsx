@@ -50,10 +50,10 @@ export default function Footer({ lang }) {
         : { to: '/login', label: t.navLogin };
 
   return (
-    <footer className='relative overflow-hidden border-t border-black/8 bg-[#f2ecdf] pb-8 pt-14 text-slate-900 dark:border-white/10 dark:bg-[#070605] dark:text-white'>
-      <div className='absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-gold/50 to-transparent' />
-      <div className='absolute left-0 top-0 h-72 w-72 rounded-full bg-brand-gold/10 blur-3xl' />
-      <div className='absolute bottom-0 right-0 h-72 w-72 rounded-full bg-brand-gold/8 blur-3xl' />
+    <footer className='relative overflow-hidden border-t border-black/8 bg-[#eae1d8] pb-8 pt-14 text-slate-900 dark:border-white/10 dark:bg-[#070605] dark:text-white'>
+      <div className='absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-gold/35 to-transparent' />
+      <div className='absolute left-0 top-0 h-72 w-72 rounded-full bg-brand-gold/7 blur-3xl' />
+      <div className='absolute bottom-0 right-0 h-72 w-72 rounded-full bg-brand-gold/6 blur-3xl' />
 
       <div className='lux-section-shell relative z-10'>
         <div className='lux-panel mb-8 overflow-hidden px-5 py-5 sm:px-6 sm:py-6'>

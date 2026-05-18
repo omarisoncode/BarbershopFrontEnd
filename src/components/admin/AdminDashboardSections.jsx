@@ -54,7 +54,7 @@ export const mobileWorkspaceScrollClass =
   'lg:max-h-[calc(100vh-15.5rem)] lg:overflow-y-auto lg:pr-1';
 
 export const inputClass =
-  'admin-form-input w-full rounded-[1rem] border border-brand-gold/12 bg-white/72 px-3.5 py-3 text-base text-slate-900 caret-slate-900 shadow-[0_16px_38px_rgba(15,23,42,0.04)] backdrop-blur-xl transition placeholder:text-slate-400 focus:border-brand-gold/42 focus:bg-white focus:outline-none dark:border-brand-gold/14 dark:bg-slate-950/70 dark:text-white dark:caret-white dark:placeholder:text-white/38 dark:focus:border-brand-gold/34 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]';
+  'admin-form-input w-full rounded-[1rem] border border-brand-gold/12 bg-white/88 px-3.5 py-3 text-base text-slate-900 caret-slate-900 shadow-[0_12px_28px_rgba(15,23,42,0.04)] transition placeholder:text-slate-400 focus:border-brand-gold/42 focus:bg-white focus:outline-none dark:border-brand-gold/14 dark:bg-slate-950/78 dark:text-white dark:caret-white dark:placeholder:text-white/38 dark:focus:border-brand-gold/34 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]';
 
 const timeFieldClass =
   `${inputClass} px-3 py-2.5 text-sm`;
@@ -347,9 +347,9 @@ const getBarberQualityFlags = (barber, lang = 'en') => {
 
 const qualityBadgeClass = {
   success:
-    'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-300',
+    'border-emerald-300/40 bg-emerald-50/80 text-emerald-700 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200',
   warning:
-    'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300',
+    'border-[#c49a58]/24 bg-[#f4ede2] text-[#8a6430] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/28 dark:text-[#e6c58d]',
   muted:
     'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300',
 };
@@ -384,7 +384,8 @@ export const MetricCard = ({ icon, label, value, accent }) => {
   const RenderIcon = icon;
 
   return (
-    <div className={`rounded-[0.85rem] p-4 ${glassPanel}`}>
+    <div className={`relative overflow-hidden rounded-[0.85rem] p-4 transition-all duration-300 hover:-translate-y-0.5 ${glassPanel}`}>
+      <div className='absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-brand-gold/35 to-transparent' />
       <div className='flex items-start gap-3.5'>
         <div className={`rounded-[0.75rem] bg-linear-to-br p-2.5 text-slate-900 ${accent} dark:text-white`}>
           <RenderIcon size={17} />
@@ -415,7 +416,7 @@ export const SectionShell = ({
       className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ${
         compact ? 'mb-3 pb-3' : 'mb-3.5 pb-3.5'
       }`}
-      style={{ borderBottom: '1px solid rgba(148, 163, 184, 0.16)' }}
+      style={{ borderBottom: '1px solid rgba(122, 58, 51, 0.12)' }}
     >
       <div className={hideHeaderOnMobile ? 'hidden sm:block' : ''}>
         <h2 className='text-[1rem] font-black text-slate-900 dark:text-white sm:text-[1.06rem]'>
@@ -435,7 +436,7 @@ export const SectionShell = ({
 
 export const AdminSubviewTabs = ({ activeView, tabs, onChange, columns = 2 }) => (
   <div
-    className={`sticky top-2 z-20 grid w-full gap-2 rounded-[1.1rem] bg-[#f5efe4]/92 p-2 shadow-[0_16px_32px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:bg-[#0b0908]/92 sm:static sm:w-auto sm:bg-transparent sm:p-0 sm:shadow-none ${
+    className={`sticky top-2 z-20 grid w-full gap-2 rounded-[1.1rem] bg-[#f1ebe4] p-2 shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:bg-[#0b0908] sm:static sm:w-auto sm:bg-transparent sm:p-0 sm:shadow-none ${
       columns === 3 ? 'sm:grid-cols-3' : columns === 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2'
     }`}
   >
@@ -453,14 +454,14 @@ export const AdminSubviewTabs = ({ activeView, tabs, onChange, columns = 2 }) =>
           disabled={tab.disabled}
           className={`flex min-h-[3.2rem] items-center gap-2.5 rounded-[1rem] border px-4 py-3 text-left text-sm font-black transition disabled:cursor-not-allowed disabled:opacity-55 ${
             activeView === tab.id
-              ? 'border-slate-900 bg-slate-900 text-white shadow-sm dark:border-white dark:bg-white dark:text-slate-900'
-              : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-900'
+              ? 'border-brand-gold/22 bg-brand-gold/8 text-slate-900 shadow-[0_14px_30px_rgba(86,34,35,0.12)] dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-white'
+              : 'border-slate-200 bg-white text-slate-700 hover:border-brand-gold/22 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-brand-gold/18 dark:hover:bg-slate-900'
           }`}
         >
           <span
             className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
               activeView === tab.id
-                ? 'bg-white/16 text-white dark:bg-slate-900 dark:text-slate-900'
+                ? 'bg-brand-gold text-[#f6f1eb] dark:bg-brand-gold dark:text-[#f6f1eb]'
                 : 'bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-300'
             }`}
           >
@@ -699,12 +700,12 @@ export const ActivityCard = ({ item, lang }) => (
 const StatusBadge = ({ status, t }) => {
   const tone =
     status === 'completed'
-      ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+      ? 'border-emerald-300/40 bg-emerald-50/80 text-emerald-700 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200'
       : status === 'no_show'
-        ? 'border-red-500/20 bg-red-500/10 text-red-600'
+        ? 'border-[#a85054]/24 bg-[#fbf2f2] text-[#8d3942] dark:border-[#a85054]/24 dark:bg-[#31171a]/36 dark:text-[#efb7bd]'
         : status === 'cancelled'
           ? 'border-slate-300/80 bg-slate-200/65 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
-          : 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/40 dark:bg-sky-900/20 dark:text-sky-200';
+          : 'border-brand-gold/18 bg-brand-gold/8 text-brand-gold dark:border-brand-gold/20 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
 
   const labelMap = {
     active: t.statusActive,
@@ -737,19 +738,19 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
         }
       : state.intent === 'success'
       ? {
-          icon: 'bg-emerald-500/10 text-emerald-500',
-          button: 'bg-emerald-500 text-white hover:bg-emerald-400',
+          icon: 'border border-emerald-300/40 bg-emerald-50/80 text-emerald-600 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200',
+          button: 'border border-emerald-300/40 bg-emerald-600 text-white hover:bg-emerald-500 dark:border-emerald-500/24 dark:bg-emerald-600 dark:hover:bg-emerald-500',
           iconNode: <ShieldAlert size={22} />,
         }
       : state.intent === 'warning'
         ? {
-          icon: 'bg-amber-500/12 text-amber-500',
-          button: 'bg-amber-400 text-black hover:bg-amber-300',
+          icon: 'border border-[#c49a58]/24 bg-[#f4ede2] text-[#8a6430] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/28 dark:text-[#e6c58d]',
+          button: 'border border-[#c49a58]/24 bg-[#8a6430] text-white hover:bg-[#745227] dark:border-[#c49a58]/22 dark:bg-[#8a6430] dark:hover:bg-[#745227]',
           iconNode: <ShieldAlert size={22} />,
         }
         : {
-            icon: 'bg-red-500/10 text-red-500',
-            button: 'bg-red-500 text-white hover:bg-red-400',
+            icon: 'border border-[#a85054]/24 bg-[#fbf2f2] text-[#8d3942] dark:border-[#a85054]/24 dark:bg-[#31171a]/36 dark:text-[#efb7bd]',
+            button: 'border border-[#a85054]/24 bg-[#8d3942] text-white hover:bg-[#7a3139] dark:border-[#a85054]/24 dark:bg-[#8d3942] dark:hover:bg-[#7a3139]',
             iconNode: <ShieldAlert size={22} />,
           };
 
@@ -759,7 +760,7 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-md'
+        className='fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/50 p-4'
         onClick={() => !busy && onClose()}
       >
         <MotionDiv
@@ -867,7 +868,7 @@ export const BookingCard = ({
               <button
                 type='button'
                 onClick={() => setDetailsOpen((current) => !current)}
-                className='inline-flex items-center gap-2 rounded-full border border-brand-gold/16 bg-white/72 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl transition hover:border-brand-gold/26 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-slate-200 dark:hover:text-brand-gold-soft'
+                className='inline-flex items-center gap-2 rounded-full border border-brand-gold/16 bg-white/88 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-slate-700 shadow-[0_10px_22px_rgba(15,23,42,0.05)] transition hover:border-brand-gold/26 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-slate-200 dark:hover:text-brand-gold-soft'
               >
                 {detailsToggleLabel}
                 {detailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -1202,7 +1203,7 @@ const ModalShell = ({ open, onClose, title, children }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed inset-0 z-[95] flex overflow-y-auto overscroll-contain bg-slate-950/45 p-4 backdrop-blur-md sm:items-center sm:justify-center'
+        className='fixed inset-0 z-[95] flex overflow-y-auto overscroll-contain bg-slate-950/45 p-4 sm:items-center sm:justify-center'
         onClick={onClose}
       >
         <MotionDiv
@@ -2055,7 +2056,7 @@ export const AdminBookingsPanel = ({
                               className='h-full w-full object-cover'
                             />
                           ) : (
-                            <div className='flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,215,122,0.14),_rgba(15,23,42,0.88)_40%,_rgba(2,6,23,1)_100%)]'>
+                            <div className='flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,rgba(33,25,20,0.84),rgba(10,9,8,1))]'>
                               <Scissors size={18} className='text-brand-gold' />
                             </div>
                           )}
@@ -2421,20 +2422,20 @@ export const AdminBookingsPanel = ({
 
 const customerStatusStyles = {
   active: {
-    chip: 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200',
-    card: 'border-emerald-200/70 dark:border-emerald-500/20',
+    chip: 'border-brand-gold/18 bg-brand-gold/8 text-brand-gold dark:border-brand-gold/20 dark:bg-brand-gold/10 dark:text-brand-gold-soft',
+    card: 'border-brand-gold/18 dark:border-brand-gold/20',
   },
   completed: {
-    chip: 'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-200',
-    card: 'border-sky-200/70 dark:border-sky-500/20',
+    chip: 'border-emerald-300/40 bg-emerald-50/80 text-emerald-700 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200',
+    card: 'border-emerald-300/40 dark:border-emerald-500/24',
   },
   cancelled: {
-    chip: 'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200',
-    card: 'border-rose-200/70 dark:border-rose-500/20',
+    chip: 'border-[#a85054]/24 bg-[#fbf2f2] text-[#8d3942] dark:border-[#a85054]/24 dark:bg-[#31171a]/36 dark:text-[#efb7bd]',
+    card: 'border-[#a85054]/24 dark:border-[#a85054]/24',
   },
   no_show: {
-    chip: 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200',
-    card: 'border-amber-200/70 dark:border-amber-500/20',
+    chip: 'border-[#c49a58]/24 bg-[#f4ede2] text-[#8a6430] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/28 dark:text-[#e6c58d]',
+    card: 'border-[#c49a58]/24 dark:border-[#c49a58]/22',
   },
 };
 

@@ -118,7 +118,7 @@ const getAuthFieldClass = (error) =>
   `relative flex items-center rounded-[1.5rem] border backdrop-blur-xl transition-all duration-200 ${
     error
       ? 'border-red-300/70 bg-red-50/70 shadow-[0_12px_28px_rgba(239,68,68,0.06)] dark:border-red-500/40 dark:bg-red-950/10 dark:shadow-[0_14px_32px_rgba(0,0,0,0.18)]'
-      : 'border-brand-gold/12 bg-white/72 shadow-[0_14px_30px_rgba(15,23,42,0.04)] focus-within:border-brand-gold/30 focus-within:bg-white/82 focus-within:shadow-[0_16px_34px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/22 dark:focus-within:shadow-[0_18px_38px_rgba(0,0,0,0.24)]'
+      : 'border-brand-gold/12 bg-white/72 shadow-[0_14px_30px_rgba(15,23,42,0.04)] focus-within:-translate-y-[1px] focus-within:border-brand-gold/30 focus-within:bg-white/84 focus-within:shadow-[0_18px_38px_rgba(15,23,42,0.07)] dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/22 dark:focus-within:shadow-[0_18px_38px_rgba(0,0,0,0.24)]'
   }`;
 
 const getLoginGreeting = (lang) => {
@@ -390,11 +390,12 @@ const AuthPage = ({ lang, isRTL }) => {
         </div>
       </div>
 
-      <div className='flex flex-1 items-start justify-center overflow-x-hidden overflow-y-auto px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-6 md:items-center md:px-8 md:pb-8 md:pt-8 lg:p-12'>
+      <div className='relative flex flex-1 items-start justify-center overflow-x-hidden overflow-y-auto px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-6 md:items-center md:px-8 md:pb-8 md:pt-8 lg:p-12'>
+        <div className='pointer-events-none absolute inset-x-6 top-0 h-40 rounded-full bg-brand-gold/10 blur-3xl md:hidden' />
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          initial={{ opacity: 0, y: 20, scale: 0.985, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className={`mx-auto w-full max-w-md self-start md:self-auto ${isRTL ? 'text-right' : 'text-left'}`}
         >
           <div className='md:hidden flex items-center justify-center gap-3 mb-6'>
@@ -406,7 +407,8 @@ const AuthPage = ({ lang, isRTL }) => {
             </span>
           </div>
 
-          <div className='lux-panel space-y-7 border-white/45 p-5 sm:p-8 md:space-y-8 md:p-10 dark:border-white/10'>
+          <div className='lux-panel relative overflow-hidden space-y-7 border-white/45 p-5 sm:p-8 md:space-y-8 md:p-10 dark:border-white/10'>
+            <div className='pointer-events-none absolute inset-x-10 top-0 h-24 rounded-full bg-brand-gold/10 blur-3xl' />
             <div className='text-center space-y-2'>
               <div className='flex justify-center'>
                 {isLogin && !isResetRequest && !isResetForm ? (
@@ -429,7 +431,7 @@ const AuthPage = ({ lang, isRTL }) => {
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
-                  className={`rounded-[1.2rem] border border-red-200/70 bg-red-50/80 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-950/12 dark:text-red-300 flex items-start gap-3 overflow-hidden ${
+                  className={`rounded-[1.2rem] border border-[#a85054]/24 bg-[#fbf2f2] px-4 py-3 text-sm text-[#8d3942] dark:border-[#a85054]/24 dark:bg-[#31171a]/36 dark:text-[#efb7bd] flex items-start gap-3 overflow-hidden ${
                     isRTL ? 'text-right' : 'text-left'
                   }`}
                 >
@@ -442,7 +444,7 @@ const AuthPage = ({ lang, isRTL }) => {
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
-                  className={`rounded-[1.2rem] border border-emerald-200/70 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/12 dark:text-emerald-300 flex items-start gap-3 overflow-hidden ${
+                  className={`rounded-[1.2rem] border border-emerald-300/40 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200 flex items-start gap-3 overflow-hidden ${
                     isRTL ? 'text-right' : 'text-left'
                   }`}
                 >
@@ -696,7 +698,7 @@ const PasswordField = ({
       <button
         type='button'
         onClick={togglePassword}
-        className={`text-slate-400 hover:text-brand-gold transition-colors ${
+        className={`transition-colors ${showPassword ? 'text-[#7a3f39]' : 'text-[#9b8c79] hover:text-[#7a3f39]'} ${
           isRTL ? 'order-1 pl-4 pr-2' : 'pr-4'
         }`}
       >

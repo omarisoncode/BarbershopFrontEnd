@@ -42,14 +42,14 @@ const SidebarNavItem = ({ item, active, isRTL, onClick }) => {
       onClick={() => onClick(item.id)}
       className={`group relative flex min-h-[3.1rem] w-full items-center gap-3 overflow-hidden rounded-[0.75rem] px-3.5 py-2.5 text-left transition-colors ${
         active
-          ? 'border border-brand-gold/24 bg-brand-gold/10 text-slate-900 shadow-[0_10px_28px_rgba(201,164,92,0.16)] dark:border-brand-gold/26 dark:bg-brand-gold/12 dark:text-white'
-          : 'border border-transparent text-slate-600 hover:bg-white/62 hover:text-[#8b6238] dark:text-slate-300 dark:hover:bg-white/6 dark:hover:text-brand-gold-soft'
+          ? 'border border-brand-gold/22 bg-brand-gold/8 text-slate-900 shadow-[0_10px_28px_rgba(86,34,35,0.14)] dark:border-brand-gold/24 dark:bg-brand-gold/10 dark:text-white'
+          : 'border border-transparent text-slate-600 hover:bg-white/62 hover:text-brand-gold dark:text-slate-300 dark:hover:bg-white/6 dark:hover:text-brand-gold-soft'
       } ${isRTL ? 'flex-row-reverse text-right' : ''}`}
     >
       <span
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.7rem] border ${
           active
-            ? 'border-brand-gold/24 bg-brand-gold/12 text-brand-gold dark:border-brand-gold/24 dark:bg-brand-gold/14 dark:text-brand-gold-soft'
+            ? 'border-brand-gold/22 bg-brand-gold/8 text-brand-gold dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-brand-gold-soft'
             : 'border-transparent bg-transparent text-slate-400 dark:text-slate-500'
         }`}
       >
@@ -172,7 +172,7 @@ export const AdminDashboardSidebar = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='fixed inset-0 z-[70] bg-slate-950/45 backdrop-blur-sm lg:hidden'
+            className='fixed inset-0 z-[70] bg-slate-950/45 lg:hidden'
             onClick={onClose}
           >
             <MotionDiv
@@ -205,8 +205,8 @@ export const AdminDashboardHeader = ({
 }) => {
   const statusToneClass =
     statusTone === 'warning'
-      ? 'border-amber-300/28 bg-amber-50/80 text-amber-700 shadow-[0_12px_26px_rgba(245,158,11,0.08)] dark:border-amber-300/20 dark:bg-amber-400/8 dark:text-amber-200'
-      : 'border-brand-gold/18 bg-brand-gold/10 text-slate-700 shadow-[0_12px_26px_rgba(201,164,92,0.1)] dark:border-brand-gold/18 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
+      ? 'border-[#c49a58]/24 bg-[#f4ede2] text-[#8a6430] shadow-[0_12px_26px_rgba(138,100,48,0.08)] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/28 dark:text-[#e6c58d]'
+      : 'border-brand-gold/16 bg-brand-gold/8 text-slate-700 shadow-[0_12px_26px_rgba(86,34,35,0.08)] dark:border-brand-gold/18 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
 
   return (
     <header className={`rounded-[0.95rem] p-3.5 sm:p-4 ${shellSurface}`} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -246,11 +246,7 @@ export const AdminDashboardHeader = ({
             <span
               className={`inline-flex min-h-9 items-center gap-2 rounded-[0.8rem] border px-3 text-xs font-black ${statusToneClass}`}
             >
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  statusTone === 'warning' ? 'bg-amber-500' : 'bg-emerald-500'
-                }`}
-              />
+              <span className={`lux-presence-dot ${statusTone === 'warning' ? 'lux-presence-dot--amber' : 'lux-presence-dot--emerald'}`} />
               {statusText}
             </span>
           </div>
@@ -268,11 +264,7 @@ export const AdminDashboardHeader = ({
               <span
                 className={`inline-flex min-h-10 items-center gap-2 rounded-[0.8rem] border px-3.5 text-sm font-black ${statusToneClass}`}
               >
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    statusTone === 'warning' ? 'bg-amber-500' : 'bg-emerald-500'
-                  }`}
-                />
+                <span className={`lux-presence-dot ${statusTone === 'warning' ? 'lux-presence-dot--amber' : 'lux-presence-dot--emerald'}`} />
                 {statusText}
               </span>
             ) : null}
@@ -305,7 +297,7 @@ export const AdminMobileTabBar = ({
   const isMoreActive = !primaryItems.some((item) => item.id === activeSection);
 
   return (
-    <div className='fixed inset-x-0 bottom-0 z-[65] border-t border-black/8 bg-[#f5efe4]/96 px-2 pb-[max(0.45rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl dark:border-white/10 dark:bg-[#090807]/96 lg:hidden'>
+    <div className='fixed inset-x-0 bottom-0 z-[65] border-t border-black/8 bg-[#f1ebe4] px-2 pb-[max(0.45rem,env(safe-area-inset-bottom))] pt-2 dark:border-white/10 dark:bg-[#090807] lg:hidden'>
       <div className='mx-auto max-w-[30rem]'>
         <div
           className='grid gap-2'
@@ -322,7 +314,7 @@ export const AdminMobileTabBar = ({
                 onClick={() => onSelect(item.id)}
                 className={`flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
                   active
-                    ? 'border-brand-gold/24 bg-brand-gold/12 text-slate-900 dark:border-brand-gold/24 dark:bg-brand-gold/12 dark:text-white'
+                    ? 'border-brand-gold/22 bg-brand-gold/8 text-slate-900 dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-white'
                     : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
                 }`}
               >
@@ -337,7 +329,7 @@ export const AdminMobileTabBar = ({
             onClick={onOpenSidebar}
             className={`flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
               isMoreActive
-                ? 'border-brand-gold/24 bg-brand-gold/12 text-slate-900 dark:border-brand-gold/24 dark:bg-brand-gold/12 dark:text-white'
+                ? 'border-brand-gold/22 bg-brand-gold/8 text-slate-900 dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-white'
                 : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
             }`}
           >
@@ -367,7 +359,7 @@ export const AdminShellActions = ({ actions, isRTL = false }) => {
             aria-busy={action.busy ? 'true' : 'false'}
             className={`inline-flex min-h-10 items-center gap-2 rounded-[0.8rem] border px-3.5 py-2 text-sm font-bold transition ${
               action.tone === 'danger'
-                ? 'border-red-200 bg-white/78 text-red-600 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-red-50 dark:border-red-900/40 dark:bg-red-950/18 dark:text-red-300 dark:hover:bg-red-950/30'
+                ? 'border-[#a85054]/24 bg-white/78 text-[#8d3942] shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:bg-[#31171a]/32 dark:text-[#efb7bd] dark:hover:bg-[#31171a]/44'
                 : `${shellSubtle} text-slate-700 dark:text-slate-200`
               } ${isRTL ? 'flex-row-reverse' : ''}`}
           >
@@ -400,7 +392,7 @@ export const AdminSidebarUtilityActions = ({ actions, isRTL = false }) => {
             disabled={action.disabled}
             className={`flex min-h-[3rem] w-full items-center gap-3 rounded-[0.75rem] border px-3.5 py-2.5 text-left text-sm font-bold transition ${
               action.tone === 'danger'
-                ? 'border-red-200 bg-white/78 text-red-600 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-red-50 dark:border-red-900/40 dark:bg-red-950/18 dark:text-red-300 dark:hover:bg-red-950/30'
+                ? 'border-[#a85054]/24 bg-white/78 text-[#8d3942] shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:bg-[#31171a]/32 dark:text-[#efb7bd] dark:hover:bg-[#31171a]/44'
                 : `${shellSubtle} text-slate-700 dark:text-slate-200`
             } ${isRTL ? 'flex-row-reverse text-right' : ''}`}
           >
