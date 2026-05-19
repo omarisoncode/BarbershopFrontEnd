@@ -8,10 +8,11 @@ const MotionDiv = motion.div;
 export const sectionViewport = { once: true, amount: 0.08, margin: '0px 0px -2% 0px' };
 
 export const revealUpVariants = {
-  hidden: { opacity: 0, y: 22, filter: 'blur(4px)' },
+  hidden: { opacity: 0, y: 20, scale: 0.985, filter: 'blur(4px)' },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
     filter: 'blur(0px)',
     transition: {
       duration: 0.58,
@@ -31,10 +32,11 @@ export const staggerContainer = {
 };
 
 export const sequentialReveal = {
-  hidden: { opacity: 0, y: 14, filter: 'blur(3px)' },
+  hidden: { opacity: 0, y: 14, scale: 0.988, filter: 'blur(3px)' },
   visible: (index = 0) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     filter: 'blur(0px)',
     transition: {
       duration: 0.46,

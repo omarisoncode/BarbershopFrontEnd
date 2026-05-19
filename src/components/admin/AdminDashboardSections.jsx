@@ -345,15 +345,6 @@ const getBarberQualityFlags = (barber, lang = 'en') => {
   return flags;
 };
 
-const qualityBadgeClass = {
-  success:
-    'border-emerald-300/40 bg-emerald-50/80 text-emerald-700 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200',
-  warning:
-    'border-[#c49a58]/24 bg-[#f4ede2] text-[#8a6430] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/28 dark:text-[#e6c58d]',
-  muted:
-    'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300',
-};
-
 export const getLocalizedDescription = (item, lang, fallback) =>
   lang === 'ar'
     ? item.descriptionAr || item.description || fallback
@@ -380,12 +371,17 @@ const formatPhoneDisplay = (phone, countryCode = '+965', lang = 'en') => {
 const formatCustomerIdDisplay = (customerId, lang = 'en', fallback = 'N/A') =>
   customerId ? localizeDigits(customerId, lang) : fallback;
 
-export const MetricCard = ({ icon, label, value, accent }) => {
+export const MetricCard = ({ icon, label, value, accent, className = '' }) => {
   const RenderIcon = icon;
 
   return (
-    <div className={`relative overflow-hidden rounded-[0.85rem] p-4 transition-all duration-300 hover:-translate-y-0.5 ${glassPanel}`}>
+    <motion.div
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.18 }}
+      className={`relative overflow-hidden rounded-[0.85rem] p-4 transition-all duration-300 ${glassPanel} ${className}`}
+    >
       <div className='absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-brand-gold/35 to-transparent' />
+      <span className='absolute right-4 top-4 inline-flex h-2 w-2 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft' />
       <div className='flex items-start gap-3.5'>
         <div className={`rounded-[0.75rem] bg-linear-to-br p-2.5 text-slate-900 ${accent} dark:text-white`}>
           <RenderIcon size={17} />
@@ -399,7 +395,7 @@ export const MetricCard = ({ icon, label, value, accent }) => {
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -539,7 +535,7 @@ export const MiniBarChart = ({ title, items, lang }) => {
             </div>
             <div className='h-2 rounded-full bg-slate-200 dark:bg-slate-800'>
               <div
-                className='h-full rounded-full bg-linear-to-r from-slate-700 to-slate-400 dark:from-slate-300 dark:to-slate-500'
+                className='h-full rounded-full bg-linear-to-r from-[#7a3f39] to-[#b88467] dark:from-[#d7a789] dark:to-[#8a4a43]'
                 style={{ width: `${Math.max((item.count / max) * 100, 8)}%` }}
               />
             </div>
@@ -600,7 +596,7 @@ export const SparklineChart = ({ title, items, lang }) => {
             </p>
           </div>
           <div className='flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500'>
-            <span className='h-2.5 w-2.5 rounded-full bg-brand-gold' />
+            <span className='h-2.5 w-2.5 rounded-full bg-[#7a3f39] dark:bg-[#d7a789]' />
             {lang === 'ar' ? 'اتجاه الحجوزات' : 'Booking trend'}
           </div>
         </div>
@@ -614,8 +610,8 @@ export const SparklineChart = ({ title, items, lang }) => {
           >
             <defs>
               <linearGradient id={gradientId} x1='0' y1='0' x2='0' y2='1'>
-                <stop offset='0%' stopColor='rgba(201,164,92,0.34)' />
-                <stop offset='100%' stopColor='rgba(201,164,92,0.04)' />
+                <stop offset='0%' stopColor='rgba(122,63,57,0.28)' />
+                <stop offset='100%' stopColor='rgba(122,63,57,0.04)' />
               </linearGradient>
             </defs>
             {[0.25, 0.5, 0.75].map((line) => (
@@ -634,7 +630,7 @@ export const SparklineChart = ({ title, items, lang }) => {
             <path
               d={linePath}
               fill='none'
-              stroke='rgba(201,164,92,0.98)'
+              stroke='rgba(122,63,57,0.98)'
               strokeWidth='2.1'
               strokeLinecap='round'
               strokeLinejoin='round'
@@ -646,7 +642,7 @@ export const SparklineChart = ({ title, items, lang }) => {
                 cy={point.y}
                 r='1.8'
                 fill='rgba(255,255,255,0.95)'
-                stroke='rgba(201,164,92,1)'
+                stroke='rgba(122,63,57,1)'
                 strokeWidth='1.2'
               />
             ))}
@@ -671,7 +667,11 @@ export const SparklineChart = ({ title, items, lang }) => {
 };
 
 export const ActivityCard = ({ item, lang }) => (
-  <div className={`rounded-[1rem] border border-slate-200/70 p-3.5 shadow-none ${mutedPanel}`}>
+  <motion.div
+    whileHover={{ y: -1 }}
+    transition={{ duration: 0.18 }}
+    className={`rounded-[1rem] border border-slate-200/70 p-3.5 shadow-none ${mutedPanel}`}
+  >
     <div className='flex items-start gap-3'>
       <div className='rounded-[0.85rem] bg-slate-100 p-2 text-slate-500 dark:bg-slate-900 dark:text-slate-300'>
         {item.type === 'booking.created' ? <BellRing size={16} /> : <CalendarClock size={16} />}
@@ -694,18 +694,18 @@ export const ActivityCard = ({ item, lang }) => (
         </p>
       </div>
     </div>
-  </div>
+  </motion.div>
 );
 
 const StatusBadge = ({ status, t }) => {
   const tone =
     status === 'completed'
-      ? 'border-emerald-300/40 bg-emerald-50/80 text-emerald-700 dark:border-emerald-500/24 dark:bg-emerald-500/10 dark:text-emerald-200'
+      ? 'border-emerald-300/30 bg-emerald-50/55 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/8 dark:text-emerald-200'
       : status === 'no_show'
-        ? 'border-[#a85054]/24 bg-[#fbf2f2] text-[#8d3942] dark:border-[#a85054]/24 dark:bg-[#31171a]/36 dark:text-[#efb7bd]'
+        ? 'border-[#a85054]/20 bg-[#fbf2f2]/78 text-[#8d3942] dark:border-[#a85054]/22 dark:bg-[#31171a]/30 dark:text-[#efb7bd]'
         : status === 'cancelled'
-          ? 'border-slate-300/80 bg-slate-200/65 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
-          : 'border-brand-gold/18 bg-brand-gold/8 text-brand-gold dark:border-brand-gold/20 dark:bg-brand-gold/10 dark:text-brand-gold-soft';
+          ? 'border-slate-300/70 bg-slate-100/75 text-slate-600 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300'
+          : 'border-[#7a3f39]/16 bg-[#f3e7dd] text-[#7a3f39] dark:border-[#7a3f39]/20 dark:bg-[#2c1d1a] dark:text-[#d7a789]';
 
   const labelMap = {
     active: t.statusActive,
@@ -716,7 +716,7 @@ const StatusBadge = ({ status, t }) => {
 
   return (
     <span
-      className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] ${tone}`}
+      className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] ${tone}`}
     >
       {labelMap[status] || status}
     </span>
@@ -731,9 +731,9 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
   const tone =
     state.intent === 'logout'
       ? {
-          icon: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
+          icon: 'border border-[#7a3f39]/16 bg-[#f3e7dd] text-[#7a3f39] dark:border-[#7a3f39]/20 dark:bg-[#2c1d1a] dark:text-[#d7a789]',
           button:
-            'border border-slate-200 bg-slate-900 text-white hover:bg-slate-800 dark:border-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100',
+            'border border-[#7a3f39]/18 bg-[#7a3f39] text-[#f7efe5] hover:bg-[#6d3833] dark:border-[#7a3f39]/20 dark:bg-[#7a3f39] dark:text-[#f7efe5] dark:hover:bg-[#8a4a43]',
           iconNode: <LogOut size={22} />,
         }
       : state.intent === 'success'
@@ -770,7 +770,7 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
           onClick={(event) => event.stopPropagation()}
           role='dialog'
           aria-modal='true'
-          className={`my-auto w-full max-w-md rounded-[2rem] p-6 ${glassPanel}`}
+          className={`my-auto w-full max-w-md rounded-[1.8rem] border border-[#d9c8b7] bg-[#fffaf4] p-6 shadow-[0_24px_70px_rgba(32,22,18,0.14)] dark:border-[#2f2520] dark:bg-[#15110f]`}
         >
           <div className='mb-5 flex items-start justify-between gap-4'>
             <div className={`rounded-2xl p-3 ${tone.icon}`}>
@@ -780,7 +780,7 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
               type='button'
               onClick={onClose}
               disabled={busy}
-              className='rounded-full border border-white/40 bg-white/70 p-2 text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300'
+              className='rounded-full border border-[#ddcdbd] bg-[#f8f0e7] p-2 text-slate-500 transition hover:border-[#7a3f39]/20 hover:text-[#7a3f39] dark:border-[#2d241f] dark:bg-[#1d1714] dark:text-slate-300 dark:hover:border-[#7a3f39]/20 dark:hover:text-[#d7a789]'
             >
               <X size={16} />
             </button>
@@ -796,7 +796,7 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
               type='button'
               onClick={onClose}
               disabled={busy}
-              className='flex-1 rounded-2xl border border-white/55 bg-white/80 px-4 py-3 text-sm font-bold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200'
+              className='flex-1 rounded-[1rem] border border-[#ddcdbd] bg-[#f8f0e7] px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-[#7a3f39]/20 hover:text-slate-900 dark:border-[#2d241f] dark:bg-[#1d1714] dark:text-slate-200 dark:hover:border-[#7a3f39]/20 dark:hover:text-white'
             >
               {state.cancelLabel || t.keepButton}
             </button>
@@ -804,7 +804,7 @@ export const ConfirmModal = ({ state, onClose, onConfirm, busy, t }) => {
               type='button'
               onClick={onConfirm}
               disabled={busy}
-              className={`flex-1 rounded-2xl px-4 py-3 text-sm font-black disabled:opacity-60 ${tone.button}`}
+              className={`flex-1 rounded-[1rem] px-4 py-3 text-sm font-black disabled:opacity-60 ${tone.button}`}
             >
               {busy ? `${state.confirmLabel || t.confirmButton}...` : state.confirmLabel || t.confirmButton}
             </button>
@@ -852,23 +852,24 @@ export const BookingCard = ({
                 </span>
               ) : null}
             </div>
-            <div className='mt-3 flex flex-wrap gap-2'>
-              <span className='inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200'>
+            <div className='mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-600 dark:text-slate-300'>
+              <span className='inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-700 dark:text-slate-200'>
                 {getLocalizedServiceLabel(booking, lang, booking.service)}
               </span>
-              <span className='inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'>
+              <span className='h-1 w-1 rounded-full bg-[#c9b7a4] dark:bg-[#5b4a3f]' />
+              <span className='inline-flex items-center text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400'>
                 {booking.barber?.name || booking.barberName}
               </span>
             </div>
-            <div className='mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-300'>
-              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 ${mutedPanel}`}>
+            <div className='mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-slate-500 dark:text-slate-300'>
+              <span className='inline-flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400'>
                 <UserRound size={13} />
                 {formatCustomerIdDisplay(booking.user?.customerId, lang, lang === 'ar' ? 'غير متوفر' : 'N/A')}
               </span>
               <button
                 type='button'
                 onClick={() => setDetailsOpen((current) => !current)}
-                className='inline-flex items-center gap-2 rounded-full border border-brand-gold/16 bg-white/88 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-slate-700 shadow-[0_10px_22px_rgba(15,23,42,0.05)] transition hover:border-brand-gold/26 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-slate-200 dark:hover:text-brand-gold-soft'
+                className='inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.14em] text-[#7a3f39] transition hover:text-[#5f312c] dark:text-[#d7a789] dark:hover:text-[#ead2c1]'
               >
                 {detailsToggleLabel}
                 {detailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -935,28 +936,28 @@ export const BookingCard = ({
               <button
                 type='button'
                 onClick={() => onReschedule(booking)}
-                className='inline-flex min-h-[2.9rem] w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-white dark:bg-white dark:text-slate-900'
+                className='inline-flex min-h-[2.85rem] w-full items-center justify-center rounded-xl bg-[#231916] px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-[#f7efe5] transition hover:bg-[#1b1311] dark:bg-[#f0e4d7] dark:text-[#231916] dark:hover:bg-[#ead8c6]'
               >
                 {t.rescheduleBooking}
               </button>
               <button
                 type='button'
                 onClick={() => onStatusChange(booking, 'completed')}
-                className='inline-flex min-h-[2.9rem] w-full items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/20 dark:text-emerald-300'
+                className='inline-flex min-h-[2.85rem] w-full items-center justify-center rounded-xl border border-emerald-300/30 bg-emerald-50/60 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-emerald-700 dark:border-emerald-900/30 dark:bg-emerald-950/18 dark:text-emerald-300'
               >
                 {t.markCompleted}
               </button>
               <button
                 type='button'
                 onClick={() => onStatusChange(booking, 'no_show')}
-                className='inline-flex min-h-[2.9rem] w-full items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300'
+                className='inline-flex min-h-[2.85rem] w-full items-center justify-center rounded-xl border border-[#c49a58]/24 bg-[#f4ede2] px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-[#8a6430] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/22 dark:text-[#e6c58d]'
               >
                 {t.markNoShow}
               </button>
               <button
                 type='button'
                 onClick={() => onStatusChange(booking, 'cancelled')}
-                className='inline-flex min-h-[2.9rem] w-full items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200'
+                className='inline-flex min-h-[2.85rem] w-full items-center justify-center rounded-xl border border-[#ddcdbd] bg-[#f8f0e7] px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-slate-700 dark:border-[#2d241f] dark:bg-[#1d1714] dark:text-slate-200'
               >
                 {t.cancelBooking}
               </button>
@@ -965,7 +966,7 @@ export const BookingCard = ({
           <button
             type='button'
             onClick={() => onDelete(booking)}
-            className='inline-flex min-h-[2.9rem] w-full items-center justify-center rounded-xl border border-red-200/80 bg-transparent px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-red-600 transition hover:bg-red-50 dark:border-red-900/40 dark:text-red-300 dark:hover:bg-red-950/20'
+            className='inline-flex min-h-[2.85rem] w-full items-center justify-center rounded-xl border border-[#a85054]/22 bg-transparent px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-[#8d3942] transition hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:text-[#efb7bd] dark:hover:bg-[#31171a]/20'
           >
             {t.deleteBooking}
           </button>
@@ -1012,15 +1013,15 @@ const notificationStatusCopy = {
 
 const notificationStatusClass = {
   pending:
-    'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300',
+    'border-[#c49a58]/22 bg-[#f4ede2] text-[#8a6430] dark:border-[#c49a58]/22 dark:bg-[#3a2d1c]/22 dark:text-[#e6c58d]',
   sent:
-    'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/20 dark:text-emerald-300',
+    'border-emerald-300/30 bg-emerald-50/60 text-emerald-700 dark:border-emerald-900/30 dark:bg-emerald-950/18 dark:text-emerald-300',
   failed:
-    'border-red-200 bg-red-50 text-red-700 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300',
+    'border-[#a85054]/22 bg-[#fbf2f2] text-[#8d3942] dark:border-[#a85054]/24 dark:bg-[#31171a]/24 dark:text-[#efb7bd]',
   skipped:
-    'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300',
+    'border-slate-200/80 bg-slate-100/85 text-slate-600 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300',
   cancelled:
-    'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300',
+    'border-slate-200/80 bg-slate-100/85 text-slate-600 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300',
 };
 
 const formatNotificationMoment = (value, lang) => {
@@ -1084,30 +1085,36 @@ const NotificationStatusGrid = ({ summary, lang }) => {
                 current === section.type ? null : section.type,
               )
             }
-            className='rounded-[1rem] border border-slate-200/80 bg-white/75 p-3 text-left transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-slate-700'
+            className='rounded-[1rem] border border-[#e1d4c7] bg-[#fffaf4] p-3 text-left transition hover:border-[#c9b39c] dark:border-[#2d241f] dark:bg-[#171210] dark:hover:border-[#47362f]'
           >
             <p className='text-[11px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400'>
               {section.label}
             </p>
-            <div className='mt-3 flex flex-wrap gap-2'>
+            <div className='mt-3 space-y-2'>
               {section.channels.map((entry) => (
-                <span
+                <div
                   key={`${section.type}-${entry.channel}`}
-                  className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] ${
+                  className='flex items-center justify-between gap-3 text-[11px]'
+                >
+                  <span className='font-semibold text-slate-600 dark:text-slate-300'>
+                    {entry.label}
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
                     notificationStatusClass[entry.status] ||
                     notificationStatusClass.pending
                   }`}
                 >
-                  <span>{entry.label}</span>
                   <span>
                     {notificationStatusCopy[entry.status]?.[lang] ||
                       notificationStatusCopy[entry.status]?.en ||
                       entry.status}
                   </span>
-                </span>
+                  </span>
+                </div>
               ))}
             </div>
-            <p className='mt-3 text-[11px] font-semibold text-slate-500 dark:text-slate-400'>
+            <p className='mt-3 text-[11px] font-semibold text-[#7a3f39] dark:text-[#d7a789]'>
               {expandedType === section.type
                 ? lang === 'ar'
                   ? 'إخفاء التفاصيل'
@@ -1121,7 +1128,7 @@ const NotificationStatusGrid = ({ summary, lang }) => {
                 {section.channels.map((entry) => (
                   <div
                     key={`${section.type}-${entry.channel}-details`}
-                    className='rounded-xl border border-slate-200/80 bg-slate-50/90 p-2.5 dark:border-slate-800 dark:bg-slate-900/80'
+                    className='rounded-xl border border-[#e6dad0] bg-[#f8f0e7] p-2.5 dark:border-[#2d241f] dark:bg-[#1d1714]'
                   >
                     <div className='flex items-center justify-between gap-2'>
                       <span className='text-xs font-bold text-slate-700 dark:text-slate-200'>
@@ -2246,7 +2253,7 @@ export const AdminBookingsPanel = ({
           {activeBookingView === 'manage' ? (
           <div className={`rounded-[1.15rem] p-3.5 sm:p-4 ${mutedPanel}`}>
             <div className='flex flex-col gap-3'>
-              <div className='flex flex-wrap items-center justify-between gap-3'>
+              <div className='flex flex-wrap items-end justify-between gap-3'>
                 <div>
                   <p className='text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300'>
                     {selectedStatus.label}
@@ -2260,34 +2267,22 @@ export const AdminBookingsPanel = ({
                     </p>
                   </div>
                 </div>
-                <div className='flex flex-wrap items-center gap-2'>
-                <span className='rounded-full border border-slate-200/70 bg-white/72 px-3 py-1.5 text-xs font-bold text-slate-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300'>
+                <p className='text-xs text-slate-500 dark:text-slate-300'>
                   {`${t.allStatuses}: ${formatNumber(bookingSummary?.all || 0, lang)}`}
-                </span>
-                <button
-                  type='button'
-                  onClick={handleExportBookings}
-                  disabled={bookings.length === 0}
-                  className='inline-flex min-h-[2.7rem] items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-700 transition hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white'
-                >
-                  {exportState === 'done'
-                    ? t.exportedBookings || (lang === 'ar' ? 'تم التصدير' : 'Exported')
-                    : t.exportBookings || (lang === 'ar' ? 'تصدير CSV' : 'Export CSV')}
-                </button>
-                </div>
+                </p>
               </div>
 
               <div className='pb-0.5'>
-                <div className='flex flex-wrap gap-2'>
+                <div className='flex flex-wrap gap-2 rounded-[1rem] border border-[#e4d7ca] bg-[#f8f0e7] p-1.5 dark:border-[#2d241f] dark:bg-[#1d1714]'>
                   {statusOptions.map((status) => (
                     <button
                       key={status.id}
                       type='button'
                       onClick={() => setStatusFilter(status.id)}
-                      className={`rounded-full border px-3 py-2 text-left text-[11px] font-black uppercase tracking-[0.14em] transition ${
+                      className={`rounded-[0.8rem] border px-3 py-2 text-left text-[11px] font-black uppercase tracking-[0.14em] transition ${
                         statusFilter === status.id
-                          ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900'
-                          : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:text-white'
+                          ? 'border-[#7a3f39]/18 bg-[#7a3f39] text-[#f7efe5] shadow-[0_10px_24px_rgba(122,63,57,0.14)] dark:border-[#7a3f39]/20 dark:bg-[#7a3f39] dark:text-[#f7efe5]'
+                          : 'border-transparent bg-transparent text-slate-600 hover:border-[#d7c6b8] hover:bg-[#fffaf4] hover:text-slate-900 dark:text-slate-300 dark:hover:border-[#3a2d28] dark:hover:bg-[#171210] dark:hover:text-white'
                       }`}
                     >
                       <span className='whitespace-nowrap'>{status.label}</span>
@@ -2301,6 +2296,49 @@ export const AdminBookingsPanel = ({
                     </button>
                     ))}
                 </div>
+              </div>
+
+              <div className='flex items-center justify-end border-t border-[#e4d7ca] pt-3 dark:border-white/10'>
+                <button
+                  type='button'
+                  onClick={handleExportBookings}
+                  disabled={bookings.length === 0}
+                  className='inline-flex min-h-[2.55rem] items-center justify-center rounded-full border border-[#e1d4c7] bg-[#fffaf4] px-3.5 py-2 text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 transition hover:border-[#7a3f39]/18 hover:text-slate-900 disabled:opacity-50 dark:border-[#2d241f] dark:bg-[#171210] dark:text-slate-200 dark:hover:border-[#47362f] dark:hover:text-white'
+                >
+                  {exportState === 'done'
+                    ? t.exportedBookings || (lang === 'ar' ? 'تم التصدير' : 'Exported')
+                    : t.exportBookings || (lang === 'ar' ? 'تصدير CSV' : 'Export CSV')}
+                </button>
+              </div>
+
+              <div className='border-t border-[#e4d7ca] pt-4 dark:border-white/10'>
+                {bookings.length === 0 ? (
+                  <div
+                    className={`rounded-[1.35rem] border border-dashed p-8 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
+                  >
+                    {t.emptyBookings}
+                  </div>
+                ) : (
+                  <div className='space-y-4'>
+                    {bookings.map((booking) => (
+                      <BookingCard
+                        key={booking._id}
+                        booking={booking}
+                        lang={lang}
+                        t={t}
+                        onStatusChange={onStatusChange}
+                        onDelete={onDelete}
+                        onReschedule={onReschedule}
+                      />
+                    ))}
+                  </div>
+                )}
+                <AdminPagination
+                  page={bookingPagination?.page || 1}
+                  totalPages={bookingPagination?.totalPages || 1}
+                  onChange={onBookingPageChange}
+                  className='pt-4'
+                />
               </div>
             </div>
           </div>
@@ -2387,35 +2425,6 @@ export const AdminBookingsPanel = ({
         </div>
       </div>
 
-      {activeBookingView === 'manage' ? (
-        <div className={`space-y-4 ${mobileWorkspaceScrollClass}`}>
-          {bookings.length === 0 ? (
-            <div
-              className={`rounded-[1.35rem] border border-dashed p-8 text-sm text-slate-500 dark:text-slate-300 ${mutedPanel}`}
-            >
-              {t.emptyBookings}
-            </div>
-          ) : (
-            bookings.map((booking) => (
-              <BookingCard
-                key={booking._id}
-                booking={booking}
-                lang={lang}
-                t={t}
-                onStatusChange={onStatusChange}
-                onDelete={onDelete}
-                onReschedule={onReschedule}
-              />
-            ))
-          )}
-          <AdminPagination
-            page={bookingPagination?.page || 1}
-            totalPages={bookingPagination?.totalPages || 1}
-            onChange={onBookingPageChange}
-            className='pt-1'
-          />
-        </div>
-      ) : null}
     </SectionShell>
   );
 };
@@ -2765,7 +2774,7 @@ const CustomerWorkspacePanel = ({
           </div>
           <div className='flex flex-col gap-3 sm:items-end'>
             {customerDetails.summary?.totalSpent ? (
-              <div className={`rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.16em] ${mutedPanel}`}>
+              <div className='px-1 text-xs font-black uppercase tracking-[0.16em] text-[#7a3f39] dark:text-[#d7a789]'>
                 {`${t.totalSpentLabel}: ${formatPrice(customerDetails.summary.totalSpent, lang)}`}
               </div>
             ) : null}
@@ -2777,8 +2786,8 @@ const CustomerWorkspacePanel = ({
                   onClick={() => setHistoryFilter(option.id)}
                   className={`rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] transition ${
                     historyFilter === option.id
-                      ? 'border-brand-gold/45 bg-brand-gold/12 text-brand-gold'
-                      : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-brand-gold/25 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-white'
+                      ? 'border-[#7a3f39]/22 bg-[#f3e7dd] text-[#7a3f39] dark:border-[#7a3f39]/20 dark:bg-[#2c1d1a] dark:text-[#d7a789]'
+                      : 'border-[#e1d4c7] bg-[#fffaf4] text-slate-500 hover:border-[#7a3f39]/18 hover:text-slate-900 dark:border-[#2d241f] dark:bg-[#171210] dark:text-slate-300 dark:hover:text-white'
                   }`}
                 >
                   {option.label}
@@ -2848,17 +2857,18 @@ const CustomerDirectoryList = ({
               <p className='mt-1 break-words text-sm text-slate-500 dark:text-slate-300'>
                 {customer.email}
               </p>
+              <p className='mt-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500'>
+                {formatCustomerIdDisplay(customer.customerId, lang, lang === 'ar' ? t.notAvailableShort || 'غير متوفر' : 'N/A')}
+              </p>
             </div>
-            <span className='rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'>
-              {formatCustomerIdDisplay(customer.customerId, lang, lang === 'ar' ? t.notAvailableShort || 'غير متوفر' : 'N/A')}
-            </span>
           </div>
 
-          <div className='mt-3 flex flex-wrap gap-2 text-[11px]'>
-            <span className='rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 font-black uppercase tracking-[0.12em] text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'>
+          <div className='mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-slate-500 dark:text-slate-300'>
+            <span className='font-black uppercase tracking-[0.12em] text-slate-600 dark:text-slate-200'>
               {`${t.bookings}: ${formatNumber(customer.totalBookings || 0, lang)}`}
             </span>
-            <span className='rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 font-black uppercase tracking-[0.12em] text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'>
+            <span className='h-1 w-1 rounded-full bg-[#c9b7a4] dark:bg-[#5b4a3f]' />
+            <span className='font-black uppercase tracking-[0.12em] text-slate-600 dark:text-slate-200'>
               {`${t.activeBookings}: ${formatNumber(customer.activeBookings || 0, lang)}`}
             </span>
           </div>
@@ -2877,7 +2887,7 @@ const CustomerDirectoryList = ({
                   : 'N/A'}
             </span>
             {customer.latestBookingService ? (
-              <span className='truncate font-bold text-slate-700 dark:text-slate-200 sm:col-span-2'>
+              <span className='truncate font-bold text-[#7a3f39] dark:text-[#d7a789] sm:col-span-2'>
                 {getLocalizedServiceLabel(customer, lang, customer.latestBookingService)}
               </span>
             ) : null}
@@ -3185,60 +3195,98 @@ export const AdminServicesPanel = ({
                 {services.map((service) => {
                   const assignedBarberCount = getAssignedBarberCount(service._id);
                   const deleteBlocked = assignedBarberCount > 0;
+                  const qualityFlags = getServiceQualityFlags(service, lang);
+                  const serviceFeatures = (lang === 'ar' ? service.featuresAr : service.features) || [];
+                  const serviceQualityTone = qualityFlags.some((flag) => flag.tone === 'success')
+                    ? 'text-slate-500 dark:text-slate-400'
+                    : qualityFlags.some((flag) => flag.tone === 'warning')
+                      ? 'text-[#8a6430] dark:text-[#e6c58d]'
+                      : 'text-slate-500 dark:text-slate-400';
 
                   return (
-                    <div key={service._id} className={`rounded-[1.25rem] p-5 ${mutedPanel}`}>
+                    <motion.div key={service._id} whileHover={{ y: -2 }} transition={{ duration: 0.18 }} className={`rounded-[1.25rem] p-5 ${mutedPanel}`}>
                       <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
-                        <div className='min-w-0'>
+                        <div className='min-w-0 flex-1'>
+                          <div className='mb-4 overflow-hidden rounded-[1.15rem] border border-[#e3d4c7] bg-[#fffaf4] shadow-[0_10px_24px_rgba(15,23,42,0.05)] dark:border-[#2d241f] dark:bg-[#171210] dark:shadow-none'>
+                            <div className='relative h-40 overflow-hidden'>
+                              {service.image ? (
+                                <img
+                                  src={service.image}
+                                  alt={getLocalizedName(service, lang)}
+                                  className='h-full w-full object-cover'
+                                />
+                              ) : (
+                                <div className='flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,rgba(38,26,23,0.92),rgba(18,14,12,1))]'>
+                                  <Scissors className='h-8 w-8 text-[#d7a789]' />
+                                </div>
+                              )}
+                              <div className='absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent' />
+                              <div className='absolute inset-x-4 bottom-4 flex items-end justify-between gap-3'>
+                                <div className='min-w-0'>
+                                  <p className='text-[11px] font-semibold text-[#e8ddd3]'>
+                                    {getLocalizedCategoryLabel(service, lang)}
+                                  </p>
+                                  <p className='mt-2 truncate text-lg font-black text-white'>
+                                    {getLocalizedName(service, lang)}
+                                  </p>
+                                </div>
+                                <div className='shrink-0 rounded-full bg-[#fffaf4] px-3 py-1.5 text-xs font-black text-slate-900 dark:bg-[#231916] dark:text-[#f7efe5]'>
+                                  {formatPrice(service.price, lang)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                           <p className='font-black text-slate-900 dark:text-white'>
                             {getLocalizedName(service, lang)}
                           </p>
                           <p className='mt-2 text-sm leading-7 text-slate-500 dark:text-slate-300'>
                             {getLocalizedDescription(service, lang, t.serviceFallback)}
                           </p>
-                          <div className='mt-4 flex flex-wrap gap-2 text-xs font-bold'>
+                          <p className='mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500'>
+                            {lang === 'ar' ? 'تجربة خدمة معروضة للعملاء' : 'Customer-facing service experience'}
+                          </p>
+                          <div className='mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs'>
                             {service.badge ? (
-                              <span className='rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200'>
+                              <span className='font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400'>
                                 {lang === 'ar' ? service.badgeAr || service.badge : service.badge}
                               </span>
                             ) : null}
-                            <span className='rounded-full bg-slate-100 px-3 py-1 text-slate-700 dark:bg-white/10 dark:text-slate-200'>
+                            <span className='font-semibold text-slate-400 dark:text-slate-500'>
                               {getLocalizedCategoryLabel(service, lang)}
                             </span>
-                            <span className='rounded-full bg-slate-100 px-3 py-1 text-slate-700 dark:bg-slate-800 dark:text-slate-200'>
-                              {formatPrice(service.price, lang)}
-                            </span>
-                            <span className='rounded-full bg-white/85 px-3 py-1 text-slate-700 dark:bg-white/10 dark:text-slate-200'>
+                            <span className='font-semibold text-slate-500 dark:text-slate-300'>
                               {formatDuration(service.durationMinutes, lang)}
                             </span>
                             {deleteBlocked ? (
-                              <span className='rounded-full border border-amber-300/50 bg-amber-100/70 px-3 py-1 text-amber-700 dark:border-amber-300/25 dark:bg-amber-300/12 dark:text-amber-200'>
+                              <>
+                                <span className='h-1 w-1 rounded-full bg-[#c9b7a4] dark:bg-[#5b4a3f]' />
+                                <span className='font-semibold text-slate-400 dark:text-slate-500'>
                                 {assignedBarberCount}{' '}
                                 {t.linkedBarbers ||
                                   (lang === 'ar'
                                     ? '\u0627\u0644\u062d\u0644\u0627\u0642\u0648\u0646 \u0627\u0644\u0645\u0631\u062a\u0628\u0637\u0648\u0646'
                                     : 'Linked barbers')}
-                              </span>
-                            ) : null}
-                            {getServiceQualityFlags(service, lang).map((flag) => (
-                              <span
-                                key={`${service._id}-${flag.id}`}
-                                className={`rounded-full border px-3 py-1 ${qualityBadgeClass[flag.tone]}`}
-                              >
-                                {flag.label}
-                              </span>
-                            ))}
-                          </div>
-                          {((lang === 'ar' ? service.featuresAr : service.features) || []).length > 0 ? (
-                            <div className='mt-4 flex flex-wrap gap-2'>
-                              {(lang === 'ar' ? service.featuresAr : service.features).map((feature) => (
-                                <span
-                                  key={feature}
-                                  className='rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300'
-                                >
-                                  {feature}
                                 </span>
-                              ))}
+                              </>
+                            ) : null}
+                          </div>
+                          {qualityFlags.length > 0 ? (
+                            <div className={`mt-3 flex items-center gap-2 text-xs font-semibold ${serviceQualityTone}`}>
+                              <span
+                                className={`h-1.5 w-1.5 rounded-full ${
+                                  qualityFlags.some((flag) => flag.tone === 'success')
+                                    ? 'bg-[#7a3f39] dark:bg-[#d7a789]'
+                                    : qualityFlags.some((flag) => flag.tone === 'warning')
+                                      ? 'bg-[#8a6430] dark:bg-[#e6c58d]'
+                                      : 'bg-slate-400 dark:bg-slate-500'
+                                }`}
+                              />
+                              {qualityFlags.map((flag) => flag.label).join(' • ')}
+                            </div>
+                          ) : null}
+                          {serviceFeatures.length > 0 ? (
+                            <div className='mt-3 text-sm text-slate-600 dark:text-slate-300'>
+                              {serviceFeatures.slice(0, 3).join(' • ')}
                             </div>
                           ) : null}
                         </div>
@@ -3266,7 +3314,7 @@ export const AdminServicesPanel = ({
                           </button>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -3457,17 +3505,27 @@ export const AdminBarbersPanel = ({
                   {t.noBarbersCreated || t.noServices}
                 </div>
               ) : null}
-              {barbers.map((barber) => (
-                <div key={barber._id} className={`rounded-[1.25rem] p-5 ${mutedPanel}`}>
+              {barbers.map((barber) => {
+                const barberQualityFlags = getBarberQualityFlags(barber, lang);
+                const barberQualityTone = barberQualityFlags.some((flag) => flag.tone === 'success')
+                  ? 'text-slate-500 dark:text-slate-400'
+                  : barberQualityFlags.some((flag) => flag.tone === 'warning')
+                    ? 'text-[#8a6430] dark:text-[#e6c58d]'
+                    : 'text-slate-500 dark:text-slate-400';
+
+                return (
+                <motion.div key={barber._id} whileHover={{ y: -2 }} transition={{ duration: 0.18 }} className={`rounded-[1.25rem] p-5 ${mutedPanel}`}>
                   <div className='flex flex-col gap-4 sm:flex-row sm:items-start'>
-                    <img
-                      src={
-                        barber.image ||
-                        'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80'
-                      }
-                      alt={getLocalizedName(barber, lang)}
-                      className='h-20 w-20 rounded-[1.4rem] object-cover'
-                    />
+                    <div className='overflow-hidden rounded-[1.4rem] border border-[#e3d4c7] bg-[#fffaf4] shadow-[0_10px_24px_rgba(15,23,42,0.05)] dark:border-[#2d241f] dark:bg-[#171210] dark:shadow-none'>
+                      <img
+                        src={
+                          barber.image ||
+                          'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80'
+                        }
+                        alt={getLocalizedName(barber, lang)}
+                        className='h-20 w-20 object-cover'
+                      />
+                    </div>
                     <div className='min-w-0 flex-1'>
                       <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
                         <div className='min-w-0'>
@@ -3476,6 +3534,9 @@ export const AdminBarbersPanel = ({
                           </p>
                           <p className='mt-2 text-sm leading-7 text-slate-500 dark:text-slate-300'>
                             {getLocalizedBio(barber, lang, t.barberFallback)}
+                          </p>
+                          <p className='mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500'>
+                            {lang === 'ar' ? 'ملف حلاق ظاهر للعملاء' : 'Customer-facing barber profile'}
                           </p>
                         </div>
                         <div className='flex shrink-0 gap-2 self-start'>
@@ -3496,31 +3557,40 @@ export const AdminBarbersPanel = ({
                         </div>
                       </div>
 
-                      <div className='mt-4 flex flex-wrap gap-2'>
-                        <span className='rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200'>
+                      <div className='mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs'>
+                        <span className='font-semibold text-slate-500 dark:text-slate-300'>
                           {formatNumber(barber.experienceYears, lang)} {t.experience}
                         </span>
-                        {getBarberQualityFlags(barber, lang).map((flag) => (
-                          <span
-                            key={`${barber._id}-${flag.id}`}
-                            className={`rounded-full border px-3 py-1 text-xs font-bold ${qualityBadgeClass[flag.tone]}`}
-                          >
-                            {flag.label}
-                          </span>
-                        ))}
+                        {(barber.serviceIds || []).length > 0 ? (
+                          <span className='h-1 w-1 rounded-full bg-[#c9b7a4] dark:bg-[#5b4a3f]' />
+                        ) : null}
                         {(barber.serviceIds || []).map((service) => (
                           <span
                             key={service._id}
-                            className='rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-200'
+                            className='font-semibold text-slate-400 dark:text-slate-500'
                           >
                             {getLocalizedName(service, lang)}
                           </span>
                         ))}
                       </div>
+                      {barberQualityFlags.length > 0 ? (
+                        <div className={`mt-3 flex items-center gap-2 text-xs font-semibold ${barberQualityTone}`}>
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              barberQualityFlags.some((flag) => flag.tone === 'success')
+                                ? 'bg-[#7a3f39] dark:bg-[#d7a789]'
+                                : barberQualityFlags.some((flag) => flag.tone === 'warning')
+                                  ? 'bg-[#8a6430] dark:bg-[#e6c58d]'
+                                  : 'bg-slate-400 dark:bg-slate-500'
+                            }`}
+                          />
+                          {barberQualityFlags.map((flag) => flag.label).join(' • ')}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
-                </div>
-              ))}
+                </motion.div>
+              )})}
             </div>
           </div>
         ) : null}

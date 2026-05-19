@@ -300,7 +300,7 @@ const glassPanel =
 const actionButtonClass =
   'inline-flex items-center justify-center gap-2 rounded-[1rem] px-4 py-3 text-sm font-bold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-gold/30 disabled:cursor-not-allowed disabled:opacity-60';
 const subtleButtonClass =
-  'border border-brand-gold/16 bg-[#fbf7f1] text-slate-800 shadow-[0_4px_14px_rgba(15,23,42,0.04)] hover:-translate-y-[1px] hover:border-brand-gold/28 hover:text-[#8b6238] hover:shadow-[0_8px_18px_rgba(15,23,42,0.06)] dark:border-brand-gold/14 dark:bg-[#1a1512] dark:text-[#f4ead6] dark:hover:border-brand-gold/24 dark:hover:text-brand-gold-soft';
+  'border border-brand-gold/16 bg-[#fdf8f1] text-slate-800 shadow-[0_4px_14px_rgba(15,23,42,0.04)] hover:-translate-y-[1px] hover:border-brand-gold/28 hover:text-[#8b6238] hover:shadow-[0_8px_18px_rgba(15,23,42,0.06)] dark:border-brand-gold/14 dark:bg-[#1a1512] dark:text-[#f4ead6] dark:hover:border-brand-gold/24 dark:hover:text-brand-gold-soft';
 const primaryButtonClass =
   'bg-[linear-gradient(135deg,#2d211c_0%,#5c2d2b_58%,#7a3f39_100%)] text-[#f7efe5] shadow-[0_14px_32px_rgba(86,34,35,0.18)] hover:-translate-y-[1px] hover:shadow-[0_18px_38px_rgba(86,34,35,0.24)]';
 const dangerButtonClass =
@@ -308,9 +308,9 @@ const dangerButtonClass =
 const accentSecondaryButtonClass =
   'border border-brand-gold/20 bg-[#f8f1e5] text-[#8b6238] shadow-[0_6px_16px_rgba(138,100,48,0.06)] hover:-translate-y-[1px] hover:border-brand-gold/32 hover:text-[#6f4d2a] hover:shadow-[0_10px_20px_rgba(138,100,48,0.1)] dark:border-brand-gold/18 dark:bg-[#2a2219] dark:text-[#f3dfb6] dark:hover:border-brand-gold/28 dark:hover:text-[#fff0cb]';
 const insetPanelClass =
-  'border border-brand-gold/12 bg-[#fcf8f2] dark:border-brand-gold/10 dark:bg-[#191411]';
+  'border border-brand-gold/12 bg-[#fff9f2] dark:border-brand-gold/10 dark:bg-[#191411]';
 const workspaceFrame =
-  'overflow-hidden rounded-[2rem] border border-brand-gold/14 bg-[#efe5d8] shadow-[0_14px_34px_rgba(15,23,42,0.06)] dark:border-brand-gold/12 dark:bg-[#0c0a09] dark:shadow-[0_18px_36px_rgba(0,0,0,0.24)]';
+  'overflow-hidden rounded-[2rem] border border-brand-gold/14 bg-[#f1e7db] shadow-[0_14px_34px_rgba(15,23,42,0.06)] dark:border-brand-gold/12 dark:bg-[#0c0a09] dark:shadow-[0_18px_36px_rgba(0,0,0,0.24)]';
 const sidebarButtonClass =
   'flex min-h-[3rem] w-full items-center gap-2.5 rounded-[0.95rem] px-3.5 text-left text-[13px] font-semibold transition';
 
@@ -386,15 +386,16 @@ const SidebarNavButton = ({ icon: Icon, label, active, onClick, badge = null }) 
   <button
     type='button'
     onClick={onClick}
-    className={`${sidebarButtonClass} ${
+    className={`relative ${sidebarButtonClass} ${
       active
-        ? 'border border-brand-gold/24 bg-[#f1e5d3] shadow-[0_8px_18px_rgba(15,23,42,0.05)] text-slate-900 dark:bg-[#2a2119] dark:text-[#f8f0df] dark:shadow-none'
-        : 'border border-transparent text-slate-700 hover:border-brand-gold/18 hover:bg-brand-gold/[0.07] hover:text-slate-900 dark:text-white/76 dark:hover:bg-white/[0.03] dark:hover:text-white'
+        ? 'border border-brand-gold/24 bg-[#f6ecde] shadow-[0_8px_18px_rgba(15,23,42,0.05)] text-slate-900 dark:bg-[#2a2119] dark:text-[#f8f0df] dark:shadow-none'
+        : 'border border-transparent text-slate-700 hover:border-brand-gold/18 hover:bg-[#fffaf3] hover:text-slate-900 dark:text-white/76 dark:hover:bg-white/[0.03] dark:hover:text-white'
     }`}
   >
+    {active ? <span className='absolute inset-y-2 left-1.5 w-0.5 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft' /> : null}
     <span
       className={`flex h-8 w-8 items-center justify-center rounded-[0.85rem] ${
-        active ? 'bg-brand-gold/16 text-brand-gold' : 'bg-brand-gold/[0.08] text-slate-600 dark:bg-white/[0.03] dark:text-white/60'
+        active ? 'bg-[#7a3a33] text-[#f7efe5]' : 'bg-brand-gold/[0.08] text-slate-600 dark:bg-white/[0.03] dark:text-white/60'
       }`}
     >
       <Icon size={16} />
@@ -425,9 +426,11 @@ const UserIdentityBlock = ({ user, subtitle, compact = false }) => (
       <p className={`truncate ${compact ? 'text-[1.02rem]' : 'text-[1.15rem]'} font-black text-slate-900 dark:text-[#f6eddc]`}>
         {user?.name || 'User'}
       </p>
-      <p className='mt-1 text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
-        {subtitle}
-      </p>
+      {subtitle ? (
+        <p className='mt-1 text-[10px] font-black uppercase tracking-[0.22em] text-brand-gold'>
+          {subtitle}
+        </p>
+      ) : null}
     </div>
   </div>
 );
@@ -591,13 +594,14 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
   }
 
   return (
-    <div className={`rounded-[1rem] border border-brand-gold/14 p-3 sm:p-3.5 ${insetPanelClass}`}>
+    <motion.div
+      whileHover={{ y: -1 }}
+      transition={{ duration: 0.18 }}
+      className={`rounded-[1rem] border border-brand-gold/14 p-3 sm:p-3.5 ${insetPanelClass}`}
+    >
       <div className='flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'>
         <div className='min-w-0 flex-1'>
-          <p className='text-[10px] font-extrabold uppercase tracking-[0.16em] text-brand-gold'>
-            {dashboardCopy.nextAppointment}
-          </p>
-          <h3 className='mt-1.5 text-[1.15rem] font-black tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.3rem]'>
+          <h3 className='text-[1.15rem] font-black tracking-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.3rem]'>
             {getLocalizedBookingService(booking, lang)}
           </h3>
           <div className='mt-2 flex flex-wrap gap-2'>
@@ -620,34 +624,37 @@ const NextVisitCard = ({ booking, lang, dashboardCopy, onCancel }) => {
               <span>{booking.time || '—'}</span>
             </div>
           </div>
+          <div className='mt-3 inline-flex items-center gap-2 rounded-full border border-brand-gold/12 bg-[#fffaf3] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:border-brand-gold/14 dark:bg-[#1b1512] dark:text-slate-300'>
+            <span className='inline-flex h-1.5 w-1.5 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft' />
+            {lang === 'ar' ? 'يتابع الاستوديو هذا الموعد مباشرة' : 'Studio is actively tracking this appointment'}
+          </div>
 
         </div>
 
-        <div className='flex flex-col items-center gap-2.5 lg:min-w-[6.25rem] lg:items-end'>
-          <div className='relative flex h-[5.9rem] w-[5.9rem] items-center justify-center rounded-[1.15rem] border border-brand-gold/14 bg-[#f7efe4] shadow-[0_8px_18px_rgba(15,23,42,0.06)] dark:bg-[#1a1512] dark:shadow-[0_10px_20px_rgba(0,0,0,0.18)] sm:h-[6.5rem] sm:w-[6.5rem]'>
-            <div className='absolute inset-2 rounded-[1rem] border border-brand-gold/10' />
+        <div className='flex flex-col items-center gap-1.5 lg:min-w-[4rem] lg:items-end'>
+          <div className='h-[4.1rem] w-[4.1rem] overflow-hidden rounded-[0.7rem] border border-brand-gold/12 shadow-[0_6px_14px_rgba(15,23,42,0.05)] dark:shadow-[0_8px_16px_rgba(0,0,0,0.16)] sm:h-[4.5rem] sm:w-[4.5rem]'>
             {booking.barber?.image || booking.barber?.profileImage ? (
               <img
                 src={booking.barber.image || booking.barber.profileImage}
                 alt={booking.barber?.name || getLocalizedBookingService(booking, lang)}
-                className='relative z-10 h-[4.35rem] w-[4.35rem] rounded-[0.85rem] object-cover shadow-[0_10px_22px_rgba(0,0,0,0.22)] sm:h-[4.95rem] sm:w-[4.95rem]'
+                className='h-full w-full object-cover'
               />
             ) : (
-              <div className='relative z-10 flex h-[4.35rem] w-[4.35rem] items-center justify-center rounded-[0.85rem] border border-brand-gold/12 bg-[#fbf5ea] text-brand-gold dark:bg-[#231c17] sm:h-[4.95rem] sm:w-[4.95rem]'>
-                <Scissors size={24} />
+              <div className='flex h-full w-full items-center justify-center bg-[#fbf5ea] text-brand-gold dark:bg-[#231c17]'>
+                <Scissors size={20} />
               </div>
             )}
           </div>
           <button
             type='button'
             onClick={() => onCancel(booking)}
-            className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.05rem] min-w-[5.25rem] rounded-[0.85rem] px-2.5 py-1.5 text-[11px]`}
+            className={`${actionButtonClass} ${dangerButtonClass} min-h-[1.65rem] min-w-[3.5rem] rounded-[0.7rem] px-1 py-0 text-[9px]`}
           >
             {dashboardCopy.cancelBookingShort}
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -713,26 +720,22 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
                 <span className='rounded-full border border-brand-gold/12 bg-white/70 px-2.5 py-1 font-medium text-slate-500 dark:bg-white/[0.02] dark:text-white/52'>
                   {formatBookingDateLabel(booking, lang)}
                 </span>
+                {isActionableActive ? (
+                  <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.14em]'>
+                    <span className='lux-presence-dot lux-presence-dot--emerald' />
+                    {getUpcomingWindowLabel(booking, lang)}
+                  </span>
+                ) : null}
               </div>
             </div>
           </div>
 
-        <div className='flex shrink-0 flex-row items-center justify-between gap-2 sm:flex-col sm:items-end sm:gap-1.5'>
-          <span
-            className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
-              isActionableActive
-                ? 'border border-brand-gold/16 bg-[#f3e8db] text-[#7a3f39] dark:border-brand-gold/18 dark:bg-[#261b17] dark:text-[#d7a789]'
-                : 'border border-brand-gold/12 bg-brand-gold/[0.08] text-slate-600 dark:bg-white/[0.03] dark:text-white/60'
-            }`}
-          >
-            {statusLabel}
-          </span>
-
+        <div className='flex shrink-0 flex-row items-center justify-between gap-1.5 sm:flex-col sm:items-end sm:gap-1'>
           {isActionableActive ? (
             <button
               type='button'
               onClick={() => onCancel(booking)}
-              className={`${actionButtonClass} ${dangerButtonClass} min-h-[2.1rem] rounded-[0.85rem] px-2.5 py-1.5 text-[11px]`}
+            className={`${actionButtonClass} ${dangerButtonClass} min-h-[1.65rem] rounded-[0.7rem] px-1 py-0 text-[9px]`}
             >
               {dashboardCopy.cancelBookingShort}
             </button>
@@ -740,7 +743,7 @@ const BookingCard = ({ booking, lang, dashboardCopy, onCancel, onRebook }) => {
             <button
               type='button'
               onClick={() => onRebook(booking)}
-              className={`${actionButtonClass} ${accentSecondaryButtonClass} min-h-[2.35rem] rounded-[0.9rem] px-3 py-2 text-[12px]`}
+              className={`${actionButtonClass} ${accentSecondaryButtonClass} min-h-[1.7rem] rounded-[0.7rem] px-1.5 py-0.5 text-[9px]`}
             >
               {dashboardCopy.bookAgain}
             </button>
@@ -1324,7 +1327,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
               <div className='rounded-[1.4rem] border border-brand-gold/14 bg-[#faf5ee] p-5 shadow-[0_8px_20px_rgba(15,23,42,0.05)] dark:border-brand-gold/12 dark:bg-[#181311] dark:shadow-none'>
                 <UserIdentityBlock
                   user={user}
-                  subtitle={dashboardCopy.overview}
+                  subtitle=''
                 />
               </div>
 
@@ -1377,7 +1380,7 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
             <div className={`mb-4 flex items-center justify-between gap-3 rounded-[1.2rem] px-4 py-3 xl:hidden ${glassPanel}`}>
               <UserIdentityBlock
                 user={user}
-                subtitle={navItems.find((item) => item.id === activeSection)?.label || dashboardCopy.navOverview}
+                subtitle=''
                 compact={true}
               />
               <button
@@ -1398,15 +1401,12 @@ const Dashboard = ({ lang, isRTL, setLang }) => {
                   <div className='flex flex-col gap-3.5'>
                     <div className='flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'>
                       <div className='min-w-0'>
-                        <div className='flex items-center gap-2 text-brand-gold'>
-                          <DashboardGreetingIcon size={14} />
-                          <p className='text-[10px] font-extrabold uppercase tracking-[0.16em]'>
+                        <div className='flex items-center gap-2 text-slate-900 dark:text-[#f6eddc]'>
+                          <DashboardGreetingIcon size={16} className='text-brand-gold' />
+                          <h1 className='text-[1.35rem] font-black leading-tight sm:text-[1.55rem]'>
                             {dashboardGreeting.label}
-                          </p>
+                          </h1>
                         </div>
-                        <h1 className='mt-1.5 text-[1.35rem] font-black leading-tight text-slate-900 dark:text-[#f6eddc] sm:text-[1.55rem]'>
-                          {user?.name || ''}
-                        </h1>
                         <p className='mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-white/68'>
                           {dashboardCopy.overviewSubtitle}
                         </p>

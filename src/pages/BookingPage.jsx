@@ -91,6 +91,10 @@ const copy = {
     scheduleHint: 'Choose a day, then pick the time that fits best.',
     slotsOpenNow: 'Slots open now',
     limitedSlots: 'Limited slots left',
+    liveAvailability: 'Live availability updates as appointments are confirmed.',
+    trustedProfessional: 'Trusted professional',
+    expertMatch: 'Expert match',
+    confirmAtmosphere: 'A calm studio experience, prepared with live availability and premium care.',
   },
   ar: {
     appointmentBooking: 'حجز موعد',
@@ -146,6 +150,10 @@ const copy = {
     scheduleHint: 'اختر اليوم ثم الوقت المناسب لك.',
     slotsOpenNow: 'مواعيد متاحة الآن',
     limitedSlots: 'مواعيد محدودة متبقية',
+    liveAvailability: 'يتم تحديث التوفر المباشر فور تأكيد المواعيد.',
+    trustedProfessional: 'محترف موثوق',
+    expertMatch: 'اختيار احترافي',
+    confirmAtmosphere: 'تجربة استوديو هادئة مع توفر مباشر وعناية فاخرة.',
   },
 };
 
@@ -256,12 +264,14 @@ const MobileServiceOption = ({
   isSelected,
   onSelect,
 }) => (
-  <button
+  <motion.button
     type='button'
     onClick={onSelect}
+    whileTap={{ scale: 0.988 }}
+    whileHover={{ y: -1 }}
     className={`flex w-full items-center gap-3 rounded-[1.15rem] border px-3 py-3 text-left transition-all duration-200 ${
       isSelected
-        ? 'border-[#7a3f39]/24 bg-[#f4e8de] shadow-[0_10px_24px_rgba(86,34,35,0.1)] dark:border-[#7a3f39]/26 dark:bg-[#261a17]'
+        ? 'border-[#7a3f39]/30 bg-[#f4e8de] shadow-[0_14px_30px_rgba(86,34,35,0.12)] dark:border-[#7a3f39]/28 dark:bg-[#261a17]'
         : 'border-brand-gold/10 bg-[#fbf6ef] dark:bg-[#181310]'
     }`}
   >
@@ -285,8 +295,13 @@ const MobileServiceOption = ({
           <p className='truncate text-sm font-black text-slate-900 dark:text-white'>
             {getServiceName(service, lang)}
           </p>
-          <p className='mt-0.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#7a3f39] dark:text-[#d7a789]'>
-            {formatDuration(service.durationMinutes, lang)}
+          <p className='mt-0.5 flex items-center gap-2 text-[11px] font-bold text-slate-500 dark:text-slate-300'>
+            <span className='uppercase tracking-[0.14em] text-[#7a3f39] dark:text-[#d7a789]'>
+              {formatDuration(service.durationMinutes, lang)}
+            </span>
+            {isSelected ? (
+              <span className='inline-flex h-1.5 w-1.5 rounded-full bg-[#7a3f39] dark:bg-[#d7a789]' />
+            ) : null}
           </p>
         </div>
         <span className='shrink-0 rounded-full bg-[#fffaf4] px-2.5 py-1 text-[11px] font-black text-slate-900 dark:bg-[#231916] dark:text-[#f7efe5]'>
@@ -306,7 +321,7 @@ const MobileServiceOption = ({
         ) : null}
       </div>
     </div>
-  </button>
+  </motion.button>
 );
 
 const MobileBarberOption = ({
@@ -316,12 +331,14 @@ const MobileBarberOption = ({
   isSelected,
   onSelect,
 }) => (
-  <button
+  <motion.button
     type='button'
     onClick={onSelect}
+    whileTap={{ scale: 0.988 }}
+    whileHover={{ y: -1 }}
     className={`flex w-full items-start gap-3 rounded-[1.15rem] border px-3 py-3 text-left transition-all duration-200 ${
       isSelected
-        ? 'border-[#7a3f39]/24 bg-[#f4e8de] shadow-[0_10px_24px_rgba(86,34,35,0.1)] dark:border-[#7a3f39]/26 dark:bg-[#261a17]'
+        ? 'border-[#7a3f39]/30 bg-[#f4e8de] shadow-[0_14px_30px_rgba(86,34,35,0.12)] dark:border-[#7a3f39]/28 dark:bg-[#261a17]'
         : 'border-brand-gold/10 bg-[#fbf6ef] dark:bg-[#181310]'
     }`}
   >
@@ -346,9 +363,17 @@ const MobileBarberOption = ({
           <p className='truncate text-sm font-black text-slate-900 dark:text-white'>
             {getBarberName(barber, lang)}
           </p>
-          <p className='mt-1 line-clamp-2 text-xs leading-5 text-slate-500 dark:text-slate-300'>
-            {getBarberBio(barber, lang, t)}
-          </p>
+          {barber._id === AUTO_BARBER_ID ? (
+            <p className='mt-1 line-clamp-2 text-xs leading-5 text-slate-500 dark:text-slate-300'>
+              {getBarberBio(barber, lang, t)}
+            </p>
+          ) : (
+            <div className='mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300'>
+              <span>{barber.experienceYears} {t.yearsExperience}</span>
+              <span className='inline-flex h-1 w-1 rounded-full bg-[#7a3f39]/45 dark:bg-[#d7a789]/55' />
+              <span>{t.trustedProfessional}</span>
+            </div>
+          )}
         </div>
         {isSelected ? (
           <CheckCircle2 className='shrink-0 text-[#7a3f39] dark:text-[#d7a789]' size={18} />
@@ -358,12 +383,12 @@ const MobileBarberOption = ({
       <div className='mt-2 flex flex-wrap items-center gap-2'>
         {barber._id === AUTO_BARBER_ID ? null : (
           <span className='rounded-full bg-[#f0e2d6] px-2.5 py-1 text-[11px] font-bold text-[#7a3f39] dark:bg-[#2b201c] dark:text-[#d7a789]'>
-            {barber.experienceYears} {t.yearsExperience}
+            {t.expertMatch}
           </span>
         )}
       </div>
     </div>
-  </button>
+  </motion.button>
 );
 
 const getAutoBarberOption = (t) => ({
@@ -382,6 +407,21 @@ export default function BookingPage({ lang, isRTL }) {
   const { addToast } = useContext(ToastContext);
   const t = copy[lang] || copy.en;
   const scrollContainerRef = useRef(null);
+  const trustPoints = useMemo(
+    () =>
+      lang === 'ar'
+        ? [
+            'تأكيد الحجز فوراً بدون ازدواجية.',
+            'تحديثات واتساب والبريد بعد الحجز.',
+            'الموعد يُثبت حسب التوفر المباشر.',
+          ]
+        : [
+            'Instant confirmation with live availability checks.',
+            'WhatsApp and email updates continue after booking.',
+            'Your appointment is held the moment it is confirmed.',
+          ],
+    [lang],
+  );
 
   const [direction, setDirection] = useState(1);
   const [step, setStep] = useState(0);
@@ -784,7 +824,7 @@ export default function BookingPage({ lang, isRTL }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md'
+            className='fixed inset-0 z-[100] flex items-center justify-center bg-[#17110f]/74'
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -813,7 +853,7 @@ export default function BookingPage({ lang, isRTL }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='fixed inset-0 z-[101] flex items-center justify-center bg-slate-950/72 backdrop-blur-md'
+            className='fixed inset-0 z-[101] flex items-center justify-center bg-[#17110f]/80'
           >
             <motion.div
               initial={{ scale: 0.96, opacity: 0, y: 12 }}
@@ -1140,11 +1180,17 @@ export default function BookingPage({ lang, isRTL }) {
                             key={service._id}
                             type='button'
                             onClick={() => resetAfterServiceChange(service)}
-                            whileHover={{ y: -3, scale: 1.01 }}
+                            whileHover={{ y: -4, scale: 1.01 }}
                             whileTap={{ scale: 0.992 }}
+                            animate={
+                              selectedService?._id === service._id
+                                ? { y: -2, scale: 1.005 }
+                                : { y: 0, scale: 1 }
+                            }
+                            transition={{ duration: 0.2, type: 'spring', stiffness: 260, damping: 24 }}
                             className={`group overflow-hidden rounded-[1.25rem] border-2 bg-[#fbf6ef] text-left shadow-[0_14px_34px_rgba(15,23,42,0.07)] transition-all duration-200 dark:bg-[#181310] ${
                               selectedService?._id === service._id
-                                ? 'border-[#7a3f39]/24 bg-[#fffaf4] shadow-[0_18px_42px_rgba(86,34,35,0.12)] dark:bg-[#231916]'
+                                ? 'border-[#7a3f39]/28 bg-[#fffaf4] shadow-[0_20px_44px_rgba(86,34,35,0.14)] dark:bg-[#231916]'
                                 : 'border-brand-gold/10 hover:-translate-y-0.5 hover:border-[#7a3f39]/24'
                             }`}
                           >
@@ -1169,6 +1215,12 @@ export default function BookingPage({ lang, isRTL }) {
                                   </div>
                                 )}
                                 <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent' />
+                                {selectedService?._id === service._id ? (
+                                  <div className='absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#7a3f39] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#f7efe5] shadow-[0_10px_24px_rgba(86,34,35,0.18)]'>
+                                    <CheckCircle2 size={12} />
+                                    {t.selected}
+                                  </div>
+                                ) : null}
                                 <div className='absolute inset-x-3 bottom-3 flex items-end justify-between gap-3'>
                                   <div>
                                     <p className='mb-1 inline-flex rounded-full bg-[#15110f]/70 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-white'>
@@ -1192,6 +1244,12 @@ export default function BookingPage({ lang, isRTL }) {
                                 <p className='line-clamp-2 text-xs leading-5 text-gray-500 dark:text-gray-300 sm:text-sm'>
                                   {getServiceDescription(service, lang, t)}
                                 </p>
+                              ) : null}
+                              {selectedService?._id === service._id ? (
+                                <div className='mt-3 inline-flex items-center gap-2 rounded-full border border-[#7a3f39]/12 bg-[#f6ebe1] px-2.5 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#7a3f39] dark:border-[#7a3f39]/16 dark:bg-[#2a1c18] dark:text-[#d7a789]'>
+                                  <Sparkles size={12} />
+                                  {lang === 'ar' ? 'اختيارك الحالي' : 'Current selection'}
+                                </div>
                               ) : null}
                               {((lang === 'ar' ? service.featuresAr : service.features) || []).length > 0 ? (
                                 <div className='mt-3 flex flex-wrap gap-2'>
@@ -1266,11 +1324,17 @@ export default function BookingPage({ lang, isRTL }) {
                             key={barber._id}
                             type='button'
                             onClick={() => handleBarberSelect(barber)}
-                            whileHover={{ y: -3, scale: 1.01 }}
+                            whileHover={{ y: -4, scale: 1.01 }}
                             whileTap={{ scale: 0.992 }}
+                            animate={
+                              selectedBarber?._id === barber._id
+                                ? { y: -2, scale: 1.005 }
+                                : { y: 0, scale: 1 }
+                            }
+                            transition={{ duration: 0.2, type: 'spring', stiffness: 260, damping: 24 }}
                             className={`overflow-hidden rounded-[1.55rem] border-2 bg-[#fbf6ef] text-left shadow-[0_14px_34px_rgba(15,23,42,0.07)] transition-all duration-200 dark:bg-[#181310] ${
                               selectedBarber?._id === barber._id
-                                ? 'border-[#7a3f39]/24 bg-[#fffaf4] shadow-[0_18px_42px_rgba(86,34,35,0.12)] dark:bg-[#231916]'
+                                ? 'border-[#7a3f39]/28 bg-[#fffaf4] shadow-[0_20px_44px_rgba(86,34,35,0.14)] dark:bg-[#231916]'
                                 : 'border-brand-gold/10 hover:-translate-y-0.5 hover:border-[#7a3f39]/24'
                             }`}
                           >
@@ -1290,6 +1354,10 @@ export default function BookingPage({ lang, isRTL }) {
                                 <p className='mt-2 text-center text-sm leading-6 text-slate-500 dark:text-slate-300'>
                                   {t.autoBarberHint}
                                 </p>
+                                <div className='mt-4 inline-flex items-center gap-2 rounded-full border border-[#7a3f39]/12 bg-[#f6ebe1] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#7a3f39] dark:border-[#7a3f39]/16 dark:bg-[#2a1c18] dark:text-[#d7a789]'>
+                                  <ShieldCheck size={12} />
+                                  {t.expertMatch}
+                                </div>
                               </div>
                             ) : (
                               <>
@@ -1304,11 +1372,18 @@ export default function BookingPage({ lang, isRTL }) {
                                     className='h-full w-full object-cover'
                                   />
                                   <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/18 to-transparent' />
+                                  <div className='absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[#15110f]/70 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-white'>
+                                    <span className='inline-flex h-1.5 w-1.5 rounded-full bg-[#d7a789]' />
+                                    {barber.experienceYears} {t.yearsExperience}
+                                  </div>
                                   <div className='absolute inset-x-4 bottom-4 flex items-end justify-between gap-3'>
                                     <div>
                                       <h3 className='text-xl font-black text-white'>
                                         {getBarberName(barber, lang)}
                                       </h3>
+                                      <p className='mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/72'>
+                                        {t.trustedProfessional}
+                                      </p>
                                     </div>
                                     {selectedBarber?._id === barber._id ? (
                                       <span className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#7a3f39] text-[#f7efe5] shadow-lg shadow-[#7a3f39]/20'>
@@ -1370,6 +1445,12 @@ export default function BookingPage({ lang, isRTL }) {
                           <p className='mt-2 max-w-sm text-xs leading-5 text-slate-500 dark:text-slate-300 sm:text-sm sm:leading-6'>
                             {t.scheduleHint}
                           </p>
+                          {selectedDate ? (
+                            <div className='mt-3 inline-flex items-center gap-2 rounded-full border border-[#7a3f39]/12 bg-[#f6ebe1] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#7a3f39] dark:border-[#7a3f39]/18 dark:bg-[#2a1c18] dark:text-[#d7a789]'>
+                              <span className='inline-flex h-1.5 w-1.5 rounded-full bg-[#7a3f39] dark:bg-[#d7a789]' />
+                              {t.liveAvailability}
+                            </div>
+                          ) : null}
                         </div>
                         <div className='flex flex-wrap gap-2'>
                           {selectedDate && slots.length > 0 ? (
@@ -1397,14 +1478,14 @@ export default function BookingPage({ lang, isRTL }) {
 
                       {!selectedDate ? (
                         <div className='app-surface-muted flex min-h-[180px] flex-col items-center justify-center border-dashed px-5 text-center sm:min-h-[240px]'>
-                          <CalendarClock className='mb-4 text-brand-gold' size={32} />
+                          <CalendarClock className='mb-4 text-[#7a3f39] dark:text-[#d7a789]' size={32} />
                           <p className='text-sm font-bold text-gray-500 dark:text-gray-400'>
                             {t.noDateSelected}
                           </p>
                         </div>
                       ) : loadingSlots ? (
                         <div className='app-surface-muted flex min-h-[180px] flex-col items-center justify-center px-5 text-center sm:min-h-[240px]'>
-                          <Loader2 className='mx-auto mb-4 animate-spin text-brand-gold' size={28} />
+                          <Loader2 className='mx-auto mb-4 animate-spin text-[#7a3f39] dark:text-[#d7a789]' size={28} />
                           <p className='text-sm font-bold text-gray-500 dark:text-gray-400'>
                             {t.findingTimes}
                           </p>
@@ -1426,15 +1507,24 @@ export default function BookingPage({ lang, isRTL }) {
                               key={slot}
                               type='button'
                               onClick={() => handleTimeSelect(slot)}
-                              whileHover={{ y: -2 }}
+                              whileHover={{ y: -2, scale: 1.01 }}
                               whileTap={{ scale: 0.985 }}
+                              animate={
+                                selectedTime === slot
+                                  ? { y: -1, scale: 1.01 }
+                                  : { y: 0, scale: 1 }
+                              }
+                              transition={{ duration: 0.18, type: 'spring', stiffness: 280, damping: 24 }}
                               className={`min-h-11 rounded-xl border-2 px-3 py-2.5 text-sm font-bold transition-all duration-200 ${
                                 selectedTime === slot
-                                  ? 'border-[#7a3f39] bg-[#7a3f39] text-[#f7efe5] shadow-lg shadow-[#7a3f39]/18'
+                                  ? 'border-[#7a3f39] bg-[#7a3f39] text-[#f7efe5] shadow-[0_16px_28px_rgba(86,34,35,0.18)]'
                                   : 'border-brand-gold/10 bg-[#fffaf4] text-gray-700 hover:border-[#7a3f39]/24 dark:border-brand-gold/12 dark:bg-[#231916] dark:text-gray-200'
                               }`}
                             >
-                              {formatDisplayTime(slot)}
+                              <span className='inline-flex items-center gap-2'>
+                                {selectedTime === slot ? <CheckCircle2 size={14} /> : null}
+                                {formatDisplayTime(slot)}
+                              </span>
                             </motion.button>
                           ))}
                         </div>
@@ -1473,12 +1563,15 @@ export default function BookingPage({ lang, isRTL }) {
                           <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent' />
                           <div className='absolute inset-x-4 bottom-4 flex flex-wrap items-end justify-between gap-3 lg:inset-x-5 lg:bottom-4'>
                             <div className='min-w-0'>
-                              <p className='text-[10px] font-black uppercase tracking-[0.22em] text-[#d7a789]'>
+                              <p className='text-[10px] font-black uppercase tracking-[0.22em] text-[#b88467] dark:text-[#d7a789]'>
                                 {t.yourSelection}
                               </p>
                               <h2 className='mt-2 text-xl font-black text-white lg:text-2xl'>
                                 {getServiceName(selectedService, lang)}
                               </h2>
+                              <p className='mt-2 max-w-xl text-sm leading-6 text-white/78'>
+                                {t.confirmAtmosphere}
+                              </p>
                             </div>
                             <div className='shrink-0 rounded-full bg-[#fffaf4] px-3.5 py-2 text-sm font-black text-gray-900 dark:bg-[#231916] dark:text-[#f7efe5]'>
                               {formatPrice(selectedService?.price, lang)}
@@ -1490,30 +1583,33 @@ export default function BookingPage({ lang, isRTL }) {
                       <div className='grid gap-2.5 sm:grid-cols-2'>
                       {[
                         {
-                          icon: <ShieldCheck size={15} className='text-brand-gold' />,
+                          icon: <ShieldCheck size={15} className='text-[#7a3f39] dark:text-[#d7a789]' />,
                           label: t.barberLabel,
                           value: isAutoBarberSelection
                             ? t.autoBarberSummary
                             : getBarberName(selectedBarber, lang),
                         },
                         {
-                          icon: <CalendarClock size={15} className='text-brand-gold' />,
+                          icon: <CalendarClock size={15} className='text-[#7a3f39] dark:text-[#d7a789]' />,
                           label: t.dateLabel,
                           value: formatLocalizedDate(selectedDate, lang),
                         },
                         {
-                          icon: <Clock3 size={15} className='text-brand-gold' />,
+                          icon: <Clock3 size={15} className='text-[#7a3f39] dark:text-[#d7a789]' />,
                           label: t.timeLabel,
                           value: formatDisplayTime(selectedTime),
                         },
                         {
-                          icon: <Scissors size={15} className='text-brand-gold' />,
+                          icon: <Scissors size={15} className='text-[#7a3f39] dark:text-[#d7a789]' />,
                           label: t.totalAmount,
                           value: formatPrice(selectedService?.price, lang),
                         },
-                      ].map((item) => (
-                        <div
+                      ].map((item, index) => (
+                        <motion.div
                           key={item.label}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.05 * index, duration: 0.2 }}
                           className='app-surface-muted flex min-h-[4.75rem] flex-col items-start justify-between gap-2 p-3 text-left'
                         >
                           <div className='flex min-w-0 items-center gap-2.5 text-gray-500 dark:text-gray-400'>
@@ -1525,8 +1621,28 @@ export default function BookingPage({ lang, isRTL }) {
                           <span className='w-full text-[15px] font-black text-gray-900 dark:text-white'>
                             {item.value}
                           </span>
-                        </div>
+                        </motion.div>
                       ))}
+                      </div>
+
+                      <div className='grid gap-2.5 lg:grid-cols-3'>
+                        {trustPoints.map((point, index) => (
+                          <motion.div
+                            key={point}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.08 * index, duration: 0.22 }}
+                            className='rounded-[1rem] border border-[#e3d4c7] bg-[#f8f0e7] px-3.5 py-3 text-sm font-semibold leading-6 text-slate-600 dark:border-[#2d241f] dark:bg-[#1d1714] dark:text-slate-300'
+                          >
+                            <div className='mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#7a3f39] dark:text-[#d7a789]'>
+                              <span className='inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#7a3f39]/16 bg-[#f3e7dd] text-[10px] text-[#7a3f39] dark:border-[#7a3f39]/20 dark:bg-[#2c1d1a] dark:text-[#d7a789]'>
+                                {index + 1}
+                              </span>
+                              <span>{lang === 'ar' ? 'موثوق' : 'Trusted'}</span>
+                            </div>
+                            <p>{point}</p>
+                          </motion.div>
+                        ))}
                       </div>
                     </div>
                   </div>

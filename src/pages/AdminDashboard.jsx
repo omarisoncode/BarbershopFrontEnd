@@ -2331,12 +2331,12 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
             <span className={`lux-presence-dot ${syncIssue ? 'lux-presence-dot--amber' : 'lux-presence-dot--emerald'}`} />
             {syncIssue ? t.livePaused : t.liveHealthy}
           </span>
-          <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+          <span className='hidden sm:inline-flex lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
             <span className='lux-presence-dot' />
             {`${formatNumber(analytics?.totals?.active || 0, lang)} ${t.activeBookings}`}
           </span>
           {nextUpcomingBooking ? (
-            <span className='lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
+            <span className='hidden sm:inline-flex lux-live-pill text-[10px] font-black uppercase tracking-[0.16em]'>
               <span className='lux-presence-dot lux-presence-dot--emerald' />
               {getOperationalTimingLabel(nextUpcomingBooking, lang)}
             </span>
@@ -2361,12 +2361,14 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
             label={t.completedBookings}
             value={formatNumber(analytics?.totals?.completed || 0, lang)}
             accent='from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600'
+            className='hidden sm:flex'
           />
           <MetricCard
             icon={ShieldAlert}
             label={t.noShows}
             value={formatNumber(analytics?.totals?.noShow || 0, lang)}
             accent='from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600'
+            className='hidden sm:flex'
           />
         </div>
 
@@ -2377,21 +2379,21 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
               handleBookingStatusFilterChange('active');
               handleSectionChange('bookings');
             }}
-            className='inline-flex min-h-[3.2rem] items-center justify-center rounded-[1.1rem] bg-[linear-gradient(135deg,#f1ddb2_0%,#c9a45c_52%,#9d7242_100%)] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-brand-ink shadow-[0_18px_42px_rgba(201,164,92,0.24)] transition hover:-translate-y-[1px] hover:shadow-[0_22px_50px_rgba(201,164,92,0.3)]'
+            className='inline-flex min-h-[3.2rem] items-center justify-center rounded-[1.1rem] bg-[linear-gradient(135deg,#2d211c_0%,#5c2d2b_58%,#7a3f39_100%)] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-[#f7efe5] shadow-[0_16px_36px_rgba(86,34,35,0.18)] transition hover:-translate-y-[1px] hover:shadow-[0_20px_44px_rgba(86,34,35,0.24)] dark:text-[#f7efe5]'
           >
             {t.heroGoBookings}
           </button>
           <button
             type='button'
             onClick={() => handleSectionChange('catalog')}
-            className='inline-flex min-h-[3.2rem] items-center justify-center rounded-[1.1rem] border border-brand-gold/16 bg-white/72 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl transition hover:border-brand-gold/28 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-white/84 dark:hover:text-brand-gold-soft'
+            className='inline-flex min-h-[3.2rem] items-center justify-center rounded-[1.1rem] border border-brand-gold/16 bg-[#fffaf3] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-[0_10px_22px_rgba(15,23,42,0.04)] transition hover:border-brand-gold/28 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-[#1a1411] dark:text-white/84 dark:hover:text-brand-gold-soft'
           >
             {t.heroGoServices}
           </button>
           <button
             type='button'
             onClick={() => handleSectionChange('team')}
-            className='hidden min-h-[3.2rem] items-center justify-center rounded-[1.1rem] border border-brand-gold/16 bg-white/72 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl transition hover:border-brand-gold/28 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-white/5 dark:text-white/84 dark:hover:text-brand-gold-soft lg:inline-flex'
+            className='hidden min-h-[3.2rem] items-center justify-center rounded-[1.1rem] border border-brand-gold/16 bg-[#fffaf3] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-[0_10px_22px_rgba(15,23,42,0.04)] transition hover:border-brand-gold/28 hover:text-brand-gold dark:border-brand-gold/16 dark:bg-[#1a1411] dark:text-white/84 dark:hover:text-brand-gold-soft lg:inline-flex'
           >
             {t.heroGoBarbers}
           </button>
@@ -2424,6 +2426,10 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
                     nextUpcomingBooking.businessDate || '',
                   )}
                 </p>
+                <div className='mt-3 inline-flex items-center gap-2 rounded-full border border-brand-gold/14 bg-white/70 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:border-brand-gold/14 dark:bg-white/6 dark:text-slate-300'>
+                  <span className='inline-flex h-1.5 w-1.5 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft' />
+                  {lang === 'ar' ? 'يتم متابعة هذا الموعد في الوقت الفعلي' : 'This appointment is being tracked in real time'}
+                </div>
               </div>
             ) : (
               <div
@@ -2506,41 +2512,34 @@ export default function AdminDashboard({ lang, isRTL, setLang }) {
                 </div>
               </div>
               <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
-                <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-                  {t.topService}
-                </p>
-                <p className='mt-2 text-base font-black text-slate-900 dark:text-white'>
-                  {analytics?.leaders?.mostBookedService?.label || t.noDataYet}
-                </p>
-                {topServices[0]?.count ? (
-                  <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
-                    {`${formatNumber(topServices[0].count, lang)} ${t.bookings}`}
-                  </p>
-                ) : null}
-              </div>
-              <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
-                <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-                  {t.topBarber}
-                </p>
-                <p className='mt-2 text-base font-black text-slate-900 dark:text-white'>
-                  {analytics?.leaders?.mostSelectedBarber?.label || t.noDataYet}
-                </p>
-                {topBarbers[0]?.count ? (
-                  <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
-                    {`${formatNumber(topBarbers[0].count, lang)} ${t.bookings}`}
-                  </p>
-                ) : null}
-              </div>
-              <div className={`rounded-[1.05rem] p-4 ${mutedPanel}`}>
-                <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
-                  {t.heroFollowUp}
-                </p>
-                <p className='mt-2 text-2xl font-black text-slate-900 dark:text-white'>
-                  {formatNumber(operationalHealth.followUp, lang)}
-                </p>
-                <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
-                  {operationalHealth.detail}
-                </p>
+                <div className='grid gap-3 sm:grid-cols-2 xl:grid-cols-1'>
+                  <div>
+                    <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                      {t.topService}
+                    </p>
+                    <p className='mt-2 text-base font-black text-slate-900 dark:text-white'>
+                      {analytics?.leaders?.mostBookedService?.label || t.noDataYet}
+                    </p>
+                    {topServices[0]?.count ? (
+                      <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
+                        {`${formatNumber(topServices[0].count, lang)} ${t.bookings}`}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <p className='text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500'>
+                      {t.topBarber}
+                    </p>
+                    <p className='mt-2 text-base font-black text-slate-900 dark:text-white'>
+                      {analytics?.leaders?.mostSelectedBarber?.label || t.noDataYet}
+                    </p>
+                    {topBarbers[0]?.count ? (
+                      <p className='mt-2 text-xs text-slate-500 dark:text-slate-300'>
+                        {`${formatNumber(topBarbers[0].count, lang)} ${t.bookings}`}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
               </div>
             </div>
           </SectionShell>

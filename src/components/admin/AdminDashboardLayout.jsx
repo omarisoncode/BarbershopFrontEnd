@@ -42,14 +42,17 @@ const SidebarNavItem = ({ item, active, isRTL, onClick }) => {
       onClick={() => onClick(item.id)}
       className={`group relative flex min-h-[3.1rem] w-full items-center gap-3 overflow-hidden rounded-[0.75rem] px-3.5 py-2.5 text-left transition-colors ${
         active
-          ? 'border border-brand-gold/22 bg-brand-gold/8 text-slate-900 shadow-[0_10px_28px_rgba(86,34,35,0.14)] dark:border-brand-gold/24 dark:bg-brand-gold/10 dark:text-white'
-          : 'border border-transparent text-slate-600 hover:bg-white/62 hover:text-brand-gold dark:text-slate-300 dark:hover:bg-white/6 dark:hover:text-brand-gold-soft'
+          ? 'border border-brand-gold/22 bg-[#f6ecde] text-slate-900 shadow-[0_10px_24px_rgba(86,34,35,0.1)] dark:border-brand-gold/24 dark:bg-[#211815] dark:text-white'
+          : 'border border-transparent text-slate-600 hover:bg-[#fffaf3] hover:text-brand-gold dark:text-slate-300 dark:hover:bg-white/6 dark:hover:text-brand-gold-soft'
       } ${isRTL ? 'flex-row-reverse text-right' : ''}`}
     >
+      {active ? (
+        <span className={`absolute inset-y-2 ${isRTL ? 'right-1.5' : 'left-1.5'} w-0.5 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft`} />
+      ) : null}
       <span
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.7rem] border ${
           active
-            ? 'border-brand-gold/22 bg-brand-gold/8 text-brand-gold dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-brand-gold-soft'
+            ? 'border-brand-gold/22 bg-[#7a3a33] text-[#f7efe5] dark:border-brand-gold/22 dark:bg-brand-gold/18 dark:text-brand-gold-soft'
             : 'border-transparent bg-transparent text-slate-400 dark:text-slate-500'
         }`}
       >
@@ -312,27 +315,33 @@ export const AdminMobileTabBar = ({
                 key={item.id}
                 type='button'
                 onClick={() => onSelect(item.id)}
-                className={`flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
-                  active
-                    ? 'border-brand-gold/22 bg-brand-gold/8 text-slate-900 dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-white'
-                    : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
-                }`}
-              >
-                <Icon size={17} />
-                <span className='text-[10px] font-black leading-none'>{item.label}</span>
-              </button>
+            className={`relative flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
+              active
+                ? 'border-brand-gold/22 bg-[#f6ecde] text-slate-900 shadow-[0_8px_20px_rgba(86,34,35,0.08)] dark:border-brand-gold/22 dark:bg-[#211815] dark:text-white'
+                : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
+            }`}
+          >
+            {active ? (
+              <span className='absolute inset-x-5 top-1.5 h-0.5 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft' />
+            ) : null}
+            <Icon size={17} />
+            <span className='text-[10px] font-black leading-none'>{item.label}</span>
+          </button>
             );
           })}
 
           <button
             type='button'
             onClick={onOpenSidebar}
-            className={`flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
+            className={`relative flex min-h-[3.65rem] flex-col items-center justify-center gap-1 rounded-[1rem] border px-2 py-2 text-center transition ${
               isMoreActive
-                ? 'border-brand-gold/22 bg-brand-gold/8 text-slate-900 dark:border-brand-gold/22 dark:bg-brand-gold/10 dark:text-white'
+                ? 'border-brand-gold/22 bg-[#f6ecde] text-slate-900 shadow-[0_8px_20px_rgba(86,34,35,0.08)] dark:border-brand-gold/22 dark:bg-[#211815] dark:text-white'
                 : 'border-transparent bg-transparent text-slate-500 dark:text-slate-300'
             }`}
           >
+            {isMoreActive ? (
+              <span className='absolute inset-x-5 top-1.5 h-0.5 rounded-full bg-[#7a3a33] dark:bg-brand-gold-soft' />
+            ) : null}
             <Menu size={17} />
             <span className='text-[10px] font-black leading-none'>{moreLabel}</span>
           </button>
@@ -359,7 +368,7 @@ export const AdminShellActions = ({ actions, isRTL = false }) => {
             aria-busy={action.busy ? 'true' : 'false'}
             className={`inline-flex min-h-10 items-center gap-2 rounded-[0.8rem] border px-3.5 py-2 text-sm font-bold transition ${
               action.tone === 'danger'
-                ? 'border-[#a85054]/24 bg-white/78 text-[#8d3942] shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:bg-[#31171a]/32 dark:text-[#efb7bd] dark:hover:bg-[#31171a]/44'
+                ? 'border-[#a85054]/24 bg-[#f8efe8] text-[#8d3942] shadow-[0_12px_30px_rgba(15,23,42,0.05)] hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:bg-[#261513] dark:text-[#efb7bd] dark:hover:bg-[#31171a]/44'
                 : `${shellSubtle} text-slate-700 dark:text-slate-200`
               } ${isRTL ? 'flex-row-reverse' : ''}`}
           >
@@ -392,7 +401,7 @@ export const AdminSidebarUtilityActions = ({ actions, isRTL = false }) => {
             disabled={action.disabled}
             className={`flex min-h-[3rem] w-full items-center gap-3 rounded-[0.75rem] border px-3.5 py-2.5 text-left text-sm font-bold transition ${
               action.tone === 'danger'
-                ? 'border-[#a85054]/24 bg-white/78 text-[#8d3942] shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:bg-[#31171a]/32 dark:text-[#efb7bd] dark:hover:bg-[#31171a]/44'
+                ? 'border-[#a85054]/24 bg-[#f8efe8] text-[#8d3942] shadow-[0_12px_30px_rgba(15,23,42,0.05)] hover:bg-[#fbf2f2] dark:border-[#a85054]/24 dark:bg-[#261513] dark:text-[#efb7bd] dark:hover:bg-[#31171a]/44'
                 : `${shellSubtle} text-slate-700 dark:text-slate-200`
             } ${isRTL ? 'flex-row-reverse text-right' : ''}`}
           >

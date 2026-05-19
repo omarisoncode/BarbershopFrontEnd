@@ -3,16 +3,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
+  ArrowLeft,
+  ArrowRight,
   CheckCircle2,
   Eye,
   EyeOff,
   Loader2,
   Lock,
   Mail,
-  MoonStar,
   ShieldAlert,
-  Sun,
-  Sunrise,
   User,
 } from 'lucide-react';
 
@@ -115,34 +114,11 @@ const translateApiMessage = (message, lang) => {
 };
 
 const getAuthFieldClass = (error) =>
-  `relative flex items-center rounded-[1.5rem] border backdrop-blur-xl transition-all duration-200 ${
+  `relative flex items-center rounded-[1.5rem] border transition-all duration-300 ${
     error
-      ? 'border-red-300/70 bg-red-50/70 shadow-[0_12px_28px_rgba(239,68,68,0.06)] dark:border-red-500/40 dark:bg-red-950/10 dark:shadow-[0_14px_32px_rgba(0,0,0,0.18)]'
-      : 'border-brand-gold/12 bg-white/72 shadow-[0_14px_30px_rgba(15,23,42,0.04)] focus-within:-translate-y-[1px] focus-within:border-brand-gold/30 focus-within:bg-white/84 focus-within:shadow-[0_18px_38px_rgba(15,23,42,0.07)] dark:border-white/10 dark:bg-white/5 dark:focus-within:border-brand-gold/22 dark:focus-within:shadow-[0_18px_38px_rgba(0,0,0,0.24)]'
+      ? 'border-red-300/70 bg-red-50/78 shadow-[0_14px_30px_rgba(239,68,68,0.08)] dark:border-red-500/36 dark:bg-red-950/12 dark:shadow-[0_18px_36px_rgba(0,0,0,0.22)]'
+      : 'border-black/8 bg-[linear-gradient(180deg,rgba(255,252,248,0.96),rgba(247,240,233,0.9))] shadow-[0_16px_34px_rgba(15,23,42,0.06)] focus-within:-translate-y-[1px] focus-within:border-[#7a3a33]/24 focus-within:bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,241,235,0.94))] focus-within:shadow-[0_22px_42px_rgba(86,34,35,0.1)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,17,15,0.9),rgba(14,11,10,0.88))] dark:focus-within:border-[#7a3a33]/20 dark:focus-within:shadow-[0_22px_44px_rgba(0,0,0,0.28)]'
   }`;
-
-const getLoginGreeting = (lang) => {
-  const hour = new Date().getHours();
-
-  if (hour < 12) {
-    return {
-      icon: Sunrise,
-      title: lang === 'ar' ? 'صباح الخير' : 'Good morning',
-    };
-  }
-
-  if (hour < 18) {
-    return {
-      icon: Sun,
-      title: lang === 'ar' ? 'مساء الخير' : 'Good afternoon',
-    };
-  }
-
-  return {
-    icon: MoonStar,
-    title: lang === 'ar' ? 'مساء الخير' : 'Good evening',
-  };
-};
 
 const AuthPage = ({ lang, isRTL }) => {
   const navigate = useNavigate();
@@ -323,6 +299,15 @@ const AuthPage = ({ lang, isRTL }) => {
     navigate('/login?action=reset', { replace: true });
   };
 
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/', { replace: true });
+  };
+
   const panelTitle = isResetRequest
     ? t.resetPassword
     : isResetForm
@@ -356,8 +341,21 @@ const AuthPage = ({ lang, isRTL }) => {
           : t.btnRegister;
 
   const [logoPrimary, logoAccent] = String(t.logo || 'THE CUT').split(' ');
-  const loginGreeting = getLoginGreeting(lang);
-  const GreetingIcon = loginGreeting.icon;
+  const authTrustPoints = isRTL
+    ? [
+        'حجزك وبياناتك محفوظة داخل تجربة موثوقة.',
+        'يمكنك إكمال الدخول أو إنشاء حساب خلال لحظات.',
+      ]
+    : [
+        'Your details and bookings stay inside a trusted studio experience.',
+        'Sign in or create your account in just a few calm steps.',
+      ];
+  const authWelcomeTitle =
+    isLogin && !isResetRequest && !isResetForm
+      ? isRTL
+        ? 'أهلاً بك في الاستوديو'
+        : 'Welcome to the studio'
+      : panelTitle;
 
   return (
     <div
@@ -368,12 +366,14 @@ const AuthPage = ({ lang, isRTL }) => {
         <img
           src='https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=870&auto=format&fit=crop'
           alt='Barbershop'
-          className='absolute inset-0 h-full w-full object-cover opacity-38'
+          className='absolute inset-0 h-full w-full object-cover opacity-42'
         />
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,164,92,0.18),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.2),rgba(5,5,5,0.88))]' />
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(122,58,51,0.24),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.08),transparent_24%),linear-gradient(180deg,rgba(5,5,5,0.12),rgba(5,5,5,0.92))]' />
+        <div className='absolute inset-x-10 top-10 h-px bg-gradient-to-r from-transparent via-white/28 to-transparent' />
+        <div className='absolute left-10 top-14 h-28 w-28 rounded-full bg-[#7a3a33]/16 blur-3xl' />
 
         <div className='relative z-10 flex flex-col justify-end p-12 text-white'>
-          <div className='flex items-center gap-3 mb-8'>
+          <div className='mb-8 flex items-center gap-3'>
             <div className='text-brand-gold'>
               <ScissorsIcon />
             </div>
@@ -381,48 +381,77 @@ const AuthPage = ({ lang, isRTL }) => {
               {logoPrimary} <span className='text-brand-gold'>{logoAccent}</span>
             </span>
           </div>
-          <h2 className='text-4xl font-display font-bold leading-tight mb-4'>
-            {t.experiencePremium}
-          </h2>
-          <p className='max-w-sm text-sm leading-8 text-white/72'>
-            {t.bookSeamlessly}
-          </p>
+          <div className='max-w-xl rounded-[1.8rem] border border-white/12 bg-white/[0.03] p-7 shadow-[0_28px_72px_rgba(0,0,0,0.24)] backdrop-blur-[2px]'>
+            <p className='text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-gold'>
+              {isRTL ? 'تجربة الاستوديو' : 'Studio experience'}
+            </p>
+            <h2 className='mb-4 mt-4 text-4xl font-display font-bold leading-tight'>
+              {t.experiencePremium}
+            </h2>
+            <p className='max-w-md text-sm leading-8 text-white/74'>
+              {t.bookSeamlessly}
+            </p>
+
+            <div className='mt-6 grid gap-3 text-sm text-white/78'>
+              <div className='flex items-start gap-3 rounded-[1.2rem] border border-white/10 bg-white/[0.03] px-4 py-3'>
+                <span className='mt-[0.45rem] h-1.5 w-1.5 rounded-full bg-brand-gold' />
+                <p>{isRTL ? 'دخول هادئ إلى مواعيدك وتفضيلاتك وتفاصيلك.' : 'A calm entry into your bookings, preferences, and account details.'}</p>
+              </div>
+              <div className='flex items-start gap-3 rounded-[1.2rem] border border-white/10 bg-white/[0.03] px-4 py-3'>
+                <span className='mt-[0.45rem] h-1.5 w-1.5 rounded-full bg-brand-gold' />
+                <p>{isRTL ? 'مصمم ليشعرك بالعناية والثقة قبل أن يبدأ الموعد.' : 'Designed to feel reassuring and cared-for before your appointment even begins.'}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className='relative flex flex-1 items-start justify-center overflow-x-hidden overflow-y-auto px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-6 md:items-center md:px-8 md:pb-8 md:pt-8 lg:p-12'>
-        <div className='pointer-events-none absolute inset-x-6 top-0 h-40 rounded-full bg-brand-gold/10 blur-3xl md:hidden' />
+      <div className='relative flex flex-1 items-start justify-center overflow-x-hidden overflow-y-auto px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 sm:px-6 sm:pt-4 md:items-center md:px-8 md:pb-8 md:pt-6 lg:p-12'>
+        <div className='pointer-events-none absolute inset-x-6 top-0 h-40 rounded-full bg-[#7a3a33]/8 blur-3xl md:hidden' />
+        <div className='pointer-events-none absolute inset-x-0 top-0 h-56 bg-[linear-gradient(180deg,rgba(255,255,255,0.24),rgba(255,255,255,0))] md:hidden' />
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.985, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className={`mx-auto w-full max-w-md self-start md:self-auto ${isRTL ? 'text-right' : 'text-left'}`}
         >
-          <div className='md:hidden flex items-center justify-center gap-3 mb-6'>
-            <div className='text-brand-gold'>
-              <ScissorsIcon />
+          <div className='lux-panel relative overflow-hidden space-y-6 border-white/45 p-5 sm:p-7 md:space-y-7 md:p-9 dark:border-white/10'>
+            <div className='pointer-events-none absolute inset-x-10 top-0 h-24 rounded-full bg-[#7a3a33]/10 blur-3xl' />
+            <div className='pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#7a3a33]/18 to-transparent' />
+            <div className={`flex ${isRTL ? 'justify-end' : 'justify-start'}`}>
+              <button
+                type='button'
+                onClick={goBack}
+                className='inline-flex min-h-10 items-center gap-2 rounded-full border border-black/8 bg-black/[0.02] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] text-slate-600 transition-all duration-200 hover:border-[#7a3a33]/20 hover:text-slate-900 active:scale-[0.985] dark:border-white/10 dark:bg-white/[0.04] dark:text-white/72 dark:hover:text-white'
+              >
+                {isRTL ? <ArrowRight size={15} /> : <ArrowLeft size={15} />}
+                <span>{isRTL ? 'الرجوع' : 'Back'}</span>
+              </button>
             </div>
-            <span className='text-2xl font-display font-bold text-slate-900 dark:text-white'>
-              {logoPrimary} <span className='text-brand-gold'>{logoAccent}</span>
-            </span>
-          </div>
-
-          <div className='lux-panel relative overflow-hidden space-y-7 border-white/45 p-5 sm:p-8 md:space-y-8 md:p-10 dark:border-white/10'>
-            <div className='pointer-events-none absolute inset-x-10 top-0 h-24 rounded-full bg-brand-gold/10 blur-3xl' />
-            <div className='text-center space-y-2'>
-              <div className='flex justify-center'>
-                {isLogin && !isResetRequest && !isResetForm ? (
-                  <span className='inline-flex h-12 w-12 items-center justify-center rounded-full border border-brand-gold/16 bg-brand-gold/10 text-brand-gold'>
-                    <GreetingIcon size={20} />
-                  </span>
-                ) : null}
+            <div className='text-center space-y-3'>
+              <div className='mx-auto flex w-fit items-center gap-3 rounded-full border border-black/8 bg-black/[0.02] px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.04]'>
+                <div className='text-brand-gold'>
+                  <ScissorsIcon />
+                </div>
+                <span className='text-[1.35rem] font-display font-bold text-slate-900 dark:text-white'>
+                  {logoPrimary} <span className='text-brand-gold'>{logoAccent}</span>
+                </span>
               </div>
               <h2 className='text-3xl font-display font-bold text-slate-900 dark:text-white'>
-                {isLogin && !isResetRequest && !isResetForm ? loginGreeting.title : panelTitle}
+                {authWelcomeTitle}
               </h2>
               <p className='text-sm leading-7 text-slate-500 dark:text-white/68'>
                 {panelSubtitle}
               </p>
+            </div>
+
+            <div className='grid gap-2 rounded-[1.35rem] border border-black/8 bg-black/[0.02] p-3.5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/70'>
+              {authTrustPoints.map((point) => (
+                <div key={point} className='flex items-start gap-2.5'>
+                  <span className='mt-[0.45rem] h-1.5 w-1.5 rounded-full bg-[#7a3a33] dark:bg-[#d7bdb7]' />
+                  <p className='leading-6'>{point}</p>
+                </div>
+              ))}
             </div>
 
             <AnimatePresence mode='wait'>
@@ -545,7 +574,7 @@ const AuthPage = ({ lang, isRTL }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='auth-submit-button lux-button-primary flex min-h-12 w-full items-center justify-center overflow-hidden rounded-full py-3.5 font-bold whitespace-nowrap transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
+                className='auth-submit-button lux-button-primary flex min-h-12 w-full items-center justify-center overflow-hidden rounded-full py-3.5 font-bold whitespace-nowrap transition-all duration-200 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60'
               >
                 <span className='auth-submit-label inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold leading-none'>
                   {loading && <Loader2 className='shrink-0 animate-spin' size={18} />}

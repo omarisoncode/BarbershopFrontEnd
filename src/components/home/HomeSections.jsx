@@ -71,10 +71,12 @@ export function HeroSection({
           initial='hidden'
           animate='visible'
           variants={staggerContainer}
-          className='relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#efe9e2] shadow-[0_24px_72px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-[#090807]'
+          className='lux-hero-stage relative overflow-hidden rounded-[2rem]'
         >
-          <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(255,255,255,0)_32%,rgba(91,58,45,0.04)_100%)]' />
-          <div className='absolute inset-y-0 left-0 w-[42%] bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0))] opacity-70 dark:hidden' />
+          <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0)_30%,rgba(91,58,45,0.05)_100%)]' />
+          <div className='absolute -left-[12%] top-[12%] h-52 w-52 rounded-full bg-[#7a3a33]/8 blur-3xl dark:bg-[#7a3a33]/12' />
+          <div className='absolute bottom-[6%] right-[8%] h-48 w-48 rounded-full bg-black/6 blur-3xl dark:bg-white/[0.05]' />
+          <div className='absolute inset-y-0 left-0 w-[42%] bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(255,255,255,0))] opacity-70 dark:hidden' />
           <div className='absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(90deg,rgba(7,7,7,0)_0%,rgba(7,7,7,0.18)_24%,rgba(7,7,7,0.62)_100%)] dark:block' />
 
           <div className='relative grid min-h-[auto] gap-5 sm:min-h-[72svh] lg:min-h-[78svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10'>
@@ -110,6 +112,16 @@ export function HeroSection({
               </motion.div>
 
               <motion.div
+                variants={revealUpVariants}
+                className='mt-5 flex items-center gap-3 border-t border-black/8 pt-4 text-sm text-slate-600 dark:border-white/10 dark:text-white/68 sm:mt-7'
+              >
+                <span className='h-1.5 w-1.5 rounded-full bg-[#7a3a33]' />
+                <p className='max-w-lg leading-7'>
+                  {t.homeHeroMediaPoint}
+                </p>
+              </motion.div>
+
+              <motion.div
                 variants={staggerContainer}
                 className='mt-5 grid grid-cols-2 gap-3 sm:mt-8 lg:gap-4 2xl:grid-cols-4'
               >
@@ -121,7 +133,7 @@ export function HeroSection({
                       key={badge.titleKey}
                       variants={sequentialReveal}
                       custom={index}
-                      className={`flex h-full rounded-[1.2rem] border border-black/8 bg-white/74 p-4 transition-transform duration-300 hover:-translate-y-0.5 sm:p-4.5 lg:p-5 dark:border-white/10 dark:bg-white/7 ${
+                      className={`flex h-full rounded-[1.2rem] border border-black/8 bg-white/82 p-4 transition-transform duration-300 hover:-translate-y-0.5 sm:p-4.5 lg:p-5 dark:border-white/10 dark:bg-white/7 ${
                         index > 1 ? 'hidden md:block' : ''
                       }`}
                     >
@@ -160,7 +172,7 @@ export function HeroSection({
 
                 <motion.div
                   variants={revealUpVariants}
-                  className='relative z-10 m-3 w-full max-w-[13rem] rounded-[1.2rem] border border-white/12 bg-[#15110f]/82 p-3.5 text-white shadow-[0_20px_48px_rgba(0,0,0,0.26)] sm:m-8 sm:max-w-xs sm:p-5'
+                  className='relative z-10 m-3 w-full max-w-[13rem] rounded-[1.2rem] border border-white/12 bg-[#15110f]/84 p-3.5 text-white shadow-[0_20px_48px_rgba(0,0,0,0.26)] sm:m-8 sm:max-w-xs sm:p-5'
                 >
                   <p className='text-[10px] font-semibold uppercase tracking-[0.26em] text-brand-gold'>
                     {t.homeHeroMediaBadge}

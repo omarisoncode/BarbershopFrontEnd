@@ -546,15 +546,24 @@ export default function Navbar({ lang, setLang }) {
 
         <AnimatePresence>
           {isMenuOpen ? (
-            <motion.div
-              initial={{ opacity: 0, y: -14, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
-              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-              className='absolute inset-x-0 top-full border-b border-black/8 bg-brand-light shadow-[0_18px_48px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-[#090807] lg:hidden'
-            >
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
+                className='fixed inset-0 top-[5.5rem] bg-[#16110f]/18 backdrop-blur-[2px] dark:bg-black/32 lg:hidden'
+                onClick={() => setIsMenuOpen(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, y: -14, filter: 'blur(8px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
+                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                className='absolute inset-x-0 top-full border-b border-black/8 bg-brand-light shadow-[0_18px_48px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-[#090807] lg:hidden'
+              >
               <div className='lux-section-shell max-h-[calc(100vh-5.5rem)] overflow-y-auto pb-6 pt-5'>
-                <GlassPanel className='p-5'>
+                <GlassPanel className='p-5 shadow-[0_24px_64px_rgba(15,23,42,0.08)]'>
                   <p className='lux-kicker'>{c.menuTitle}</p>
                   <p className='mt-3 text-sm leading-7 text-slate-600 dark:text-white/70'>
                     {c.menuSubtitle}
@@ -645,7 +654,8 @@ export default function Navbar({ lang, setLang }) {
                   </div>
                 </GlassPanel>
               </div>
-            </motion.div>
+              </motion.div>
+            </>
           ) : null}
         </AnimatePresence>
       </nav>
